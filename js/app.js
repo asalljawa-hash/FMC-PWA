@@ -1,9 +1,35 @@
 // ==========================================
-// FMC BROILER MOBILE V5 FINAL
-// APP.JS
+// FMC BROILER MOBILE V6
+// APP ENGINE
 // ==========================================
 
 let currentPage = "dashboard";
+
+// ==========================
+// Daftar Halaman
+// ==========================
+
+const pages = [
+    "dashboard",
+    "flok",
+    "keuangan",
+    "harian",
+    "ai"
+];
+
+// ==========================
+// Loader Halaman
+// ==========================
+
+const pageLoader = {
+
+    dashboard: tampilDashboard,
+    flok: tampilFlok,
+    keuangan: tampilKeuangan,
+    harian: tampilHarian,
+    ai: tampilAI
+
+};
 
 // ==========================
 // Menampilkan Halaman
@@ -13,51 +39,33 @@ async function showPage(page){
 
     currentPage = page;
 
-    document.getElementById("dashboardPage").style.display="none";
-    document.getElementById("flokPage").style.display="none";
-    document.getElementById("keuanganPage").style.display="none";
-    document.getElementById("harianPage").style.display="none";
-    document.getElementById("aiPage").style.display="none";
+    pages.forEach(name=>{
 
-    document.getElementById(page+"Page").style.display="block";
+        const el=document.getElementById(name+"Page");
 
-    switch(page){
+        if(el){
 
-        case "dashboard":
-            if(typeof tampilDashboard==="function"){
-                await tampilDashboard();
-            }
-        break;
+            el.hidden=true;
 
-        case "flok":
-            if(typeof tampilFlok==="function"){
-                await tampilFlok();
-            }
-        break;
+        }
 
-        case "keuangan":
-            if(typeof tampilKeuangan==="function"){
-                await tampilKeuangan();
-            }
-        break;
+    });
 
-        case "harian":
-            if(typeof tampilHarian==="function"){
-                await tampilHarian();
-            }
-        break;
-        
-        case "ai":
-    alert("AI dipanggil");
-    if(typeof tampilAI==="function"){
-        await tampilAI();
-    }else{
-        alert("tampilAI tidak ditemukan");
+    const active=document.getElementById(page+"Page");
+
+    if(active){
+
+        active.hidden=false;
+
     }
-break;
-           }
 
     aktifkanMenu(page);
+
+    if(typeof pageLoader[page]==="function"){
+
+        await pageLoader[page]();
+
+    }
 
 }
 
@@ -74,32 +82,28 @@ function aktifkanMenu(page){
     const tombol={
 
         dashboard:"btnDashboard",
-
         flok:"btnFlok",
-
         keuangan:"btnKeuangan",
-
         harian:"btnHarian",
-
         ai:"btnAI"
 
     };
 
-    if(document.getElementById(tombol[page])){
+    const btn=document.getElementById(tombol[page]);
 
-        document
-        .getElementById(tombol[page])
-        .classList.add("active");
+    if(btn){
+
+        btn.classList.add("active");
 
     }
 
 }
 
 // ==========================
-// Splash
+// Splash Screen
 // ==========================
 
-window.onload=function(){
+document.addEventListener("DOMContentLoaded",()=>{
 
     setTimeout(async()=>{
 
@@ -111,13 +115,19 @@ window.onload=function(){
 
     },1500);
 
-};
+});
 
 // ==========================
 // Auto Refresh
 // ==========================
 
 setInterval(async()=>{
+
+    if(document.hidden){
+
+        return;
+
+    }
 
     await showPage(currentPage);
 

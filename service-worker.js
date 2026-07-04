@@ -1,58 +1,46 @@
-// ======================================
-// FMC BROILER MOBILE V5
-// Service Worker
-// ======================================
+// ==========================================
+// FMC BROILER MOBILE V6
+// SERVICE WORKER
+// ==========================================
 
-const CACHE_NAME = "fmc-broiler-v1";
+const CACHE_NAME = "fmc-broiler-v6";
 
 const FILES_TO_CACHE = [
+  "/",
+  "/index.html",
+  "/manifest.json",
 
-  "./",
-  "./index.html",
-  "./manifest.json",
+  "/css/index.css",
 
-  "./css/index.css",
-
-  "./js/api.js",
-  "./js/app.js",
-  "./js/dashboard.js",
-  "./js/flok.js",
-  "./js/harian.js",
-  "./js/keuangan.js"
-
+  "/js/index.js",
+  "/js/api.js",
+  "/js/app.js",
+  "/js/dashboard.js",
+  "/js/flok.js",
+  "/js/harian.js",
+  "/js/keuangan.js",
+  "/js/ai.js"
 ];
 
-// Install
+// =========================
+// INSTALL
+// =========================
 self.addEventListener("install", (event) => {
+
+  self.skipWaiting();
 
   event.waitUntil(
 
-    caches.open(CACHE_NAME).then((cache) => {
-
-      return cache.addAll(FILES_TO_CACHE);
-
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(FILES_TO_CACHE))
 
   );
 
 });
 
-// Fetch
-self.addEventListener("fetch", (event) => {
-
-  event.respondWith(
-
-    caches.match(event.request).then((response) => {
-
-      return response || fetch(event.request);
-
-    })
-
-  );
-
-});
-
-// Activate
+// =========================
+// ACTIVATE
+// =========================
 self.addEventListener("activate", (event) => {
 
   event.waitUntil(
@@ -64,9 +52,7 @@ self.addEventListener("activate", (event) => {
         keys.map((key) => {
 
           if (key !== CACHE_NAME) {
-
             return caches.delete(key);
-
           }
 
         })
@@ -74,6 +60,46 @@ self.addEventListener("activate", (event) => {
       );
 
     })
+
+  );
+
+  self.clients.claim();
+
+});
+
+// =========================
+// FETCH
+// =========================
+self.addEventListener("fetch", (event) => {
+
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+
+    caches.match(event.request)
+      .then((cachedResponse) => {
+
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        return fetch(event.request)
+          .then((networkResponse) => {
+
+            const responseClone = networkResponse.clone();
+
+            caches.open(CACHE_NAME)
+              .then(cache => {
+
+                cache.put(event.request, responseClone);
+
+              });
+
+            return networkResponse;
+
+          });
+
+      })
 
   );
 

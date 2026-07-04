@@ -4,13 +4,21 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>FMC Broiler Mobile V6</title>
 
+<meta name="description" content="Farm Management Control System">
 <meta name="theme-color" content="#2E7D32">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="FMC Broiler">
 
 <link rel="manifest" href="manifest.json">
+
+<link rel="icon" href="icons/icon-192.png">
+
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 
 <link rel="stylesheet" href="css/index.css">
 
@@ -18,14 +26,12 @@
 
 <body>
 
-<!-- Splash Screen -->
+<!-- Splash -->
 
 <div id="splash">
 
 <div class="logo">
-
 🐔
-
 </div>
 
 <h1>FMC BROILER</h1>
@@ -50,13 +56,13 @@
 
 <section id="dashboardPage"></section>
 
-<section id="flokPage" style="display:none;"></section>
+<section id="flokPage" hidden></section>
 
-<section id="keuanganPage" style="display:none;"></section>
+<section id="keuanganPage" hidden></section>
 
-<section id="harianPage" style="display:none;"></section>
+<section id="harianPage" hidden></section>
 
-<section id="aiPage" style="display:none;"></section>
+<section id="aiPage" hidden></section>
 
 </main>
 
@@ -65,33 +71,23 @@
 <nav class="bottomNav">
 
 <button id="btnDashboard" onclick="showPage('dashboard')">
-
 🏠<br>Dashboard
-
 </button>
 
 <button id="btnFlok" onclick="showPage('flok')">
-
 🐔<br>Flok
-
 </button>
 
 <button id="btnKeuangan" onclick="showPage('keuangan')">
-
 💰<br>Keuangan
-
 </button>
 
 <button id="btnHarian" onclick="showPage('harian')">
-
 📋<br>Harian
-
 </button>
 
 <button id="btnAI" onclick="showPage('ai')">
-
 🤖<br>AI
-
 </button>
 
 </nav>
@@ -106,11 +102,11 @@
 
 <script>
 
-if("serviceWorker" in navigator){
+if ("serviceWorker" in navigator) {
 
-window.addEventListener("load",()=>{
+window.addEventListener("load", () => {
 
-navigator.serviceWorker.register("service-worker.js");
+navigator.serviceWorker.register("/service-worker.js");
 
 });
 
