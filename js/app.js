@@ -1,77 +1,77 @@
 // ==========================================
-// FMC BROILER MOBILE V6
-// APP ENGINE
+// FMC BROILER MOBILE V8
+// APP.JS
 // ==========================================
 
 let currentPage = "dashboard";
 
-// ==========================
-// Daftar Halaman
-// ==========================
-
-const pages = [
-    "dashboard",
-    "flok",
-    "keuangan",
-    "harian",
-    "ai"
-];
-
-// ==========================
-// Loader Halaman
-// ==========================
-
-const pageLoader = {
-
-    dashboard: tampilDashboard,
-    flok: tampilFlok,
-    keuangan: tampilKeuangan,
-    harian: tampilHarian,
-    ai: tampilAI
-
-};
-
-// ==========================
-// Menampilkan Halaman
-// ==========================
+// ==========================================
+// MENAMPILKAN HALAMAN
+// ==========================================
 
 async function showPage(page){
 
     currentPage = page;
 
-    pages.forEach(name=>{
+    const pages = [
+        "dashboard",
+        "flok",
+        "keuangan",
+        "harian",
+        "ai"
+    ];
 
-        const el=document.getElementById(name+"Page");
+    pages.forEach(p=>{
 
-        if(el){
-
-            el.hidden=true;
-
-        }
+        document.getElementById(p+"Page").style.display="none";
 
     });
 
-    const active=document.getElementById(page+"Page");
+    document.getElementById(page+"Page").style.display="block";
 
-    if(active){
+    switch(page){
 
-        active.hidden=false;
+        case "dashboard":
+            if(typeof tampilDashboard==="function"){
+                await tampilDashboard();
+            }
+        break;
+
+        case "flok":
+            if(typeof tampilFlok==="function"){
+                await tampilFlok();
+            }
+        break;
+
+        case "keuangan":
+            if(typeof tampilKeuangan==="function"){
+                await tampilKeuangan();
+            }
+        break;
+
+        case "harian":
+            if(typeof tampilHarian==="function"){
+                await tampilHarian();
+            }
+        break;
+
+        case "ai":
+            if(typeof tampilAI==="function"){
+                await tampilAI();
+            }
+        break;
 
     }
 
     aktifkanMenu(page);
 
-    if(typeof pageLoader[page]==="function"){
-
-        await pageLoader[page]();
-
-    }
+    updateJam();
 
 }
 
-// ==========================
-// Bottom Navigation
-// ==========================
+// ==========================================
+// MENU ACTIVE
+// ==========================================
 
 function aktifkanMenu(page){
 
@@ -89,21 +89,60 @@ function aktifkanMenu(page){
 
     };
 
-    const btn=document.getElementById(tombol[page]);
+    document
+    .getElementById(tombol[page])
+    .classList.add("active");
 
-    if(btn){
+}
 
-        btn.classList.add("active");
+// ==========================================
+// STATUS SERVER
+// ==========================================
+
+function statusServer(online){
+
+    const el=document.getElementById("statusServer");
+
+    if(!el) return;
+
+    if(online){
+
+        el.innerHTML="🟢 Online";
+
+    }else{
+
+        el.innerHTML="🔴 Offline";
 
     }
 
 }
 
-// ==========================
-// Splash Screen
-// ==========================
+// ==========================================
+// UPDATE JAM
+// ==========================================
 
-document.addEventListener("DOMContentLoaded",()=>{
+function updateJam(){
+
+    const el=document.getElementById("updateTime");
+
+    if(!el) return;
+
+    const now=new Date();
+
+    const jam=String(now.getHours()).padStart(2,"0");
+    const menit=String(now.getMinutes()).padStart(2,"0");
+
+    el.innerHTML="Update "+jam+":"+menit;
+
+}
+
+// ==========================================
+// SPLASH
+// ==========================================
+
+window.onload=async function(){
+
+    updateJam();
 
     setTimeout(async()=>{
 
@@ -113,22 +152,34 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         await showPage("dashboard");
 
-    },1500);
+    },2000);
 
-});
+}
 
-// ==========================
-// Auto Refresh
-// ==========================
+// ==========================================
+// AUTO REFRESH
+// ==========================================
 
 setInterval(async()=>{
-
-    if(document.hidden){
-
-        return;
-
-    }
 
     await showPage(currentPage);
 
 },30000);
+
+// ==========================================
+// CEK INTERNET
+// ==========================================
+
+window.addEventListener("online",()=>{
+
+    statusServer(true);
+
+});
+
+window.addEventListener("offline",()=>{
+
+    statusServer(false);
+
+});
+
+statusServer(navigator.onLine);

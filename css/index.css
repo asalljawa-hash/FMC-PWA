@@ -1,202 +1,533 @@
+/* ==========================================================
+   FMC BROILER MOBILE V8
+   INDEX.CSS
+   BAGIAN 1
+========================================================== */
+
+/* =========================
+   RESET
+========================= */
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
-body{
+html,body{
 
-background:#eef2f5;
-color:#222;
-padding-bottom:80px;
+    width:100%;
+    height:100%;
 
-}
+    background:#eef4ef;
 
-.header{
-
-background:#0B8F43;
-color:white;
-padding:20px;
-text-align:center;
-box-shadow:0 3px 10px rgba(0,0,0,.15);
+    overflow:hidden;
 
 }
 
-.header h1{
-
-font-size:30px;
-
-}
-
-.header p{
-
-margin-top:5px;
-font-size:14px;
-opacity:.9;
-
-}
-
-#app{
-
-padding:15px;
-
-}
-
-.card{
-
-background:white;
-border-radius:18px;
-padding:18px;
-margin-bottom:15px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-
-}
-
-.cardTitle{
-
-font-size:14px;
-color:#777;
-
-}
-
-.cardValue{
-
-font-size:30px;
-font-weight:bold;
-color:#0B8F43;
-margin-top:8px;
-
-}
-
-.bottomNav{
-
-position:fixed;
-left:0;
-right:0;
-bottom:0;
-
-height:70px;
-
-background:white;
-
-display:flex;
-
-justify-content:space-around;
-
-align-items:center;
-
-box-shadow:0 -3px 10px rgba(0,0,0,.12);
-
-}
-
-.bottomNav button{
-
-background:none;
-
-border:none;
-
-font-size:14px;
-
-color:#444;
-
-cursor:pointer;
-
-}
-
-.bottomNav button:active{
-
-color:#0B8F43;
-
-transform:scale(.95);
-
-}
-
-.bottomNav button.active{
-
-color:#0B8F43;
-
-font-weight:bold;
-
-}
-
-/* ===== SPLASH SCREEN ===== */
+/* =========================
+   SPLASH SCREEN
+========================= */
 
 #splash{
 
-position:fixed;
+    position:fixed;
 
-top:0;
-left:0;
+    top:0;
+    left:0;
 
-width:100%;
-height:100%;
+    width:100%;
+    height:100%;
 
-background:#0B8F43;
+    background:linear-gradient(
+        180deg,
+        #063b1d 0%,
+        #0B8F43 45%,
+        #16A34A 100%
+    );
 
-display:flex;
+    display:flex;
 
-flex-direction:column;
+    flex-direction:column;
 
-justify-content:center;
+    justify-content:center;
 
-align-items:center;
+    align-items:center;
 
-color:white;
+    z-index:99999;
 
-z-index:9999;
-
-transition:opacity .6s;
+    transition:.7s;
 
 }
 
 #splash.hide{
 
-opacity:0;
+    opacity:0;
 
-pointer-events:none;
+    visibility:hidden;
 
 }
 
-#splash .logo{
+.splashLogo{
 
-font-size:90px;
+    width:180px;
 
-animation:zoomLogo 1.2s infinite alternate;
+    height:180px;
+
+    object-fit:contain;
+
+    animation:logoFloat 2s ease-in-out infinite;
+
+    filter:drop-shadow(0 10px 25px rgba(0,0,0,.35));
 
 }
 
 #splash h1{
 
-margin-top:15px;
+    margin-top:25px;
 
-font-size:32px;
+    color:white;
 
-letter-spacing:2px;
+    font-size:36px;
+
+    letter-spacing:3px;
+
+    font-weight:bold;
 
 }
 
 #splash p{
 
-margin-top:10px;
+    margin-top:10px;
 
-font-size:15px;
+    color:#EAFBEF;
 
-opacity:.9;
-
-}
-
-@keyframes zoomLogo{
-
-from{
-
-transform:scale(.9);
+    font-size:16px;
 
 }
 
-to{
+.loadingBar{
 
-transform:scale(1.1);
+    margin-top:35px;
+
+    width:260px;
+
+    height:10px;
+
+    background:rgba(255,255,255,.20);
+
+    border-radius:50px;
+
+    overflow:hidden;
+
+}
+
+.loadingFill{
+
+    width:0;
+
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        #C5FF5C,
+        #41FF7A
+    );
+
+    animation:loadingMove 2s linear infinite;
+
+}
+
+.loadingText{
+
+    margin-top:18px;
+
+    color:white;
+
+    font-size:15px;
+
+    opacity:.9;
+
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    background:#0B8F43;
+
+    color:white;
+
+    padding:15px;
+
+    box-shadow:0 3px 12px rgba(0,0,0,.18);
+
+    z-index:100;
+
+}
+
+.headerTop{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.headerTop h2{
+
+    font-size:24px;
+
+}
+
+#statusServer{
+
+    font-size:14px;
+
+    font-weight:bold;
+
+}
+
+.headerBottom{
+
+    margin-top:10px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:14px;
+
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+#app{
+
+    position:absolute;
+
+    top:82px;
+
+    bottom:75px;
+
+    left:0;
+    right:0;
+
+    overflow-y:auto;
+
+    padding:15px;
+
+    background:#eef4ef;
+
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes logoFloat{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-10px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+}
+
+@keyframes loadingMove{
+
+    0%{
+
+        width:0;
+
+    }
+
+    100%{
+
+        width:100%;
+
+    }
+
+}
+
+/* ==========================================================
+   FMC BROILER MOBILE V8
+   INDEX.CSS
+   BAGIAN 2
+========================================================== */
+
+/* =========================
+   CARD
+========================= */
+
+.card{
+
+    background:#ffffff;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    margin-bottom:15px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.card h2{
+
+    color:#0B8F43;
+
+    margin-bottom:10px;
+
+    font-size:22px;
+
+}
+
+.cardTitle{
+
+    color:#666;
+
+    font-size:14px;
+
+}
+
+.cardValue{
+
+    margin-top:8px;
+
+    font-size:30px;
+
+    font-weight:bold;
+
+    color:#0B8F43;
+
+}
+
+/* =========================
+   GRID KPI
+========================= */
+
+.gridCard{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+button{
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+button:active{
+
+    transform:scale(.95);
+
+}
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+.bottomNav{
+
+    position:fixed;
+
+    left:0;
+
+    right:0;
+
+    bottom:0;
+
+    height:72px;
+
+    background:#ffffff;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+    box-shadow:0 -3px 15px rgba(0,0,0,.15);
+
+    z-index:999;
+
+}
+
+.bottomNav button{
+
+    flex:1;
+
+    height:100%;
+
+    border:none;
+
+    background:none;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:24px;
+
+    color:#777;
+
+}
+
+.bottomNav button span{
+
+    font-size:12px;
+
+    margin-top:4px;
+
+}
+
+.bottomNav button.active{
+
+    color:#0B8F43;
+
+    font-weight:bold;
+
+}
+
+/* =========================
+   TABLE
+========================= */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+table td{
+
+    padding:10px;
+
+    border-bottom:1px solid #eeeeee;
+
+}
+
+/* =========================
+   FORM
+========================= */
+
+input,select{
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    border:1px solid #cccccc;
+
+    margin-top:6px;
+
+    margin-bottom:12px;
+
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar{
+
+    width:5px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#0B8F43;
+
+    border-radius:20px;
+
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:420px){
+
+.gridCard{
+
+grid-template-columns:1fr;
+
+}
+
+.cardValue{
+
+font-size:26px;
+
+}
+
+.headerTop h2{
+
+font-size:20px;
+
+}
+
+.splashLogo{
+
+width:150px;
+
+height:150px;
 
 }
 

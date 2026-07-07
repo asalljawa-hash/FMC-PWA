@@ -1,41 +1,75 @@
-const keuangan = [
-  {
-    judul: "💰 Total Biaya Operasional",
-    nilai: "Rp 39.052.000"
-  },
-  {
-    judul: "🌽 Total Konsumsi Pakan",
-    nilai: "1.200 Kg"
-  },
-  {
-    judul: "📈 Estimasi Omzet",
-    nilai: "Rp 0"
-  },
-  {
-    judul: "📉 Estimasi Laba",
-    nilai: "Rp -39.052.000"
-  },
-  {
-    judul: "🐔 Profit / Ekor",
-    nilai: "-3.719"
-  }
-];
+// ==========================================
+// FMC BROILER MOBILE V8
+// KEUANGAN.JS
+// ==========================================
 
-function tampilKeuangan() {
+async function tampilKeuangan(){
 
-  let html = "";
+    const data = await ambilDataServer();
 
-  keuangan.forEach(item => {
+    if(!data){
 
-    html += `
-      <div class="card">
-        <div class="cardTitle">${item.judul}</div>
-        <div class="cardValue">${item.nilai}</div>
-      </div>
+        document.getElementById("keuanganPage").innerHTML = `
+
+        <div class="card">
+
+            <h2>❌ Server Offline</h2>
+
+            <p>Data keuangan tidak tersedia.</p>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+    const keuangan = data.keuangan;
+
+    document.getElementById("keuanganPage").innerHTML = `
+
+    <div class="card">
+
+        <h2>💰 Ringkasan Keuangan</h2>
+
+        <table>
+
+            <tr>
+                <td>💵 Pendapatan</td>
+                <td><b>Rp ${keuangan.pendapatan}</b></td>
+            </tr>
+
+            <tr>
+                <td>🛒 Biaya Pakan</td>
+                <td><b>Rp ${keuangan.pakan}</b></td>
+            </tr>
+
+            <tr>
+                <td>🐣 Biaya DOC</td>
+                <td><b>Rp ${keuangan.doc}</b></td>
+            </tr>
+
+            <tr>
+                <td>💊 Obat & Vaksin</td>
+                <td><b>Rp ${keuangan.obat}</b></td>
+            </tr>
+
+            <tr>
+                <td>⚡ Operasional</td>
+                <td><b>Rp ${keuangan.operasional}</b></td>
+            </tr>
+
+            <tr>
+                <td><b>📈 Laba Bersih</b></td>
+                <td><b style="color:#0B8F43;">
+                    Rp ${keuangan.laba}
+                </b></td>
+            </tr>
+
+        </table>
+
+    </div>
+
     `;
-
-  });
-
-  document.getElementById("keuanganPage").innerHTML = html;
-
 }

@@ -1,6 +1,7 @@
-// ===============================
-// FLOK.JS V5
-// ===============================
+// ==========================================
+// FMC BOILER MOBILE V9
+// FLOK.JS
+// ==========================================
 
 async function tampilFlok() {
 
@@ -9,17 +10,18 @@ async function tampilFlok() {
     if (!data) {
 
         document.getElementById("flokPage").innerHTML = `
-            <div class="card">
-                <h2>❌ Server Offline</h2>
-            </div>
+        <div class="card">
+            <h2>❌ Server Offline</h2>
+            <p>Data flok tidak tersedia.</p>
+        </div>
         `;
-
         return;
+
     }
 
-    const flok = data.dashboard.flok;
+    const flok = data.dashboard.flok || [];
 
-    let html = "";
+    let html = "<h2>🐔 Data Flok</h2>";
 
     flok.forEach(item => {
 
@@ -27,38 +29,33 @@ async function tampilFlok() {
 
         <div class="card">
 
-            <h2>🐔 FLOK ${item.nama}</h2>
+            <h2>${item.nama}</h2>
 
-            <table style="width:100%;font-size:15px">
+            <table style="width:100%">
 
                 <tr>
-                    <td>🐔 Hidup</td>
-                    <td align="right"><b>${item.hidup}</b></td>
+                    <td>🐔 Ayam Hidup</td>
+                    <td><b>${item.hidup ?? "-"}</b></td>
+                </tr>
+
+                <tr>
+                    <td>💀 Mati</td>
+                    <td><b>${item.mati ?? "-"}</b></td>
                 </tr>
 
                 <tr>
                     <td>📉 Mortalitas</td>
-                    <td align="right"><b>${item.mortalitas}</b></td>
-                </tr>
-
-                <tr>
-                    <td>⚖️ BB</td>
-                    <td align="right"><b>${item.bb}</b></td>
+                    <td><b>${item.mortalitas ?? "-"}</b></td>
                 </tr>
 
                 <tr>
                     <td>🌽 FCR</td>
-                    <td align="right"><b>${item.fcr}</b></td>
+                    <td><b>${item.fcr ?? "-"}</b></td>
                 </tr>
 
                 <tr>
                     <td>🎯 IP</td>
-                    <td align="right"><b>${item.ip}</b></td>
-                </tr>
-
-                <tr>
-                    <td>📌 Status</td>
-                    <td align="right"><b>${item.status}</b></td>
+                    <td><b>${item.ip ?? "-"}</b></td>
                 </tr>
 
             </table>

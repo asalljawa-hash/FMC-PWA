@@ -1,58 +1,74 @@
 // ==========================================
-// FMC BROILER MOBILE V6
-// SERVICE WORKER
+// FMC BOILER MOBILE V9
+// service-worker.js
 // ==========================================
 
-const CACHE_NAME = "fmc-broiler-v6";
+const CACHE_NAME = "fmc-boiler-mobile-v9";
+
 
 const FILES_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/manifest.json",
 
-  "/css/index.css",
+  "./",
+  "./index.html",
+  "./manifest.json",
 
-  "/js/index.js",
-  "/js/api.js",
-  "/js/app.js",
-  "/js/dashboard.js",
-  "/js/flok.js",
-  "/js/harian.js",
-  "/js/keuangan.js",
-  "/js/ai.js"
+  "./css/index.css",
+
+  "./js/api.js",
+  "./js/dashboard.js",
+  "./js/flok.js",
+  "./js/harian.js",
+  "./js/keuangan.js",
+  "./js/ai.js",
+  "./js/app.js",
+
+  "./icons/logo.png",
+  "./icons/splash.png",
+
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+
+  "./icons/icon-maskable-192.png",
+  "./icons/icon-maskable-512.png"
+
 ];
 
-// =========================
-// INSTALL
-// =========================
-self.addEventListener("install", (event) => {
 
-  self.skipWaiting();
+// INSTALL
+self.addEventListener("install", event => {
 
   event.waitUntil(
 
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(FILES_TO_CACHE))
+    .then(cache => {
+
+      return cache.addAll(FILES_TO_CACHE);
+
+    })
 
   );
 
+  self.skipWaiting();
+
 });
 
-// =========================
+
 // ACTIVATE
-// =========================
-self.addEventListener("activate", (event) => {
+self.addEventListener("activate", event => {
 
   event.waitUntil(
 
-    caches.keys().then((keys) => {
+    caches.keys()
+    .then(keys => {
 
       return Promise.all(
 
-        keys.map((key) => {
+        keys.map(key => {
 
-          if (key !== CACHE_NAME) {
+          if(key !== CACHE_NAME){
+
             return caches.delete(key);
+
           }
 
         })
@@ -67,40 +83,66 @@ self.addEventListener("activate", (event) => {
 
 });
 
-// =========================
-// FETCH
-// =========================
-self.addEventListener("fetch", (event) => {
 
-  if (event.request.method !== "GET") return;
+// FETCH
+self.addEventListener("fetch", event => {
+
+
+  // Jangan cache request API/data
+  if(event.request.url.includes("script.google.com")){
+
+    return;
+
+  }
+
 
   event.respondWith(
 
     caches.match(event.request)
-      .then((cachedResponse) => {
 
-        if (cachedResponse) {
-          return cachedResponse;
+    .then(cached => {
+
+
+      if(cached){
+
+        return cached;
+
+      }
+
+
+      return fetch(event.request)
+
+      .then(response => {
+
+
+        if(!response || response.status !== 200){
+
+          return response;
+
         }
 
-        return fetch(event.request)
-          .then((networkResponse) => {
 
-            const responseClone = networkResponse.clone();
+        let clone = response.clone();
 
-            caches.open(CACHE_NAME)
-              .then(cache => {
 
-                cache.put(event.request, responseClone);
+        caches.open(CACHE_NAME)
 
-              });
+        .then(cache => {
 
-            return networkResponse;
+          cache.put(event.request, clone);
 
-          });
+        });
 
-      })
+
+        return response;
+
+
+      });
+
+
+    })
 
   );
+
 
 });

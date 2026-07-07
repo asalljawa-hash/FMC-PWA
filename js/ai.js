@@ -1,21 +1,75 @@
+// ==========================================
+// FMC BROILER MOBILE V8
+// AI.JS
+// ==========================================
+
 async function tampilAI(){
 
     const data = await ambilDataServer();
 
     if(!data){
-        document.getElementById("aiPage").innerHTML=`
-            <div class="card">
-                <h2>🤖 FMC AI</h2>
-                <p>Server tidak tersedia.</p>
-            </div>
+
+        document.getElementById("aiPage").innerHTML = `
+
+        <div class="card">
+
+            <h2>🤖 FMC AI</h2>
+
+            <p>Server tidak tersedia.</p>
+
+        </div>
+
         `;
+
         return;
+
     }
 
     const farm = data.dashboard.farm;
     const kpi = data.dashboard.kpi;
+    const flok = data.dashboard.flok || [];
 
-    document.getElementById("aiPage").innerHTML=`
+    let terbaik = flok.length ? flok[0] : null;
+
+    flok.forEach(f=>{
+
+        if(
+            terbaik &&
+            parseFloat(String(f.ip).replace(",", ".")) >
+            parseFloat(String(terbaik.ip).replace(",", "."))
+        ){
+
+            terbaik = f;
+
+        }
+
+    });
+
+    let analisa = "";
+
+    if(parseFloat(kpi.mortalitas) <= 3){
+
+        analisa += "✅ Mortalitas masih dalam batas normal.<br><br>";
+
+    }else{
+
+        analisa += "⚠️ Mortalitas mulai meningkat, periksa kesehatan ayam.<br><br>";
+
+    }
+
+    if(parseFloat(kpi.fcr) <= 1.6){
+
+        analisa += "✅ FCR sangat baik.<br><br>";
+
+    }else{
+
+        analisa += "⚠️ Efisiensi pakan perlu ditingkatkan.<br><br>";
+
+    }
+
+    analisa += "🎯 Pertahankan biosecurity, kualitas pakan, dan monitoring harian.";
+
+    document.getElementById("aiPage").innerHTML = `
 
     <div class="card">
 
@@ -23,7 +77,7 @@ async function tampilAI(){
 
         <p><b>Farm :</b> ${farm.namaFarm}</p>
 
-        <hr><br>
+        <hr style="margin:15px 0;">
 
         <p>📉 Mortalitas : <b>${kpi.mortalitas}</b></p>
 
@@ -33,23 +87,19 @@ async function tampilAI(){
 
         <br>
 
-        <h3>📊 Analisis</h3>
+        <p>🏆 Flok Terbaik :
+        <b>${terbaik ? terbaik.nama : "-"}</b></p>
 
-        <p>
+    </div>
 
-        ✅ Farm berjalan normal.<br><br>
+    <div class="card">
 
-        ✅ Mortalitas masih dalam batas aman.<br><br>
+        <h2>🧠 Analisis AI</h2>
 
-        ✅ FCR sangat baik.<br><br>
-
-        ✅ IP menunjukkan performa yang sangat baik.<br><br>
-
-        💡 Pertahankan manajemen pakan, biosecurity, dan monitoring harian.
-
-        </p>
+        <p>${analisa}</p>
 
     </div>
 
     `;
+
 }

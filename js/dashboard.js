@@ -1,6 +1,7 @@
-// ===============================
-// DASHBOARD.JS V5
-// ===============================
+// ==========================================
+// FMC BOILER MOBILE V9
+// DASHBOARD.JS
+// ==========================================
 
 async function tampilDashboard() {
 
@@ -11,72 +12,123 @@ async function tampilDashboard() {
         document.getElementById("dashboardPage").innerHTML = `
             <div class="card">
                 <h2>❌ Server Offline</h2>
-                <p>Tidak dapat mengambil data.</p>
+                <p>Tidak dapat mengambil data dari Google Sheet.</p>
             </div>
         `;
-
         return;
     }
 
     const farm = data.dashboard.farm;
     const kpi = data.dashboard.kpi;
+    const flok = data.dashboard.flok || [];
+    const ai = data.ai || [];
 
-    document.getElementById("dashboardPage").innerHTML = `
+    let html = `
 
-    <div class="card">
-        <h2>🐔 ${farm.namaFarm}</h2>
-        <p>📅 Chick In : ${farm.chickIn}</p>
-        <p>🏷️ Periode : ${farm.periode}</p>
+    <div class="card farmCard">
+
+        <div class="farmHeader">
+            <div>
+                <h2>🏠 ${farm.namaFarm}</h2>
+                <small>Periode ${farm.periode}</small>
+            </div>
+
+            <div class="onlineBadge">
+                🟢 ONLINE
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="farmInfo">
+            Chick In :
+            <b>${farm.chickIn}</b>
+        </div>
+
     </div>
+
+    <h3>KPI</h3>
 
     <div class="gridCard">
 
-        <div class="card">
-            <div class="cardTitle">🐣 DOC IN</div>
-            <div class="cardValue">${kpi.docIn}</div>
-        </div>
-
-        <div class="card">
-            <div class="cardTitle">🐔 Ayam Hidup</div>
-            <div class="cardValue">${kpi.ayamHidup}</div>
-        </div>
-
-        <div class="card">
-            <div class="cardTitle">💀 Mati</div>
-            <div class="cardValue">${kpi.mati}</div>
-        </div>
-
-        <div class="card">
-            <div class="cardTitle">❌ Afkir</div>
-            <div class="cardValue">${kpi.afkir}</div>
-        </div>
-
-        <div class="card">
-            <div class="cardTitle">📉 Mortalitas</div>
-            <div class="cardValue">${kpi.mortalitas}</div>
-        </div>
-
-        <div class="card">
-            <div class="cardTitle">📉 Deplesi</div>
-            <div class="cardValue">${kpi.deplesi}</div>
-        </div>
-
-        <div class="card">
-            <div class="cardTitle">🌽 FCR</div>
-            <div class="cardValue">${kpi.fcr}</div>
-        </div>
-
-        <div class="card">
-            <div class="cardTitle">🎯 IP</div>
-            <div class="cardValue">${kpi.ip}</div>
-        </div>
+        ${kpiCard("🐣","DOC",kpi.docIn)}
+        ${kpiCard("🐔","Ayam Hidup",kpi.ayamHidup)}
+        ${kpiCard("💀","Mati",kpi.mati)}
+        ${kpiCard("🚫","Afkir",kpi.afkir)}
+        ${kpiCard("❤️","Mortalitas",kpi.mortalitas)}
+        ${kpiCard("📉","Deplesi",kpi.deplesi)}
+        ${kpiCard("🌽","FCR",kpi.fcr)}
+        ${kpiCard("💰","IP",kpi.ip)}
 
     </div>
 
-    <div style="text-align:center;margin-top:15px;font-size:12px;color:#777;">
-        🔄 Data Real Time
+    <h3>Ringkasan Flok</h3>
+
+    <div class="gridCard">
+`;
+
+    flok.forEach(f => {
+
+        html += `
+        <div class="card">
+
+            <h3>Flok ${f.nama}</h3>
+
+            <p>🐔 ${f.hidup}</p>
+            <p>💀 ${f.mortalitas}</p>
+            <p>🌽 ${f.fcr}</p>
+            <p>💰 ${f.ip}</p>
+
+            <b>${f.status}</b>
+
+        </div>
+        `;
+
+    });
+
+    html += `
     </div>
 
+    <div class="card">
+
+        <h2>🤖 AI Insight</h2>
+`;
+
+    if (ai.length > 0) {
+
+        ai.forEach(item => {
+
+            html += `<p>✅ ${item}</p>`;
+
+        });
+
+    } else {
+
+        html += `<p>Belum ada insight.</p>`;
+
+    }
+
+    html += `
+    </div>
+
+    <center style="margin:20px;color:#777">
+
+        Update terakhir :
+        ${new Date().toLocaleString("id-ID")}
+
+    </center>
     `;
 
+    document.getElementById("dashboardPage").innerHTML = html;
+
 }
+
+// ==========================================
+
+function kpiCard(icon, judul, nilai){
+
+    return `
+    <div class="card">
+
+        <div style="font-size:28

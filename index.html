@@ -4,109 +4,286 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>FMC Broiler Mobile V6</title>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Farm Management Control System">
-<meta name="theme-color" content="#2E7D32">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="FMC Broiler">
+<title>FMC BOILER MOBILE V9</title>
 
-<link rel="manifest" href="manifest.json">
+<meta
+name="theme-color"
+content="#0B8F43">
 
-<link rel="icon" href="icons/icon-192.png">
+<meta
+name="apple-mobile-web-app-capable"
+content="yes">
 
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta
+name="apple-mobile-web-app-status-bar-style"
+content="default">
 
-<link rel="stylesheet" href="css/index.css">
+<meta
+name="apple-mobile-web-app-title"
+content="FMC">
+
+<link
+rel="manifest"
+href="manifest.json">
+
+<link
+rel="icon"
+href="icons/logo.png">
+
+<link
+rel="apple-touch-icon"
+href="icons/logo.png">
+
+<link
+rel="stylesheet"
+href="css/index.css">
 
 </head>
 
 <body>
 
-<!-- Splash -->
+<!-- ======================================
+SPLASH SCREEN
+====================================== -->
 
 <div id="splash">
 
-<div class="logo">
-🐔
+<img
+src="icons/logo.png"
+class="splash-logo">
+
+<h1>FMC BOILER</h1>
+
+<p>
+Farm Management Control System
+</p>
+
+<div class="loadingBox">
+
+<div class="loadingBar"></div>
+
 </div>
 
-<h1>FMC BROILER</h1>
+<span class="loadingText">
 
-<p>Farm Management Control System</p>
+Loading Data...
+
+</span>
 
 </div>
 
-<!-- Header -->
+<!-- ======================================
+HEADER
+====================================== -->
 
 <header class="header">
 
-<h1>🐔 FMC Broiler</h1>
+<div class="headerTop">
 
-<p>Farm Management Control System</p>
+<div>
+
+<h2 id="farmNama">
+
+FMC BOILER
+
+</h2>
+
+<div id="updateTime">
+
+Loading...
+
+</div>
+
+</div>
+
+<div id="statusServer">
+
+🟢 Online
+
+</div>
+
+</div>
 
 </header>
 
-<!-- Main -->
+<!-- ======================================
+CONTENT
+====================================== -->
 
 <main id="app">
+  
+<!-- ======================================
+DASHBOARD
+====================================== -->
 
-<section id="dashboardPage"></section>
+<section id="dashboardPage">
 
-<section id="flokPage" hidden></section>
+<div class="card">
 
-<section id="keuanganPage" hidden></section>
+<h2>Memuat Dashboard...</h2>
 
-<section id="harianPage" hidden></section>
+</div>
 
-<section id="aiPage" hidden></section>
+</section>
+
+<!-- ======================================
+FLOK
+====================================== -->
+
+<section
+id="flokPage"
+style="display:none;">
+
+<div class="card">
+
+<h2>Memuat Data Flok...</h2>
+
+</div>
+
+</section>
+
+<!-- ======================================
+HARIAN
+====================================== -->
+
+<section
+id="harianPage"
+style="display:none;">
+
+<div class="card">
+
+<h2>Memuat Data Harian...</h2>
+
+</div>
+
+</section>
+
+<!-- ======================================
+KEUANGAN
+====================================== -->
+
+<section
+id="keuanganPage"
+style="display:none;">
+
+<div class="card">
+
+<h2>Memuat Data Keuangan...</h2>
+
+</div>
+
+</section>
+
+<!-- ======================================
+AI
+====================================== -->
+
+<section
+id="aiPage"
+style="display:none;">
+
+<div class="card">
+
+<h2>🤖 FMC AI</h2>
+
+<p>Menyiapkan analisis...</p>
+
+</div>
+
+</section>
 
 </main>
 
-<!-- Bottom Navigation -->
+<!-- ======================================
+BOTTOM NAVIGATION
+====================================== -->
 
 <nav class="bottomNav">
 
-<button id="btnDashboard" onclick="showPage('dashboard')">
-🏠<br>Dashboard
+<button id="btnDashboard"
+onclick="showPage('dashboard')"
+class="active">
+
+🏠
+<span>Home</span>
+
 </button>
 
-<button id="btnFlok" onclick="showPage('flok')">
-🐔<br>Flok
+<button id="btnFlok"
+onclick="showPage('flok')">
+
+🐔
+<span>Flok</span>
+
 </button>
 
-<button id="btnKeuangan" onclick="showPage('keuangan')">
-💰<br>Keuangan
+<button id="btnHarian"
+onclick="showPage('harian')">
+
+📅
+<span>Harian</span>
+
 </button>
 
-<button id="btnHarian" onclick="showPage('harian')">
-📋<br>Harian
+<button id="btnKeuangan"
+onclick="showPage('keuangan')">
+
+💰
+<span>Keuangan</span>
+
 </button>
 
-<button id="btnAI" onclick="showPage('ai')">
-🤖<br>AI
+<button id="btnAI"
+onclick="showPage('ai')">
+
+🤖
+<span>AI</span>
+
 </button>
 
 </nav>
 
+<!-- ======================================
+JAVASCRIPT
+====================================== -->
+
 <script src="js/api.js"></script>
+
 <script src="js/dashboard.js"></script>
+
 <script src="js/flok.js"></script>
-<script src="js/keuangan.js"></script>
+
 <script src="js/harian.js"></script>
+
+<script src="js/keuangan.js"></script>
+
 <script src="js/ai.js"></script>
+
 <script src="js/app.js"></script>
 
 <script>
 
-if ("serviceWorker" in navigator) {
+if("serviceWorker" in navigator){
 
-window.addEventListener("load", () => {
+window.addEventListener("load",()=>{
 
-navigator.serviceWorker.register("/service-worker.js");
+navigator.serviceWorker
+.register("./service-worker.js")
+.then(()=>{
+
+console.log("Service Worker Aktif");
+
+})
+.catch(err=>{
+
+console.log(err);
+
+});
 
 });
 
@@ -115,4 +292,5 @@ navigator.serviceWorker.register("/service-worker.js");
 </script>
 
 </body>
+
 </html>

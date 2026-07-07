@@ -1,165 +1,70 @@
-// ======================================
-// FMC BROILER MOBILE V5
-// api.js
-// ======================================
+// ==========================================
+// FMC BROILER MOBILE V8
+// API.JS
+// ==========================================
 
-// true  = memakai data lokal (Acode)
-// false = memakai Google Apps Script
-const DEVELOPMENT = true;
+// URL Google Apps Script
+const API_URL =
+"https://script.google.com/macros/s/AKfycbz-aTY1geCXwtz0MibQKVP5k0bUsLHRIlHVKItkcuqb0i_-ByZZ24n6fGGVXPsHYSff/exec?api=data";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbz-aTY1geCXwtz0MibQKVP5k0bUsLHRIlHVKItkcuqb0i_-ByZZ24n6fGGVXPsHYSff/exec?api=data";
+// Cache data
+let serverData = null;
 
-// ======================================
-// DATA DEVELOPMENT
-// ======================================
+async function ambilDataServer(){
 
-const DEV_DATA = {
-
-    dashboard: {
-
-        farm: {
-            namaFarm: "Pradani Farm",
-            chickIn: "30/06/2026",
-            periode: "8"
-        },
-
-        kpi: {
-            docIn: "39.000,00",
-            ayamHidup: "38.813",
-            mati: "187",
-            afkir: "0",
-            mortalitas: "0,48%",
-            deplesi: "0,48%",
-            fcr: "0,68",
-            ip: "416,72"
-        },
-
-        flok: [
-
-            {
-                nama: "A",
-                hidup: "12937",
-                mortalitas: "0,48%",
-                bb: "0,085",
-                fcr: "0,68",
-                ip: "413,41",
-                status: "BELUM"
-            },
-
-            {
-                nama: "B",
-                hidup: "12933",
-                mortalitas: "0,52%",
-                bb: "0,085",
-                fcr: "0,68",
-                ip: "413,15",
-                status: "BELUM"
-            },
-
-            {
-                nama: "C",
-                hidup: "12933",
-                mortalitas: "0,44%",
-                bb: "0,086",
-                fcr: "0,67",
-                ip: "423,59",
-                status: "BELUM"
-            },
-
-            {
-                nama: "D",
-                hidup: "0",
-                mortalitas: "-",
-                bb: "-",
-                fcr: "-",
-                ip: "-",
-                status: "BELUM"
-            }
-
-        ]
-
-    },
-
-    harian: {
-
-        tanggal: "03/07/2026",
-
-        totalMati: "59",
-
-        flok: [
-
-            {
-                nama: "A",
-                umur: "3",
-                mati: "21",
-                mortalitas: "0,48%"
-            },
-
-            {
-                nama: "B",
-                umur: "3",
-                mati: "23",
-                mortalitas: "0,52%"
-            },
-
-            {
-                nama: "C",
-                umur: "3",
-                mati: "15",
-                mortalitas: "0,44%"
-            },
-
-            {
-                nama: "D",
-                umur: "0",
-                mati: "0",
-                mortalitas: "-"
-            }
-
-        ]
-
-    },
-
-    waktu: "03/07/2026 12:00"
-
-};
-
-// ======================================
-// AMBIL DATA
-// ======================================
-
-async function ambilDataServer() {
-
-    if (DEVELOPMENT) {
-
-        console.log("MODE DEVELOPMENT");
-
-        return DEV_DATA;
-
-    }
-
-    try {
+    try{
 
         const response = await fetch(API_URL);
 
-        if (!response.ok) {
+        });
 
-            throw new Error("HTTP " + response.status);
+        if(!response.ok){
+
+            throw new Error("HTTP "+response.status);
 
         }
 
         const data = await response.json();
 
-        console.log("MODE ONLINE");
+serverData = data;
 
-        return data;
+statusServer(true);
 
-    } catch (e) {
+if (data.dashboard && data.dashboard.farm) {
 
-        console.error(e);
+    const farm = data.dashboard.farm;
 
-        return DEV_DATA;
+    const el = document.getElementById("farmNama");
 
+    if (el) {
+        el.innerHTML = "🏠 " + farm.namaFarm;
     }
+}
+
+return data;
+
+} catch (err) {
+
+    console.log(err);
+
+    alert(
+        "ERROR : " +
+        err.name +
+        "\n\n" +
+        err.message
+    );
+
+    statusServer(false);
+
+    return null;
+
+}
+
+}
+
+// Refresh data
+async function refreshData(){
+
+    return await ambilDataServer();
 
 }
