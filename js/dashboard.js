@@ -131,4 +131,15 @@ function kpiCard(icon, judul, nilai){
     return `
     <div class="card">
 
-        <div style="font-size:28
+        <div style="font-size:28px">
+            ${icon}
+        </div>
+
+        <h4>${judul}</h4>
+
+        <b>${nilai}</b>
+
+    </div>
+    `;
+
+}
