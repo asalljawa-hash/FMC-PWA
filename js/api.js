@@ -14,17 +14,18 @@ async function ambilDataServer(){
 
     try{
 
-        const response = await fetch(API_URL);
+        const response = await fetch(
+    API_URL + "&t=" + Date.now(),
+    {
+        cache: "no-store"
+    }
+);
 
-        });
+if (!response.ok) {
+    throw new Error("HTTP " + response.status);
+}
 
-        if(!response.ok){
-
-            throw new Error("HTTP "+response.status);
-
-        }
-
-        const data = await response.json();
+const data = await response.json();
 
 serverData = data;
 
