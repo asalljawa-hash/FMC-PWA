@@ -1,5 +1,5 @@
 // ==========================================
-// FMC BROILER MOBILE V8
+// FMC BOILER MOBILE V9
 // HARIAN.JS
 // ==========================================
 
@@ -9,13 +9,13 @@ async function tampilHarian(){
 
     if(!data){
 
-        document.getElementById("harianPage").innerHTML=`
+        document.getElementById("harianPage").innerHTML = `
 
         <div class="card">
 
             <h2>❌ Server Offline</h2>
 
-            <p>Data harian tidak tersedia.</p>
+            <p>Tidak dapat mengambil data harian.</p>
 
         </div>
 
@@ -25,46 +25,110 @@ async function tampilHarian(){
 
     }
 
-    const harian = data.harian || [];
+    const harian = data.harian;
 
-    let html = "";
+    let html = `
 
-    let totalMati = 0;
-    let totalAfkir = 0;
-    let totalPakan = 0;
+    <div class="card farmCard">
 
-    harian.forEach(item=>{
+        <h2>📅 Laporan Kematian Harian</h2>
 
-        totalMati += Number(item.mati || 0);
-        totalAfkir += Number(item.afkir || 0);
-        totalPakan += Number(item.pakan || 0);
+        <hr>
+
+        <p><b>Tanggal :</b> ${harian.tanggal}</p>
+
+    </div>
+
+    <div class="card"
+    style="
+    background:rgba(220,53,69,.12);
+    border-left:6px solid #dc3545;
+    ">
+
+        <h2>💀 Total Mati Hari Ini</h2>
+
+        <div style="
+        font-size:42px;
+        font-weight:bold;
+        color:#dc3545;
+        text-align:center;
+        margin-top:10px;
+        ">
+
+            ${harian.totalMati}
+
+        </div>
+
+        <center>Ekor</center>
+
+    </div>
+
+    `;
+
+    const warna = [
+
+        "#3498db",
+        "#2ecc71",
+        "#f39c12",
+        "#9b59b6"
+
+    ];
+
+    harian.flok.forEach((f,index)=>{
 
         html += `
 
-        <div class="card">
+        <div class="card"
 
-            <h2>📅 ${item.tanggal}</h2>
+        style="
+        margin-top:15px;
+        background:rgba(255,255,255,.65);
+        backdrop-filter:blur(10px);
+        border-left:6px solid ${warna[index]};
+        ">
 
-            <table>
+            <h2>
+
+                🐔 Flok ${f.nama}
+
+            </h2>
+
+            <table style="width:100%;margin-top:10px;">
 
                 <tr>
-                    <td>☠️ Mati</td>
-                    <td><b>${item.mati}</b></td>
+
+                    <td>Umur</td>
+
+                    <td align="right">
+
+                        <b>${f.umur} Hari</b>
+
+                    </td>
+
                 </tr>
 
                 <tr>
-                    <td>❌ Afkir</td>
-                    <td><b>${item.afkir}</b></td>
+
+                    <td>Kematian</td>
+
+                    <td align="right">
+
+                        <b>${f.mati} Ekor</b>
+
+                    </td>
+
                 </tr>
 
                 <tr>
-                    <td>🌽 Pakan</td>
-                    <td><b>${item.pakan} Kg</b></td>
-                </tr>
 
-                <tr>
-                    <td>💧 Air Minum</td>
-                    <td><b>${item.air}</b></td>
+                    <td>Mortalitas</td>
+
+                    <td align="right">
+
+                        <b>${f.mortalitas}</b>
+
+                    </td>
+
                 </tr>
 
             </table>
@@ -77,28 +141,15 @@ async function tampilHarian(){
 
     html += `
 
-    <div class="card">
+    <div
+    style="
+    text-align:center;
+    margin:30px 0;
+    color:#888;
+    font-size:12px;
+    ">
 
-        <h2>📊 Ringkasan Harian</h2>
-
-        <table>
-
-            <tr>
-                <td>Total Mati</td>
-                <td><b>${totalMati}</b></td>
-            </tr>
-
-            <tr>
-                <td>Total Afkir</td>
-                <td><b>${totalAfkir}</b></td>
-            </tr>
-
-            <tr>
-                <td>Total Pakan</td>
-                <td><b>${totalPakan} Kg</b></td>
-            </tr>
-
-        </table>
+        Powered by Dasbor FMC Analytics
 
     </div>
 
