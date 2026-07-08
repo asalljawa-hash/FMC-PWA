@@ -27,21 +27,13 @@ content="default">
 name="apple-mobile-web-app-title"
 content="FMC">
 
-<link
-rel="manifest"
-href="manifest.json">
+<link rel="manifest" href="manifest.json">
 
-<link
-rel="icon"
-href="icons/logo.png">
+<link rel="icon" href="icons/icon-192.png">
 
-<link
-rel="apple-touch-icon"
-href="icons/logo.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 
-<link
-rel="stylesheet"
-href="css/index.css">
+<link rel="stylesheet" href="css/index.css">
 
 </head>
 
@@ -104,8 +96,14 @@ Loading...
 <div id="statusServer">
 
 🟢 Online
-
 </div>
+
+<button
+    id="installBtn"
+    onclick="installApp()"
+    style="display:none;">
+    📲 Install App
+</button>
 
 </div>
 

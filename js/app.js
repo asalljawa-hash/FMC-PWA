@@ -183,3 +183,41 @@ window.addEventListener("offline",()=>{
 });
 
 statusServer(navigator.onLine);
+
+// ==========================================
+// INSTALL PWA
+// ==========================================
+
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+
+    e.preventDefault();
+
+    deferredPrompt = e;
+
+    const btn = document.getElementById("installBtn");
+
+    if(btn){
+        btn.style.display = "block";
+    }
+
+});
+
+async function installApp(){
+
+    if(!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+
+    await deferredPrompt.userChoice;
+
+    deferredPrompt = null;
+
+    const btn = document.getElementById("installBtn");
+
+    if(btn){
+        btn.style.display = "none";
+    }
+
+}
