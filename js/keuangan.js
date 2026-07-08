@@ -1,5 +1,5 @@
 // ==========================================
-// FMC BROILER MOBILE V8
+// FMC BOILER MOBILE V9
 // KEUANGAN.JS
 // ==========================================
 
@@ -25,51 +25,125 @@ async function tampilKeuangan(){
 
     }
 
-    const keuangan = data.keuangan;
+    const k = data.keuangan;
 
-    document.getElementById("keuanganPage").innerHTML = `
+    const labaNegatif = String(k.estimasiLaba).includes("-");
+
+    let html = `
+
+    <div class="card farmCard">
+
+        <h2>💰 Ringkasan Produksi & Keuangan</h2>
+
+        <small>Realtime dari Dashboard Google Sheet</small>
+
+    </div>
+
+    <div class="gridCard">
+
+        ${cardKeuangan("🐔","Total Ekor Panen",k.totalEkor)}
+        ${cardKeuangan("⚖️","Total Tonase",k.totalTonase)}
+        ${cardKeuangan("✅","Flok Siap Panen",k.flokPanen)}
+        ${cardKeuangan("🏆","BB Tertinggi",k.bbTertinggi)}
+        ${cardKeuangan("📆","Umur Tertua",k.umurTertua)}
+        ${cardKeuangan("⭐","Flok Terbaik",k.flokTerbaik)}
+        ${cardKeuangan("🌽","Konsumsi Pakan",k.totalPakan+" Kg")}
+        ${cardKeuangan("💰","Biaya Operasional","Rp "+k.biayaOperasional)}
+        ${cardKeuangan("📈","Estimasi Omset","Rp "+k.estimasiOmset)}
+        ${cardKeuangan("🗒","Cost / Ekor",k.costEkor || "-")}
+        ${cardKeuangan("⚖️","Cost / Kg",k.costKg || "-")}
+        ${cardKeuangan("📊","Margin Produksi",k.marginProduksi || "-")}
+        ${cardKeuangan("🎁","Bonus Kematian","Rp "+(k.bonusKematian || "0"))}
+        ${cardKeuangan("🎁","Bonus Pasar","Rp "+(k.bonusPasar || "0"))}
+
+    </div>
+
+    <div class="card"
+    style="
+    margin-top:20px;
+    border-left:6px solid ${labaNegatif ? "#e53935":"#2e7d32"};
+    ">
+
+        <h2>💹 Estimasi Laba Produksi</h2>
+
+        <h1 style="
+        margin-top:10px;
+        color:${labaNegatif ? "#e53935":"#2e7d32"};
+        ">
+
+        Rp ${k.estimasiLaba}
+
+        </h1>
+
+    </div>
+
+    <div class="card"
+    style="
+    margin-top:15px;
+    border-left:6px solid #0B8F43;
+    ">
+
+        <h2>👑 Profit / Ekor Owner</h2>
+
+        <h1 style="
+        margin-top:10px;
+        color:#0B8F43;
+        ">
+
+        Rp ${k.profitOwner || "-"}
+
+        </h1>
+
+    </div>
+
+    <center style="margin:20px;color:#777;">
+
+        Update :
+        ${new Date().toLocaleString("id-ID")}
+
+    </center>
+
+    `;
+
+    document.getElementById("keuanganPage").innerHTML = html;
+
+}
+
+// ==========================================
+
+function cardKeuangan(icon,judul,nilai){
+
+    return `
 
     <div class="card">
 
-        <h2>💰 Ringkasan Keuangan</h2>
+        <div style="font-size:28px;">
+            ${icon}
+        </div>
 
-        <table>
+        <div style="
+        margin-top:8px;
+        color:#777;
+        font-size:13px;
+        ">
 
-            <tr>
-                <td>💵 Pendapatan</td>
-                <td><b>Rp ${keuangan.pendapatan}</b></td>
-            </tr>
+            ${judul}
 
-            <tr>
-                <td>🛒 Biaya Pakan</td>
-                <td><b>Rp ${keuangan.pakan}</b></td>
-            </tr>
+        </div>
 
-            <tr>
-                <td>🐣 Biaya DOC</td>
-                <td><b>Rp ${keuangan.doc}</b></td>
-            </tr>
+        <div style="
+        margin-top:8px;
+        font-size:20px;
+        font-weight:bold;
+        color:#0B8F43;
+        ">
 
-            <tr>
-                <td>💊 Obat & Vaksin</td>
-                <td><b>Rp ${keuangan.obat}</b></td>
-            </tr>
+            ${nilai}
 
-            <tr>
-                <td>⚡ Operasional</td>
-                <td><b>Rp ${keuangan.operasional}</b></td>
-            </tr>
-
-            <tr>
-                <td><b>📈 Laba Bersih</b></td>
-                <td><b style="color:#0B8F43;">
-                    Rp ${keuangan.laba}
-                </b></td>
-            </tr>
-
-        </table>
+        </div>
 
     </div>
 
     `;
+
 }
