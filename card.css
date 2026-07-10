@@ -1,0 +1,49 @@
+/* ==========================================
+   FMC CARD V10
+========================================== */
+
+.card{
+
+    background:var(--card);
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+    padding:20px;
+
+    margin:16px;
+
+    transition:all var(--speed) ease;
+
+}
+
+.card:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.card h2{
+
+    margin:0 0 12px;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.card p{
+
+    margin:0;
+
+    color:var(--text-soft);
+
+    font-size:14px;
+
+    line-height:1.6;
+
+}

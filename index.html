@@ -5,37 +5,164 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
+<meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>FMC BOILER MOBILE V9</title>
+<title>FMC BOILER MOBILE V10</title>
 
-<meta
-name="theme-color"
+<meta name="theme-color"
 content="#0B8F43">
 
-<meta
-name="apple-mobile-web-app-capable"
+<meta name="apple-mobile-web-app-capable"
 content="yes">
 
-<meta
-name="apple-mobile-web-app-status-bar-style"
+<meta name="apple-mobile-web-app-status-bar-style"
 content="default">
 
-<meta
-name="apple-mobile-web-app-title"
+<meta name="apple-mobile-web-app-title"
 content="FMC">
 
 <link rel="manifest" href="manifest.json">
 
 <link rel="icon" href="icons/icon-192.png">
 
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon"
+href="icons/icon-192.png">
+
+<!-- Google Font -->
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<!-- CSS -->
+
+<link rel="stylesheet" href="css/theme.css">
+
+<link rel="stylesheet" href="css/header.css">
+
+<link rel="stylesheet" href="css/card.css">
+
+<link rel="stylesheet" href="css/navigation.css">
+
+<link rel="stylesheet" href="css/weather.css">
 
 <link rel="stylesheet" href="css/index.css">
 
 </head>
+
+<body>
+
+<!-- =====================================
+SPLASH SCREEN
+===================================== -->
+
+<div id="splash">
+
+<img
+src="icons/logo.png"
+class="splashLogo"
+alt="FMC Logo">
+
+<h1>
+
+FMC BOILER MOBILE
+
+</h1>
+
+<p>
+
+Farm Management Control System
+
+</p>
+
+<div class="loadingBar">
+
+<div class="loadingFill"></div>
+
+</div>
+
+<div class="loadingText">
+
+Preparing Application...
+
+</div>
+
+</div>
+
+<!-- =====================================
+HEADER V10
+===================================== -->
+
+<header class="header">
+
+<div class="headerTop">
+
+<!-- Brand -->
+
+<div class="headerBrand">
+
+<img
+src="icons/logo.png"
+class="headerLogo"
+alt="Logo">
+
+<div>
+
+<h2 id="farmNama">
+
+FMC BOILER MOBILE
+
+</h2>
+
+<div class="headerSub">
+
+Farm Management Control
+
+</div>
+
+<div id="updateTime">
+
+Sinkronisasi...
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Action -->
+
+<div class="headerAction">
+
+<div
+id="statusServer"
+class="statusOnline">
+
+Online
+
+</div>
+
+<button
+id="installBtn"
+onclick="installApp()"
+style="display:none;">
+
+Install
+
+</button>
+
+</div>
+
+</div>
+
+</header>
 
 <body>
 
@@ -120,7 +247,63 @@ DASHBOARD
 ====================================== -->
 
 <section id="dashboardPage">
+<div class="weatherCard">
 
+    <div class="weatherTop">
+
+        <div>
+
+            <span class="weatherLabel">
+
+                Cuaca Hari Ini
+
+            </span>
+
+            <h2 id="weatherTemp">
+
+                --°C
+
+            </h2>
+
+            <p id="weatherDesc">
+
+                Mengambil lokasi...
+
+            </p>
+
+        </div>
+
+        <div id="weatherIcon">
+
+            ☀️
+
+        </div>
+
+    </div>
+
+    <div class="weatherInfo">
+
+        <span id="weatherHumidity">
+
+            💧 --%
+
+        </span>
+
+        <span id="weatherWind">
+
+            🌬️ -- km/j
+
+        </span>
+
+    </div>
+
+    <div id="weatherLocation">
+
+        📍 Menunggu GPS...
+
+    </div>
+
+</div>
 <div class="card">
 
 <h2>Memuat Dashboard...</h2>
@@ -254,6 +437,8 @@ JAVASCRIPT
 
 <script src="js/dashboard.js"></script>
 
+<script src="js/weather.js"></script>
+
 <script src="js/flok.js"></script>
 
 <script src="js/harian.js"></script>
@@ -263,7 +448,6 @@ JAVASCRIPT
 <script src="js/ai.js"></script>
 
 <script src="js/app.js"></script>
-
 <script>
 
 if("serviceWorker" in navigator){

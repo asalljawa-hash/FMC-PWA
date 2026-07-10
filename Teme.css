@@ -1,0 +1,43 @@
+/* ==========================================
+   FMC BOILER MOBILE V10
+   Theme System
+========================================== */
+
+:root{
+
+    /* ===== Brand Color ===== */
+
+    --primary:#0B8F43;
+    --primary-light:#18B85B;
+    --primary-dark:#087438;
+
+    /* ===== Background ===== */
+
+    --bg:#F5F7FA;
+    --card:#FFFFFF;
+
+    /* ===== Text ===== */
+
+    --text:#1F2937;
+    --text-soft:#6B7280;
+
+    /* ===== Status ===== */
+
+    --success:#22C55E;
+    --warning:#F59E0B;
+    --danger:#EF4444;
+
+    /* ===== Radius ===== */
+
+    --radius:20px;
+
+    /* ===== Shadow ===== */
+
+    --shadow:
+    0 10px 25px rgba(0,0,0,.08);
+
+    /* ===== Transition ===== */
+
+    --speed:.25s;
+
+}

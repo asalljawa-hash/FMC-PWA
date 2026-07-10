@@ -15,12 +15,20 @@
     font-family:Arial,Helvetica,sans-serif;
 }
 
-html,body{
+html,
+body{
+
+    margin:0;
+    padding:0;
 
     width:100%;
     height:100%;
 
-    background:#eef4ef;
+    font-family:'Inter',sans-serif;
+
+    background:var(--bg);
+
+    color:var(--text);
 
     overflow:hidden;
 
@@ -151,9 +159,9 @@ html,body{
 
 }
 
-/* =========================
-   HEADER
-========================= */
+/* ==========================================
+   HEADER V10
+========================================== */
 
 .header{
 
@@ -163,52 +171,95 @@ html,body{
     left:0;
 
     width:100%;
-
-    background:#0B8F43;
-
-    color:white;
-
-    padding:15px;
-
-    box-shadow:0 3px 12px rgba(0,0,0,.18);
-
-    z-index:100;
-
-}
-
-.headerTop{
+    height:72px;
 
     display:flex;
-
-    justify-content:space-between;
 
     align-items:center;
 
-}
+    justify-content:space-between;
 
-.headerTop h2{
+    padding:0 18px;
 
-    font-size:24px;
+    background:linear-gradient(135deg,#0B8F43,#17B45A);
 
-}
+    color:white;
 
-#statusServer{
+    box-shadow:0 6px 18px rgba(0,0,0,.15);
 
-    font-size:14px;
-
-    font-weight:bold;
+    z-index:999;
 
 }
 
-.headerBottom{
-
-    margin-top:10px;
+.header-left{
 
     display:flex;
 
-    justify-content:space-between;
+    align-items:center;
 
-    font-size:14px;
+    gap:14px;
+
+}
+
+.header-logo{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:50%;
+
+    background:white;
+
+    padding:4px;
+
+}
+
+.header-title{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.header-title h1{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin:0;
+
+}
+
+.header-title span{
+
+    font-size:12px;
+
+    opacity:.9;
+
+}
+
+.profile{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#0B8F43;
+
+    font-weight:bold;
 
 }
 
