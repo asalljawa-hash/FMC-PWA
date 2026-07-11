@@ -3,7 +3,7 @@
 // DASHBOARD.JS
 // ==========================================
 
-async function tampilDashboard() {
+async function tampilDashboard() {console.log("STEP DASHBOARD");
 
     const data = await ambilDataServer();
 

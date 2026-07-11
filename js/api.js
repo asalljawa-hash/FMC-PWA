@@ -10,7 +10,7 @@ const API_URL =
 // Cache data
 let serverData = null;
 
-async function ambilDataServer(){
+async function ambilDataServer(){console.log("STEP API");
 
     try{
 

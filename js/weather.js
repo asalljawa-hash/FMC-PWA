@@ -1,5 +1,5 @@
 // ==========================================
-// FMC WEATHER V10
+// FMC WEATHER V11
 // ==========================================
 
 function weatherText(code){
@@ -18,59 +18,121 @@ function weatherText(code){
 
 async function loadWeather(){
 
+    const temp=document.getElementById("weatherTemp");
+    const desc=document.getElementById("weatherDesc");
+    const hum=document.getElementById("weatherHumidity");
+    const wind=document.getElementById("weatherWind");
+    const loc=document.getElementById("weatherLocation");
+
+    temp.textContent="--°C";
+    desc.textContent="Memuat cuaca...";
+    hum.textContent="💧 --%";
+    wind.textContent="🌬️ -- km/j";
+    loc.textContent="📍 Mengambil lokasi...";
+
     if(!navigator.geolocation){
 
-        document.getElementById("weatherDesc").textContent =
-        "GPS tidak didukung";
-
+        desc.textContent="GPS tidak didukung";
+        loc.textContent="📍 Lokasi tidak tersedia";
         return;
 
     }
 
-    navigator.geolocation.getCurrentPosition(async(position)=>{
+    navigator.geolocation.getCurrentPosition(
 
-        const lat=position.coords.latitude;
-        const lon=position.coords.longitude;
+        async(position)=>{
 
-        // Cuaca
-        const weatherURL=
+            try{
+
+                const lat=position.coords.latitude;
+                const lon=position.coords.longitude;
+
+                const weatherURL=
 `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`;
 
-        const weatherRes=await fetch(weatherURL);
-        const weather=await weatherRes.json();
+                const weatherRes=await fetch(weatherURL);
 
-        document.getElementById("weatherTemp").textContent=
-        weather.current.temperature_2m+"°C";
+                if(!weatherRes.ok){
+                    throw new Error("Weather API gagal");
+                }
 
-        document.getElementById("weatherHumidity").textContent=
-        "💧 "+weather.current.relative_humidity_2m+"%";
+                const weather=await weatherRes.json();
 
-        document.getElementById("weatherWind").textContent=
-        "🌬️ "+weather.current.wind_speed_10m+" km/j";
+                temp.textContent=
+                weather.current.temperature_2m+"°C";
 
-        document.getElementById("weatherDesc").textContent=
-        weatherText(weather.current.weather_code);
+                hum.textContent=
+                "💧 "+weather.current.relative_humidity_2m+"%";
 
-        // Nama lokasi
-        try{
+                wind.textContent=
+                "🌬️ "+weather.current.wind_speed_10m+" km/j";
 
-            const geoURL=
+                desc.textContent=
+                weatherText(weather.current.weather_code);
+
+                try{
+
+                    const geoURL=
 `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`;
 
-            const geoRes=await fetch(geoURL);
-            const geo=await geoRes.json();
+                    const geoRes=await fetch(geoURL);
 
-            document.getElementById("weatherLocation").textContent=
-            "📍 "+geo.display_name;
+                    if(geoRes.ok){
 
-        }catch{
+                        const geo=await geoRes.json();
 
-            document.getElementById("weatherLocation").textContent=
-            "📍 Lokasi tidak diketahui";
+                        loc.textContent=
+                        "📍 "+(geo.display_name || "Lokasi tidak diketahui");
+
+                    }else{
+
+                        loc.textContent=
+                        "📍 Lokasi tidak diketahui";
+
+                    }
+
+                }catch{
+
+                    loc.textContent=
+                    "📍 Lokasi tidak diketahui";
+
+                }
+
+            }catch(error){
+
+                console.error(error);
+
+                temp.textContent="--°C";
+                desc.textContent="Gagal mengambil data cuaca";
+                hum.textContent="💧 --%";
+                wind.textContent="🌬️ -- km/j";
+                loc.textContent="📍 Periksa koneksi internet";
+
+            }
+
+        },
+
+        (error)=>{
+
+            console.error(error);
+
+            temp.textContent="--°C";
+            desc.textContent="Izin lokasi diperlukan";
+            hum.textContent="💧 --%";
+            wind.textContent="🌬️ -- km/j";
+            loc.textContent="📍 Aktifkan GPS & izin lokasi";
+
+        },
+
+        {
+
+            enableHighAccuracy:true,
+            timeout:10000,
+            maximumAge:300000
 
         }
 
-    });
+    );
 
 }
 

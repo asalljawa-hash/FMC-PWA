@@ -3,7 +3,7 @@
 // service-worker.js
 // ==========================================
 
-const CACHE_NAME = "fmc-boiler-mobile-v11";
+const CACHE_NAME = "fmc-boiler-mobile-v12";
 
 
 const FILES_TO_CACHE = [
@@ -12,6 +12,11 @@ const FILES_TO_CACHE = [
   "./index.html",
   "./manifest.json",
 
+  "./css/theme.css",
+  "./css/header.css",
+  "./css/card.css",
+  "./css/navigation.css",
+  "./css/weather.css",
   "./css/index.css",
 
   "./js/api.js",
@@ -20,14 +25,13 @@ const FILES_TO_CACHE = [
   "./js/harian.js",
   "./js/keuangan.js",
   "./js/ai.js",
+  "./js/weather.js",
   "./js/app.js",
 
   "./icons/logo.png",
   "./icons/splash.png",
-
   "./icons/icon-192.png",
-  "./icons/icon-512.png",
-
+  "./icons/icon-512.png"
 
 ];
 

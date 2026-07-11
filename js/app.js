@@ -140,19 +140,39 @@ function updateJam(){
 // SPLASH
 // ==========================================
 
-window.onload=async function(){
+window.onload = async function(){
 
-    updateJam();
+    try{
 
-    setTimeout(async()=>{
-
-        document
-        .getElementById("splash")
-        .classList.add("hide");
+        updateJam();
 
         await showPage("dashboard");
 
-    },2000);
+        setTimeout(()=>{
+
+            const splash=document.getElementById("splash");
+
+            if(splash){
+
+                splash.classList.add("hide");
+
+                setTimeout(()=>{
+
+                    splash.remove();
+
+                },700);
+
+            }
+
+        },800);
+
+    }catch(err){
+
+        console.error(err);
+
+        alert(err.message);
+
+    }
 
 }
 

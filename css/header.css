@@ -42,7 +42,7 @@
 
     justify-content:space-between;
 
-    align-items:center;
+    align-items:flex-start;
 
 }
 
@@ -79,5 +79,39 @@
     font-size:13px;
 
     font-weight:600;
+
+}
+
+.headerLogo{
+
+    width:48px;
+
+    height:48px;
+
+    object-fit:contain;
+
+    flex-shrink:0;
+
+}
+
+.headerBrand{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+    flex:1;
+
+}
+
+.headerAction{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
 
 }
