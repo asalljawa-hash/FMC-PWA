@@ -1,5 +1,5 @@
 // ==========================================
-// FMC BOILER MOBILE V9
+// FMC BOILER MOBILE V11
 // KEUANGAN.JS
 // ==========================================
 
@@ -9,11 +9,21 @@ async function tampilKeuangan(){
 
     if(!data){
 
-        document.getElementById("keuanganPage").innerHTML = `
+        document.getElementById("keuanganPage").innerHTML=`
 
         <div class="card">
 
-            <h2>❌ Server Offline</h2>
+            <h2>
+
+                <span class="material-symbols-rounded">
+
+                cloud_off
+
+                </span>
+
+                Server Offline
+
+            </h2>
 
             <p>Data keuangan tidak tersedia.</p>
 
@@ -25,87 +35,158 @@ async function tampilKeuangan(){
 
     }
 
-    const k = data.keuangan;
+    const k=data.keuangan;
 
-    const labaNegatif = String(k.estimasiLaba).includes("-");
+    const labaNegatif=String(k.estimasiLaba).includes("-");
 
-    let html = `
+    let html=`
 
-    <div class="card farmCard">
+<div class="dashboardHero">
 
-        <h2>💰 Ringkasan Produksi & Keuangan</h2>
+<div>
 
-        <small>Realtime dari Dashboard Google Sheet</small>
+<div class="heroSmall">
 
-    </div>
+FMC BOILER MOBILE V11
 
-    <div class="gridCard">
+</div>
 
-        ${cardKeuangan("🐔","Total Ekor Panen",k.totalEkor)}
-        ${cardKeuangan("⚖️","Total Tonase",k.totalTonase)}
-        ${cardKeuangan("✅","Flok Siap Panen",k.flokPanen)}
-        ${cardKeuangan("🏆","BB Tertinggi",k.bbTertinggi)}
-        ${cardKeuangan("📆","Umur Tertua",k.umurTertua)}
-        ${cardKeuangan("⭐","Flok Terbaik",k.flokTerbaik)}
-        ${cardKeuangan("🌽","Konsumsi Pakan",k.totalPakan+" Kg")}
-        ${cardKeuangan("💰","Biaya Operasional","Rp "+k.biayaOperasional)}
-        ${cardKeuangan("📈","Estimasi Omset","Rp "+k.estimasiOmset)}
-        ${cardKeuangan("🗒","Cost / Ekor",k.costEkor || "-")}
-        ${cardKeuangan("⚖️","Cost / Kg",k.costKg || "-")}
-        ${cardKeuangan("📊","Margin Produksi",k.marginProduksi || "-")}
-        ${cardKeuangan("🎁","Bonus Kematian","Rp "+(k.bonusKematian || "0"))}
-        ${cardKeuangan("🎁","Bonus Pasar","Rp "+(k.bonusPasar || "0"))}
+<h1>
 
-    </div>
+Keuangan
 
-    <div class="card"
-    style="
-    margin-top:20px;
-    border-left:6px solid ${labaNegatif ? "#e53935":"#2e7d32"};
-    ">
+</h1>
 
-        <h2>💹 Estimasi Laba Produksi</h2>
+<div class="heroDate">
 
-        <h1 style="
-        margin-top:10px;
-        color:${labaNegatif ? "#e53935":"#2e7d32"};
-        ">
+<span class="material-symbols-rounded">
 
-        Rp ${k.estimasiLaba}
+payments
 
-        </h1>
+</span>
 
-    </div>
+Ringkasan Produksi & Keuangan
 
-    <div class="card"
-    style="
-    margin-top:15px;
-    border-left:6px solid #0B8F43;
-    ">
+</div>
 
-        <h2>👑 Profit / Ekor Owner</h2>
+</div>
 
-        <h1 style="
-        margin-top:10px;
-        color:#0B8F43;
-        ">
+<div class="heroLogo">
 
-        Rp ${k.profitOwner || "-"}
+<span class="material-symbols-rounded">
 
-        </h1>
+account_balance_wallet
 
-    </div>
+</span>
 
-    <center style="margin:20px;color:#777;">
+</div>
 
-        Update :
-        ${new Date().toLocaleString("id-ID")}
+</div>
 
-    </center>
+<div class="gridCard">
 
-    `;
+${cardKeuangan("📦","Total Ekor Panen",k.totalEkor)}
 
-    document.getElementById("keuanganPage").innerHTML = html;
+${cardKeuangan("scale","Total Tonase",k.totalTonase)}
+
+${cardKeuangan("task_alt","Flok Siap Panen",k.flokPanen)}
+
+${cardKeuangan("workspace_premium","BB Tertinggi",k.bbTertinggi)}
+
+${cardKeuangan("calendar_month","Umur Tertua",k.umurTertua)}
+
+${cardKeuangan("military_tech","Flok Terbaik",k.flokTerbaik)}
+
+${cardKeuangan("🍗","Konsumsi Pakan",k.totalPakan+" Kg")}
+
+${cardKeuangan("payments","Biaya Operasional","Rp "+k.biayaOperasional)}
+
+${cardKeuangan("trending_up","Estimasi Omset","Rp "+k.estimasiOmset)}
+
+${cardKeuangan("receipt_long","Cost / Ekor",k.costEkor||"-")}
+
+${cardKeuangan("balance","Cost / Kg",k.costKg||"-")}
+
+${cardKeuangan("analytics","Margin Produksi",k.marginProduksi||"-")}
+
+${cardKeuangan("redeem","Bonus Kematian","Rp "+(k.bonusKematian||"0"))}
+
+${cardKeuangan("card_giftcard","Bonus Pasar","Rp "+(k.bonusPasar||"0"))}
+
+</div>
+
+<div class="card">
+
+<h2>
+
+<span class="material-symbols-rounded">
+
+monitoring
+
+</span>
+
+Estimasi Laba Produksi
+
+</h2>
+
+<div
+style="
+font-size:38px;
+font-weight:800;
+margin-top:18px;
+color:${labaNegatif?"#E53935":"#16A34A"};
+">
+
+Rp ${k.estimasiLaba}
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+<span class="material-symbols-rounded">
+
+paid
+
+</span>
+
+Profit Owner / Ekor
+
+</h2>
+
+<div
+style="
+font-size:34px;
+font-weight:800;
+margin-top:18px;
+color:var(--primary);
+">
+
+Rp ${k.profitOwner||"-"}
+
+</div>
+
+</div>
+
+<center
+style="
+margin:22px;
+font-size:12px;
+color:#777;
+">
+
+Update :
+
+${new Date().toLocaleString("id-ID")}
+
+</center>
+
+`;
+
+    document.getElementById("keuanganPage").innerHTML=html;
 
 }
 
@@ -113,37 +194,38 @@ async function tampilKeuangan(){
 
 function cardKeuangan(icon,judul,nilai){
 
-    return `
+    const iconHtml=
 
-    <div class="card">
+    icon.length<=2
 
-        <div style="font-size:28px;">
-            ${icon}
-        </div>
+    ? icon
 
-        <div style="
-        margin-top:8px;
-        color:#777;
-        font-size:13px;
-        ">
+    : `<span class="material-symbols-rounded">${icon}</span>`;
 
-            ${judul}
+    return`
 
-        </div>
+<div class="card">
 
-        <div style="
-        margin-top:8px;
-        font-size:20px;
-        font-weight:bold;
-        color:#0B8F43;
-        ">
+<div class="kpiIcon">
 
-            ${nilai}
+${iconHtml}
 
-        </div>
+</div>
 
-    </div>
+<h4>
 
-    `;
+${judul}
+
+</h4>
+
+<b>
+
+${nilai}
+
+</b>
+
+</div>
+
+`;
 
 }

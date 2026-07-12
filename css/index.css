@@ -1,5 +1,5 @@
 /* ==========================================================
-   FMC BROILER MOBILE V8
+   FMC BROILER MOBILE V11
    INDEX.CSS
    BAGIAN 1
 ========================================================== */
@@ -12,25 +12,33 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
 }
 
-html,
-body{
-
-    margin:0;
-    padding:0;
+html{
 
     width:100%;
     height:100%;
 
-    font-family:'Inter',sans-serif;
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
 
     background:var(--bg);
 
     color:var(--text);
 
-    overflow:hidden;
+    font-family:'Inter',Arial,Helvetica,sans-serif;
+
+    -webkit-font-smoothing:antialiased;
+
+    -moz-osx-font-smoothing:grayscale;
 
 }
 
@@ -42,18 +50,7 @@ body{
 
     position:fixed;
 
-    top:0;
-    left:0;
-
-    width:100%;
-    height:100%;
-
-    background:linear-gradient(
-        180deg,
-        #063b1d 0%,
-        #0B8F43 45%,
-        #16A34A 100%
-    );
+    inset:0;
 
     display:flex;
 
@@ -62,6 +59,14 @@ body{
     justify-content:center;
 
     align-items:center;
+
+    background:
+    linear-gradient(
+        180deg,
+        #063B1D 0%,
+        #0B8F43 45%,
+        #18B85B 100%
+    );
 
     z-index:99999;
 
@@ -77,18 +82,17 @@ body{
 
     pointer-events:none;
 
-    transition:opacity .7s ease;
-
 }
 
 .splash-logo{
 
-    width:96px;
-    height:96px;
+    width:110px;
+
+    height:110px;
 
     object-fit:contain;
 
-    animation:logoFloat 3.2s ease-in-out infinite;
+    animation:logoFloat 3s ease-in-out infinite;
 
     filter:drop-shadow(0 8px 18px rgba(0,0,0,.25));
 
@@ -98,11 +102,13 @@ body{
 
     margin-top:18px;
 
-    font-size:28px;
+    font-size:30px;
 
-    font-weight:700;
+    font-weight:800;
 
-    letter-spacing:1px;
+    color:#fff;
+
+    letter-spacing:.5px;
 
 }
 
@@ -110,25 +116,25 @@ body{
 
     margin-top:8px;
 
+    color:rgba(255,255,255,.92);
+
     font-size:14px;
 
 }
 
-.loadingBar{
+.loadingBox{
 
-    width:0;
+    margin-top:22px;
 
-    height:100%;
+    width:210px;
 
-    border-radius:30px;
+    height:8px;
 
-    background:linear-gradient(
-        90deg,
-        #C7F36A,
-        #6EEB83
-    );
+    background:rgba(255,255,255,.18);
 
-    animation:loadingMove 2s linear infinite;
+    border-radius:999px;
+
+    overflow:hidden;
 
 }
 
@@ -138,10 +144,11 @@ body{
 
     height:100%;
 
-    background:linear-gradient(
+    background:
+    linear-gradient(
         90deg,
-        #C5FF5C,
-        #41FF7A
+        #C7F36A,
+        #57FF8B
     );
 
     animation:loadingMove 2s linear infinite;
@@ -152,29 +159,9 @@ body{
 
     margin-top:14px;
 
-    color:white;
+    color:#fff;
 
     font-size:13px;
-
-    opacity:.9;
-
-}
-
-.loadingBox{
-
-    margin-top:22px;
-
-    width:190px;
-
-    height:8px;
-
-    background:rgba(255,255,255,.20);
-
-    border-radius:30px;
-
-    overflow:hidden;
-
-    box-shadow:inset 0 1px 3px rgba(0,0,0,.2);
 
 }
 
@@ -186,18 +173,29 @@ body{
 
     position:absolute;
 
-    top:82px;
-
-    bottom:75px;
+    top:78px;
 
     left:0;
+
     right:0;
+
+    bottom:74px;
 
     overflow-y:auto;
 
-    padding:15px;
+    overflow-x:hidden;
 
-    background:#eef4ef;
+    padding:16px;
+
+    background:var(--bg);
+
+    -webkit-overflow-scrolling:touch;
+
+}
+
+.page{
+
+    animation:fadePage .25s ease;
 
 }
 
@@ -207,35 +205,23 @@ body{
 
 @keyframes logoFloat{
 
-    0%{
+    0%{transform:translateY(0);}
 
-        transform:translateY(0);
+    50%{transform:translateY(-10px);}
 
-    }
-
-    50%{
-
-        transform:translateY(-10px);
-
-    }
-
-    100%{
-
-        transform:translateY(0);
-
-    }
+    100%{transform:translateY(0);}
 
 }
 
 @keyframes loadingMove{
 
-    0%{
+    from{
 
         width:0;
 
     }
 
-    100%{
+    to{
 
         width:100%;
 
@@ -243,167 +229,81 @@ body{
 
 }
 
+@keyframes fadePage{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(8px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
 /* ==========================================================
-   FMC BROILER MOBILE V8
+   FMC BROILER MOBILE V11
    INDEX.CSS
    BAGIAN 2
 ========================================================== */
 
 /* =========================
-   CARD
+   FORM
 ========================= */
 
-.card{
+input,
+select,
+textarea{
 
-    background:#ffffff;
+    width:100%;
 
-    border-radius:15px;
+    padding:13px 14px;
 
-    padding:15px;
+    border:1px solid #D1D5DB;
 
-    margin-bottom:15px;
+    border-radius:14px;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    background:#FFFFFF;
 
-    transition:.25s;
-
-}
-
-.card:hover{
-
-    transform:translateY(-2px);
-
-}
-
-.card h2{
-
-    color:#0B8F43;
-
-    margin-bottom:10px;
-
-    font-size:22px;
-
-}
-
-.cardTitle{
-
-    color:#666;
+    color:var(--text);
 
     font-size:14px;
 
-}
+    outline:none;
 
-.cardValue{
-
-    margin-top:8px;
-
-    font-size:30px;
-
-    font-weight:bold;
-
-    color:#0B8F43;
+    transition:.25s;
 
 }
 
-/* =========================
-   GRID KPI
-========================= */
+input:focus,
+select:focus,
+textarea:focus{
 
-.gridCard{
+    border-color:var(--primary);
 
-    display:grid;
-
-    grid-template-columns:repeat(2,1fr);
-
-    gap:12px;
+    box-shadow:0 0 0 3px rgba(11,143,67,.12);
 
 }
-
-/* =========================
-   BUTTON
-========================= */
 
 button{
 
-    cursor:pointer;
-
     transition:.25s;
+
+    cursor:pointer;
 
 }
 
 button:active{
 
-    transform:scale(.95);
-
-}
-
-/* =========================
-   BOTTOM NAVIGATION
-========================= */
-
-.bottomNav{
-
-    position:fixed;
-
-    left:0;
-
-    right:0;
-
-    bottom:0;
-
-    height:72px;
-
-    background:#ffffff;
-
-    display:flex;
-
-    justify-content:space-around;
-
-    align-items:center;
-
-    box-shadow:0 -3px 15px rgba(0,0,0,.15);
-
-    z-index:999;
-
-}
-
-.bottomNav button{
-
-    flex:1;
-
-    height:100%;
-
-    border:none;
-
-    background:none;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:24px;
-
-    color:#777;
-
-}
-
-.bottomNav button span{
-
-    font-size:12px;
-
-    margin-top:4px;
-
-}
-
-.bottomNav button.active{
-
-    color:#0B8F43;
-
-    font-weight:bold;
+    transform:scale(.97);
 
 }
 
@@ -417,33 +317,38 @@ table{
 
     border-collapse:collapse;
 
-}
+    background:#fff;
 
-table td{
+    border-radius:18px;
 
-    padding:10px;
-
-    border-bottom:1px solid #eeeeee;
+    overflow:hidden;
 
 }
 
-/* =========================
-   FORM
-========================= */
-
-input,select{
-
-    width:100%;
+table td,
+table th{
 
     padding:12px;
 
-    border-radius:12px;
+    border-bottom:1px solid #ECECEC;
 
-    border:1px solid #cccccc;
+    font-size:14px;
 
-    margin-top:6px;
+}
 
-    margin-bottom:12px;
+table th{
+
+    background:#F8FAF9;
+
+    color:var(--text);
+
+    font-weight:700;
+
+}
+
+table tr:last-child td{
+
+    border-bottom:none;
 
 }
 
@@ -453,15 +358,61 @@ input,select{
 
 ::-webkit-scrollbar{
 
-    width:5px;
+    width:6px;
 
 }
 
 ::-webkit-scrollbar-thumb{
 
-    background:#0B8F43;
+    background:var(--primary);
 
     border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+/* =========================
+   UTILITY
+========================= */
+
+.hidden{
+
+    display:none !important;
+
+}
+
+.text-center{
+
+    text-align:center;
+
+}
+
+.mt-10{
+
+    margin-top:10px;
+
+}
+
+.mt-20{
+
+    margin-top:20px;
+
+}
+
+.mb-10{
+
+    margin-bottom:10px;
+
+}
+
+.mb-20{
+
+    margin-bottom:20px;
 
 }
 
@@ -469,48 +420,76 @@ input,select{
    RESPONSIVE
 ========================= */
 
-@media(max-width:420px){
+@media(max-width:480px){
 
-.gridCard{
+    #app{
 
-grid-template-columns:1fr;
+        padding:14px;
+
+    }
+
+    .gridCard{
+
+        grid-template-columns:1fr;
+
+        gap:14px;
+
+    }
+
+    .dashboardHero{
+
+        padding:20px;
+
+        border-radius:20px;
+
+    }
+
+    .dashboardHero h1{
+
+        font-size:26px;
+
+    }
+
+    .heroLogo{
+
+        width:62px;
+
+        height:62px;
+
+    }
+
+    .heroLogo .material-symbols-rounded{
+
+        font-size:36px;
+
+    }
+
+    .farmHeader{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:12px;
+
+    }
 
 }
 
-.cardValue{
+/* =========================
+   SAFE AREA
+========================= */
 
-font-size:26px;
+@supports(padding:max(0px)){
 
-}
+    #app{
 
-.headerTop h2{
+        padding-left:max(16px,env(safe-area-inset-left));
 
-font-size:20px;
+        padding-right:max(16px,env(safe-area-inset-right));
 
-}
+        padding-bottom:max(16px,env(safe-area-inset-bottom));
 
-.splashLogo{
-
-width:150px;
-
-height:150px;
-
-}
-
-}
-
-/* =====================================
-   SPLASH HIDE
-===================================== */
-
-#splash.hide{
-
-    opacity:0;
-
-    visibility:hidden;
-
-    pointer-events:none;
-
-    transition:opacity .7s ease;
+    }
 
 }

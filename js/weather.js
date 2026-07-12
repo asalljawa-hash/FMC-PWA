@@ -24,6 +24,11 @@ async function loadWeather(){
     const wind=document.getElementById("weatherWind");
     const loc=document.getElementById("weatherLocation");
 
+    // Jika widget cuaca belum ada, hentikan
+    if(!temp || !desc || !hum || !wind || !loc){
+        return;
+    }
+
     temp.textContent="--°C";
     desc.textContent="Memuat cuaca...";
     hum.textContent="💧 --%";
@@ -50,7 +55,7 @@ async function loadWeather(){
                 const weatherURL=
 `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`;
 
-                const weatherRes=await fetch(weatherURL);
+                const weatherRes=await fetch(weatherURL,{cache:"no-store"});
 
                 if(!weatherRes.ok){
                     throw new Error("Weather API gagal");
@@ -59,30 +64,35 @@ async function loadWeather(){
                 const weather=await weatherRes.json();
 
                 temp.textContent=
-                weather.current.temperature_2m+"°C";
+                    Math.round(weather.current.temperature_2m)+"°C";
 
                 hum.textContent=
-                "💧 "+weather.current.relative_humidity_2m+"%";
+                    "💧 "+weather.current.relative_humidity_2m+"%";
 
                 wind.textContent=
-                "🌬️ "+weather.current.wind_speed_10m+" km/j";
+                    "🌬️ "+Math.round(weather.current.wind_speed_10m)+" km/j";
 
                 desc.textContent=
-                weatherText(weather.current.weather_code);
+                    weatherText(weather.current.weather_code);
 
                 try{
 
                     const geoURL=
 `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`;
 
-                    const geoRes=await fetch(geoURL);
+                    const geoRes=await fetch(geoURL,{cache:"no-store"});
 
                     if(geoRes.ok){
 
                         const geo=await geoRes.json();
 
                         loc.textContent=
-                        "📍 "+(geo.display_name || "Lokasi tidak diketahui");
+                        "📍 "+(geo.address?.village ||
+                               geo.address?.town ||
+                               geo.address?.city ||
+                               geo.address?.county ||
+                               geo.display_name ||
+                               "Lokasi tidak diketahui");
 
                     }else{
 
@@ -100,10 +110,10 @@ async function loadWeather(){
 
             }catch(error){
 
-                console.error(error);
+                console.error("Weather Error :",error);
 
                 temp.textContent="--°C";
-                desc.textContent="Gagal mengambil data cuaca";
+                desc.textContent="Cuaca tidak tersedia";
                 hum.textContent="💧 --%";
                 wind.textContent="🌬️ -- km/j";
                 loc.textContent="📍 Periksa koneksi internet";
@@ -114,21 +124,21 @@ async function loadWeather(){
 
         (error)=>{
 
-            console.error(error);
+            console.error("GPS Error :",error);
 
             temp.textContent="--°C";
             desc.textContent="Izin lokasi diperlukan";
             hum.textContent="💧 --%";
             wind.textContent="🌬️ -- km/j";
-            loc.textContent="📍 Aktifkan GPS & izin lokasi";
+            loc.textContent="📍 Aktifkan GPS";
 
         },
 
         {
 
             enableHighAccuracy:true,
-            timeout:10000,
-            maximumAge:300000
+            timeout:15000,
+            maximumAge:600000
 
         }
 
@@ -136,4 +146,12 @@ async function loadWeather(){
 
 }
 
-window.addEventListener("load",loadWeather);
+// Muat saat HTML siap
+document.addEventListener("DOMContentLoaded",()=>{
+
+    loadWeather();
+
+    // Refresh setiap 5 menit
+    setInterval(loadWeather,300000);
+
+});

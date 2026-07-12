@@ -1,20 +1,51 @@
 /* ==========================================
-   WEATHER CARD
+   FMC WEATHER V11
 ========================================== */
 
 .weatherCard{
 
-    background:linear-gradient(135deg,#0B8F43,#19B35A);
+    background:
+    linear-gradient(
+        135deg,
+        #087438 0%,
+        #0B8F43 45%,
+        #18B85B 100%
+    );
 
-    border-radius:22px;
+    border-radius:24px;
 
-    padding:20px;
+    padding:22px;
 
     color:#fff;
 
     margin-bottom:18px;
 
-    box-shadow:0 10px 25px rgba(11,143,67,.25);
+    box-shadow:
+    0 16px 35px rgba(11,143,67,.28);
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+.weatherCard::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-35px;
+
+    right:-35px;
+
+    width:130px;
+
+    height:130px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
 
 }
 
@@ -24,25 +55,35 @@
 
     justify-content:space-between;
 
-    align-items:center;
+    align-items:flex-start;
+
+    position:relative;
+
+    z-index:2;
 
 }
 
 .weatherLabel{
 
-    font-size:14px;
+    font-size:13px;
 
-    opacity:.9;
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    opacity:.90;
 
 }
 
 #weatherTemp{
 
-    font-size:42px;
+    margin:8px 0 4px;
 
-    font-weight:700;
+    font-size:46px;
 
-    margin:6px 0;
+    font-weight:800;
+
+    line-height:1;
 
 }
 
@@ -50,38 +91,113 @@
 
     font-size:16px;
 
+    font-weight:500;
+
     opacity:.95;
 
 }
 
 #weatherIcon{
 
-    font-size:60px;
+    font-size:66px;
+
+    line-height:1;
+
+    filter:drop-shadow(0 4px 10px rgba(0,0,0,.18));
 
 }
 
 .weatherInfo{
 
-    display:flex;
+    display:grid;
 
-    gap:20px;
+    grid-template-columns:repeat(2,1fr);
 
-    margin-top:18px;
+    gap:12px;
 
-    font-size:15px;
+    margin-top:22px;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.weatherInfo div{
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(8px);
+
+    -webkit-backdrop-filter:blur(8px);
+
+    border-radius:14px;
+
+    padding:12px;
+
+    text-align:center;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+#weatherHumidity,
+#weatherWind{
+
+    display:block;
 
 }
 
 #weatherLocation{
 
-    margin-top:15px;
+    margin-top:18px;
 
-    padding-top:12px;
+    padding-top:14px;
 
-    border-top:1px solid rgba(255,255,255,.25);
+    border-top:1px solid rgba(255,255,255,.22);
 
-    font-size:14px;
+    font-size:13px;
 
-    opacity:.95;
+    line-height:1.5;
+
+    opacity:.96;
+
+    position:relative;
+
+    z-index:2;
+
+    word-break:break-word;
+
+}
+
+@media(max-width:480px){
+
+    .weatherCard{
+
+        padding:18px;
+
+        border-radius:20px;
+
+    }
+
+    #weatherTemp{
+
+        font-size:40px;
+
+    }
+
+    #weatherIcon{
+
+        font-size:56px;
+
+    }
+
+    .weatherInfo{
+
+        gap:10px;
+
+    }
 
 }

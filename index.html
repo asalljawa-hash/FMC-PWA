@@ -6,9 +6,9 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>FMC BOILER MOBILE V10</title>
+<title>FMC BOILER MOBILE V11</title>
 
 <meta name="theme-color"
 content="#0B8F43">
@@ -71,21 +71,19 @@ href="css/index.css">
 <body>
 
 <!-- ======================================
-HEADER V10
+HEADER V11
 ====================================== -->
 
 <header class="header">
 
-<div class="headerTop">
-
 <div class="headerBrand">
 
 <img
-src="icons/logo.png"
+src="icons/icon-192.png"
 class="headerLogo"
-alt="Logo">
+alt="FMC Logo">
 
-<div>
+<div class="headerTop">
 
 <h2 id="farmNama">
 
@@ -112,10 +110,15 @@ Sinkronisasi...
 <div class="headerAction">
 
 <div
-id="statusServer"
-class="statusOnline">
+id="statusServer">
 
-🟢 Online
+<span class="material-symbols-rounded">
+
+cloud_done
+
+</span>
+
+ONLINE
 
 </div>
 
@@ -124,23 +127,28 @@ id="installBtn"
 onclick="installApp()"
 style="display:none;">
 
-Install
+<span class="material-symbols-rounded">
+
+download
+
+</span>
 
 </button>
-
-</div>
 
 </div>
 
 </header>
 
 <!-- ======================================
-SPLASH SCREEN
+SPLASH SCREEN V11
 ====================================== -->
 
 <div id="splash">
 
-<img src="icons/splash.png" class="splash-logo">
+<img
+src="icons/splash.png"
+class="splash-logo"
+alt="FMC Logo">
 
 <h1>
 
@@ -156,13 +164,13 @@ Farm Management Control System
 
 <div class="loadingBox">
 
-<div class="loadingBar"></div>
+<div class="loadingFill"></div>
 
 </div>
 
 <div class="loadingText">
 
-Loading Data...
+Menyiapkan Dashboard...
 
 </div>
 
@@ -186,11 +194,11 @@ DASHBOARD
 
 <div>
 
-<span class="weatherLabel">
+<div class="weatherLabel">
 
-Cuaca Hari Ini
+CUACA HARI INI
 
-</span>
+</div>
 
 <h2 id="weatherTemp">
 
@@ -208,7 +216,11 @@ Mengambil data cuaca...
 
 <div id="weatherIcon">
 
-☀️
+<span class="material-symbols-rounded">
+
+wb_sunny
+
+</span>
 
 </div>
 
@@ -216,23 +228,48 @@ Mengambil data cuaca...
 
 <div class="weatherInfo">
 
-<span id="weatherHumidity">
+<div>
 
-💧 --%
+<span class="material-symbols-rounded">
+
+water_drop
+
+</span>
+
+<div id="weatherHumidity">
+
+--%
+
+</div>
+
+</div>
+
+<div>
+
+<span class="material-symbols-rounded">
+
+air
 
 </span>
 
-<span id="weatherWind">
+<div id="weatherWind">
 
-🌬️ -- km/j
+-- km/j
 
-</span>
+</div>
+
+</div>
 
 </div>
 
 <div id="weatherLocation">
 
-<span class="material-symbols-rounded">location_on</span>
+<span class="material-symbols-rounded">
+
+location_on
+
+</span>
+
 Menunggu lokasi...
 
 </div>
@@ -243,13 +280,19 @@ Menunggu lokasi...
 
 <h2>
 
+<span class="material-symbols-rounded">
+
+dashboard
+
+</span>
+
 Memuat Dashboard...
 
 </h2>
 
 <p>
 
-Menghubungkan ke server...
+Menghubungkan ke Google Sheets...
 
 </p>
 
@@ -269,9 +312,19 @@ style="display:none;">
 
 <h2>
 
+<span class="material-symbols-rounded">
+pets
+</span>
+
 Memuat Data Flok...
 
 </h2>
+
+<p>
+
+Mengambil data produksi...
+
+</p>
 
 </div>
 
@@ -289,9 +342,21 @@ style="display:none;">
 
 <h2>
 
+<span class="material-symbols-rounded">
+
+calendar_month
+
+</span>
+
 Memuat Data Harian...
 
 </h2>
+
+<p>
+
+Menghubungkan laporan harian...
+
+</p>
 
 </div>
 
@@ -309,9 +374,21 @@ style="display:none;">
 
 <h2>
 
+<span class="material-symbols-rounded">
+
+payments
+
+</span>
+
 Memuat Data Keuangan...
 
 </h2>
+
+<p>
+
+Mengambil ringkasan produksi...
+
+</p>
 
 </div>
 
@@ -329,14 +406,19 @@ style="display:none;">
 
 <h2>
 
-<span class="material-symbols-rounded">smart_toy</span>
-FMC AI
+<span class="material-symbols-rounded">
+
+smart_toy
+
+</span>
+
+FMC AI Advisor
 
 </h2>
 
 <p>
 
-Menyiapkan analisis...
+Menyiapkan analisis cerdas...
 
 </p>
 
@@ -357,17 +439,26 @@ id="btnDashboard"
 class="active"
 onclick="showPage('dashboard')">
 
-<span class="material-symbols-rounded">home</span>
-<span>Home</span>
+<span class="material-symbols-rounded">
+
+home
+
+</span>
+
+<span>
+
+Home
+
+</span>
 
 </button>
 
-<button
-id="btnFlok"
-onclick="showPage('flok')">
+<button id="btnFlok" onclick="showPage('flok')">
 
-<span class="material-symbols-rounded">agriculture</span>
-<span>Flok</span>
+    <span class="navEmoji">□ □
+□ □</span>
+
+    <span>Flok</span>
 
 </button>
 
@@ -375,8 +466,17 @@ onclick="showPage('flok')">
 id="btnHarian"
 onclick="showPage('harian')">
 
-<span class="material-symbols-rounded">calendar_month</span>
-<span>Harian</span>
+<span class="material-symbols-rounded">
+
+calendar_month
+
+</span>
+
+<span>
+
+Harian
+
+</span>
 
 </button>
 
@@ -384,8 +484,17 @@ onclick="showPage('harian')">
 id="btnKeuangan"
 onclick="showPage('keuangan')">
 
-<span class="material-symbols-rounded">payments</span>
-<span>Keuangan</span>
+<span class="material-symbols-rounded">
+
+payments
+
+</span>
+
+<span>
+
+Keuangan
+
+</span>
 
 </button>
 
@@ -393,8 +502,17 @@ onclick="showPage('keuangan')">
 id="btnAI"
 onclick="showPage('ai')">
 
-<span class="material-symbols-rounded">smart_toy</span>
-<span>AI</span>
+<span class="material-symbols-rounded">
+
+smart_toy
+
+</span>
+
+<span>
+
+AI
+
+</span>
 
 </button>
 
@@ -406,9 +524,9 @@ JAVASCRIPT
 
 <script src="js/api.js"></script>
 
-<script src="js/dashboard.js"></script>
-
 <script src="js/weather.js"></script>
+
+<script src="js/dashboard.js"></script>
 
 <script src="js/flok.js"></script>
 
@@ -430,12 +548,12 @@ navigator.serviceWorker
 .register("./service-worker.js")
 .then(()=>{
 
-console.log("Service Worker Aktif");
+console.log("✅ Service Worker Aktif");
 
 })
 .catch(err=>{
 
-console.log("Service Worker Error :",err);
+console.error("❌ Service Worker Error :",err);
 
 });
 

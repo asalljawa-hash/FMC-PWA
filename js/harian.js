@@ -1,5 +1,5 @@
 // ==========================================
-// FMC BOILER MOBILE V9
+// FMC BOILER MOBILE V11
 // HARIAN.JS
 // ==========================================
 
@@ -9,11 +9,21 @@ async function tampilHarian(){
 
     if(!data){
 
-        document.getElementById("harianPage").innerHTML = `
+        document.getElementById("harianPage").innerHTML=`
 
         <div class="card">
 
-            <h2>❌ Server Offline</h2>
+            <h2>
+
+                <span class="material-symbols-rounded">
+
+                cloud_off
+
+                </span>
+
+                Server Offline
+
+            </h2>
 
             <p>Tidak dapat mengambil data harian.</p>
 
@@ -25,136 +35,255 @@ async function tampilHarian(){
 
     }
 
-    const harian = data.harian;
+    const harian=data.harian;
 
-    let html = `
+    let html=`
 
-    <div class="card farmCard">
+<div class="dashboardHero">
 
-        <h2>📅 Laporan Kematian Harian</h2>
+<div>
 
-        <hr>
+<div class="heroSmall">
 
-        <p><b>Tanggal :</b> ${harian.tanggal}</p>
+FMC BOILER MOBILE V11
 
-    </div>
+</div>
 
-    <div class="card"
-    style="
-    background:rgba(220,53,69,.12);
-    border-left:6px solid #dc3545;
-    ">
+<h1>
 
-        <h2>💀 Total Mati Hari Ini</h2>
+Laporan Harian
 
-        <div style="
-        font-size:42px;
-        font-weight:bold;
-        color:#dc3545;
-        text-align:center;
-        margin-top:10px;
-        ">
+</h1>
 
-            ${harian.totalMati}
+<div class="heroDate">
 
-        </div>
+<span class="material-symbols-rounded">
 
-        <center>Ekor</center>
+calendar_month
 
-    </div>
+</span>
 
-    `;
+${harian.tanggal}
 
-    const warna = [
+</div>
 
-        "#3498db",
-        "#2ecc71",
-        "#f39c12",
-        "#9b59b6"
+</div>
 
-    ];
+<div class="heroLogo">
 
-    harian.flok.forEach((f,index)=>{
+<span class="material-symbols-rounded">
 
-        html += `
+event_note
 
-        <div class="card"
+</span>
 
-        style="
-        margin-top:15px;
-        background:rgba(255,255,255,.65);
-        backdrop-filter:blur(10px);
-        border-left:6px solid ${warna[index]};
-        ">
+</div>
 
-            <h2>
+</div>
 
-                🐔 Flok ${f.nama}
+<div class="card farmCard">
 
-            </h2>
+<div class="farmHeader">
 
-            <table style="width:100%;margin-top:10px;">
+<div>
 
-                <tr>
+<h2>
 
-                    <td>Umur</td>
+<span class="material-symbols-rounded">
 
-                    <td align="right">
+today
 
-                        <b>${f.umur} Hari</b>
+</span>
 
-                    </td>
+Tanggal Laporan
 
-                </tr>
+</h2>
 
-                <tr>
+<small>
 
-                    <td>Kematian</td>
+${harian.tanggal}
 
-                    <td align="right">
+</small>
 
-                        <b>${f.mati} Ekor</b>
+</div>
 
-                    </td>
+<div class="onlineBadge">
 
-                </tr>
+<span class="material-symbols-rounded">
 
-                <tr>
+task_alt
 
-                    <td>Mortalitas</td>
+</span>
 
-                    <td align="right">
+HARI INI
 
-                        <b>${f.mortalitas}</b>
+</div>
 
-                    </td>
+</div>
 
-                </tr>
+</div>
 
-            </table>
+<div class="card">
 
-        </div>
+<h2>
 
-        `;
+<span class="material-symbols-rounded">
+
+warning
+
+</span>
+
+Total Kematian Hari Ini
+
+</h2>
+
+<div
+style="
+font-size:52px;
+font-weight:800;
+text-align:center;
+color:#E53935;
+margin:16px 0 8px;
+">
+
+${harian.totalMati}
+
+</div>
+
+<p style="text-align:center;">
+
+Ekor
+
+</p>
+
+</div>
+
+`;
+
+    harian.flok.forEach(f=>{
+
+        html+=`
+
+<div class="card">
+
+<div class="farmHeader">
+
+<div>
+
+<h2>
+
+Flok ${f.nama}
+
+</h2>
+
+<small>
+
+Laporan Harian
+
+</small>
+
+</div>
+
+<div class="onlineBadge">
+
+<span class="material-symbols-rounded">
+
+check_circle
+
+</span>
+
+AKTIF
+
+</div>
+
+</div>
+
+<div
+style="
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:16px;
+margin-top:18px;
+">
+
+<div>
+
+<div class="kpiIcon">
+
+<span class="material-symbols-rounded">
+
+schedule
+
+</span>
+
+</div>
+
+<h4>Umur</h4>
+
+<b>${f.umur} Hari</b>
+
+</div>
+
+<div>
+
+<div class="kpiIcon">
+
+<span class="material-symbols-rounded">
+
+warning
+
+</span>
+
+</div>
+
+<h4>Mati</h4>
+
+<b>${f.mati}</b>
+
+</div>
+
+<div>
+
+<div class="kpiIcon">
+
+<span class="material-symbols-rounded">
+
+pie_chart
+
+</span>
+
+</div>
+
+<h4>Mortalitas</h4>
+
+<b>${f.mortalitas}</b>
+
+</div>
+
+</div>
+
+</div>
+
+`;
 
     });
 
-    html += `
+    html+=`
 
-    <div
-    style="
-    text-align:center;
-    margin:30px 0;
-    color:#888;
-    font-size:12px;
-    ">
+<div
+style="
+text-align:center;
+margin:24px 0;
+font-size:12px;
+color:#777;
+">
 
-        Powered by Dasbor FMC Analytics
+Powered by Dasbor FMC Analytics
 
-    </div>
+</div>
 
-    `;
+`;
 
-    document.getElementById("harianPage").innerHTML = html;
+    document.getElementById("harianPage").innerHTML=html;
 
 }
