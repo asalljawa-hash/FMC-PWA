@@ -38,7 +38,7 @@ if (data.dashboard && data.dashboard.farm) {
     const el = document.getElementById("farmNama");
 
     if (el) {
-        el.innerHTML = "🏠 " + farm.namaFarm;
+        el.innerHTML = farm.namaFarm;
     }
 }
 
