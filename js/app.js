@@ -205,6 +205,28 @@ window.addEventListener("offline",()=>{
 statusServer(navigator.onLine);
 
 // ==========================================
+// UPDATE TOAST
+// ==========================================
+
+function showUpdateToast(text){
+
+    const toast = document.getElementById("updateToast");
+
+    if(!toast) return;
+
+    toast.innerHTML = "📢 " + text;
+
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },4000);
+
+}
+
+// ==========================================
 // INSTALL PWA
 // ==========================================
 

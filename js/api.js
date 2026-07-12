@@ -9,7 +9,8 @@ const API_URL =
 
 // Cache data
 let serverData = null;
-
+// Versi data terakhir
+let lastDataVersion = localStorage.getItem("FMC_DATA_VERSION") || "";
 async function ambilDataServer(){console.log("STEP API");
 
     try{
@@ -29,7 +30,40 @@ const data = await response.json();
 
 serverData = data;
 
+// ===============================
+// CEK VERSI DATA
+// ===============================
+
+if(data.system && data.system.dataVersion){
+
+    if(lastDataVersion === ""){
+
+        lastDataVersion = data.system.dataVersion;
+
+        localStorage.setItem(
+            "FMC_DATA_VERSION",
+            lastDataVersion
+        );
+
+    }else if(lastDataVersion !== data.system.dataVersion){
+
+        lastDataVersion = data.system.dataVersion;
+
+        localStorage.setItem(
+            "FMC_DATA_VERSION",
+            lastDataVersion
+        );
+
+        showUpdateToast(
+            "Data harian peternakan telah diperbarui"
+        );
+
+    }
+
+}
+
 statusServer(true);
+
 
 if (data.dashboard && data.dashboard.farm) {
 
