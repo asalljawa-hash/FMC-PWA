@@ -203,7 +203,7 @@ window.addEventListener("offline",()=>{
 });
 
 statusServer(navigator.onLine);
-
+showUpdateToast("Tes Notifikasi FMC");
 // ==========================================
 // UPDATE TOAST
 // ==========================================
