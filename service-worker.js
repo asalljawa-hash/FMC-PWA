@@ -3,7 +3,7 @@
 // service-worker.js
 // ==========================================
 
-const CACHE_NAME = "fmc-boiler-mobile-v12";
+const CACHE_NAME = "fmc-boiler-mobile-v13";
 
 
 const FILES_TO_CACHE = [
