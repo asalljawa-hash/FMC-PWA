@@ -84,11 +84,11 @@ body{
 
 }
 
-.splash-logo{
+.splashLogo{
 
-    width:110px;
+    width:250px;
 
-    height:110px;
+    max-width:70%;
 
     object-fit:contain;
 
@@ -126,7 +126,9 @@ body{
 
     margin-top:22px;
 
-    width:210px;
+    width:280px;
+
+    max-width:80%;
 
     height:8px;
 
@@ -416,6 +418,24 @@ table tr:last-child td{
 
 }
 
+/* ==========================================
+   APP LAYOUT V12
+========================================== */
+
+#app{
+
+    width:100%;
+
+    max-width:1400px;
+
+    margin:0 auto;
+
+    padding:12px;
+
+    box-sizing:border-box;
+
+}
+
 /* =========================
    RESPONSIVE
 ========================= */
@@ -424,7 +444,7 @@ table tr:last-child td{
 
     #app{
 
-        padding:14px;
+        padding:12px;
 
     }
 
@@ -438,29 +458,77 @@ table tr:last-child td{
 
     .dashboardHero{
 
-        padding:20px;
+        padding:18px;
 
-        border-radius:20px;
+        border-radius:18px;
+
+        margin-bottom:12px;
+
+        min-height:unset;
 
     }
 
     .dashboardHero h1{
 
-        font-size:26px;
+        font-size:24px;
+
+        font-weight:700;
+
+        margin-bottom:6px;
 
     }
 
+/* ==========================================
+   HERO DETAIL V13
+========================================== */
+
+.heroSmall{
+
+    font-size:11px;
+
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    color:rgba(255,255,255,.85);
+
+    margin-bottom:4px;
+
+}
+
+.heroDate{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    margin-top:6px;
+
+    font-size:13px;
+
+    color:rgba(255,255,255,.92);
+
+}
+
+.heroDate .material-symbols-rounded{
+
+    font-size:18px;
+
+}
+
     .heroLogo{
 
-        width:62px;
+        width:56px;
 
-        height:62px;
+        height:56px;
 
     }
 
     .heroLogo .material-symbols-rounded{
 
-        font-size:36px;
+        font-size:32px;
 
     }
 
@@ -499,39 +567,698 @@ table tr:last-child td{
 =========================== */
 
 #updateToast{
+
     position:fixed;
+
+    top:-80px;
+
     left:50%;
-    bottom:90px;
-    transform:translateX(-50%) translateY(100px);
 
-    background:#0B8F43;
-    color:#fff;
+    transform:translateX(-50%);
 
-    padding:12px 18px;
+    min-width:280px;
+
+    max-width:90%;
+
+    padding:14px 20px;
+
+    background:#FFC107;
+
+    color:#222;
 
     border-radius:14px;
 
-    font-size:14px;
-    font-weight:600;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
 
-    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    text-align:center;
+
+    font-weight:700;
 
     opacity:0;
 
-    transition:.35s;
+    transition:.35s ease;
 
-    z-index:9999;
+    z-index:99999;
 
-    pointer-events:none;
-
-    max-width:90%;
-    text-align:center;
 }
 
 #updateToast.show{
 
     opacity:1;
 
-    transform:translateX(-50%) translateY(0);
+    top:20px;
+
+    transform:translateX(-50%);
+
+}
+
+
+/* ==========================================
+   FAB SETTING V12
+========================================== */
+
+#fabSetting{
+
+    position:fixed;
+
+    right:18px;
+
+    bottom:85px;
+
+    width:58px;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#0B8F43;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    box-shadow:0 10px 24px rgba(0,0,0,.25);
+
+    cursor:pointer;
+
+    z-index:9998;
+
+    transition:.25s;
+
+}
+
+#fabSetting:hover{
+
+    transform:scale(1.08);
+}
+
+#fabSetting .material-symbols-rounded{
+
+    font-size:28px;
+
+}
+
+/* ==========================================
+   SETTING PANEL V13
+========================================== */
+
+#settingPanel{
+
+    position:fixed;
+
+    left:0;
+
+    right:0;
+
+    bottom:-100%;
+
+    background:#ffffff;
+
+    border-radius:24px 24px 0 0;
+
+    padding:18px;
+
+    box-shadow:0 -8px 30px rgba(0,0,0,.20);
+
+    transition:bottom .35s ease;
+
+    z-index:9999;
+
+}
+
+#settingPanel.show{
+
+    bottom:0;
+
+}
+
+#settingPanel h2{
+
+    margin:0 0 18px;
+
+    font-size:20px;
+
+    font-weight:700;
+
+    color:#222;
+
+}
+
+.settingItem{
+
+    display:flex;
+
+    align-items:center;
+
+    width:100%;
+
+    gap:14px;
+
+    padding:15px 14px;
+
+    margin-bottom:10px;
+
+    border-radius:14px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:.2s;
+
+    cursor:pointer;
+
+    box-sizing:border-box;
+
+}
+
+.settingItem:hover{
+
+    background:#F5F7F8;
+
+}
+
+.settingItem:last-child{
+
+    margin-bottom:0;
+
+}
+
+
+/* ==========================================
+   HANDLE
+========================================== */
+
+.panelHandle{
+
+    width:55px;
+
+    height:5px;
+
+    background:#d9d9d9;
+
+    border-radius:10px;
+
+    margin:0 auto 16px;
+
+}
+
+/* =========================
+   DESKTOP MODE V13.1
+========================= */
+
+body.desktop{
+
+    background:#eef3f1;
+
+}
+
+body.desktop main{
+
+    width:96%;
+    max-width:1700px;
+    margin:20px auto;
+
+    display:grid;
+
+    grid-template-columns:repeat(2,minmax(420px,1fr));
+
+    gap:20px;
+
+    padding:0;
+
+}
+
+body.desktop section{
+
+    display:block !important;
+
+}
+
+body.desktop .header{
+
+    width:96%;
+    max-width:1700px;
+    margin:auto;
+
+}
+
+body.desktop .bottomNav{
+
+    width:96%;
+    max-width:1700px;
+
+    left:50%;
+    transform:translateX(-50%);
+
+}
+
+body.desktop .card{
+
+    margin:0;
+
+}
+
+body.desktop .weatherCard{
+
+    margin:0;
+
+}
+
+/* ==========================================
+   TABLET MODE (768px - 1199px)
+========================================== */
+
+@media (min-width:768px) and (max-width:1199px){
+
+body.desktop main{
+
+    width:92%;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:18px;
+
+}
+
+}
+
+/* ==========================================
+   DESKTOP MODE BESAR (1200px+)
+========================================== */
+
+@media (min-width:1200px){
+
+body.desktop main{
+
+    width:86%;
+
+    max-width:1600px;
+
+    grid-template-columns:repeat(3,minmax(0,1fr));
+
+}
+
+body.desktop .header,
+body.desktop .bottomNav{
+
+    width:86%;
+
+    max-width:1600px;
+
+}
+
+}
+
+body.desktop main{
+
+    grid-template-columns:repeat(3,1fr);
+
+}
+
+}
+
+/* ==========================================
+   MOBILE MODE V12
+========================================== */
+
+body:not(.desktop){
+
+    max-width:100%;
+
+    margin:0;
+
+}
+
+body:not(.desktop) main{
+
+    display:block;
+
+    padding:12px;
+
+}
+
+body:not(.desktop) section{
+
+    width:100%;
+
+}
+
+body:not(.desktop) .card{
+
+    width:100%;
+
+    margin-bottom:16px;
+
+}
+
+body:not(.desktop) .weatherCard{
+
+    width:100%;
+
+    margin-bottom:16px;
+
+}
+
+body:not(.desktop) .header{
+
+    max-width:100%;
+
+}
+
+body:not(.desktop) .bottomNav{
+
+    max-width:100%;
+
+    left:0;
+
+    transform:none;
+
+}
+
+/* ==========================================
+   MODE ACTIVE
+========================================== */
+
+#mobileCheck,
+#desktopCheck{
+
+    color:#0B8F43;
+
+    display:none;
+
+}
+
+.modeActive{
+
+    display:block !important;
+
+}
+
+/* ==========================================
+   DARK MODE V12
+========================================== */
+
+body.dark{
+
+    background:#111827;
+
+    color:#F3F4F6;
+
+}
+
+body.dark .header{
+
+    background:#1F2937;
+
+}
+
+body.dark .card,
+body.dark .weatherCard,
+body.dark #settingPanel{
+
+    background:#1F2937;
+
+    color:#F9FAFB;
+
+    border:1px solid rgba(255,255,255,.05);
+
+}
+
+body.dark .settingItem:hover{
+
+    background:#374151;
+
+}
+
+#darkModeCheck{
+
+    color:#22C55E;
+
+    display:none;
+
+}
+
+/* ==========================================
+   DARK MODE V13
+========================================== */
+
+body.dark{
+
+    background:#111827;
+
+    color:#F9FAFB;
+
+}
+
+/* Background */
+
+body.dark #app,
+body.dark main,
+body.dark section{
+
+    background:transparent;
+
+}
+
+/* Header */
+
+body.dark .header{
+
+    background:#1F2937;
+
+    color:#F9FAFB;
+
+}
+
+/* Card */
+
+body.dark .card,
+body.dark .weatherCard,
+body.dark #settingPanel{
+
+    background:#1F2937;
+
+    color:#F9FAFB;
+
+    border:1px solid rgba(255,255,255,.05);
+
+}
+
+/* Judul */
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4{
+
+    color:#FFFFFF;
+
+}
+
+/* Teks */
+
+body.dark p,
+body.dark span,
+body.dark small,
+body.dark label{
+
+    color:#D1D5DB;
+
+}
+
+/* Hover */
+
+body.dark .settingItem:hover{
+
+    background:#374151;
+
+}
+
+/* Bottom Navigation */
+
+body.dark .bottomNav{
+
+    background:#1F2937;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+body.dark .bottomNav button{
+
+    color:#9CA3AF;
+
+}
+
+body.dark .bottomNav button.active{
+
+    color:#22C55E;
+
+}
+
+/* Check Icon */
+
+#darkModeCheck{
+
+    color:#22C55E;
+
+    display:none;
+
+}
+
+.darkActive{
+
+    display:block !important;
+
+}
+
+body.dark .card b{
+
+    color:#FFFFFF;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   ABOUT FMC PANEL V13 FINAL
+========================================== */
+
+#aboutPanel{
+
+    position:fixed;
+
+    left:0;
+
+    right:0;
+
+    bottom:-100%;
+
+    background:#fff;
+
+    border-radius:26px 26px 0 0;
+
+    padding:24px;
+
+    transition:.35s;
+
+    z-index:10000;
+
+    box-shadow:0 -10px 35px rgba(0,0,0,.25);
+
+    text-align:center;
+
+    max-height:90vh;
+
+    overflow:auto;
+
+}
+
+#aboutPanel.show{
+
+    bottom:0 !important;
+
+}
+
+.aboutLogo{
+
+    font-size:60px;
+
+    margin-bottom:12px;
+
+}
+
+.aboutVersion{
+
+    display:inline-block;
+
+    margin:12px 0;
+
+    padding:6px 16px;
+
+    border-radius:999px;
+
+    background:#0B8F43;
+
+    color:#fff;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+.aboutDesc{
+
+    margin:18px 0;
+
+    line-height:1.7;
+
+}
+
+.aboutInfo{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:14px;
+
+    margin:22px 0;
+
+}
+
+.aboutInfo div{
+
+    background:#F5F7F8;
+
+    padding:14px;
+
+    border-radius:14px;
+
+}
+
+.aboutFooter{
+
+    margin-top:20px;
+
+    color:#666;
+
+    line-height:1.7;
+
+}
+
+.aboutClose{
+
+    margin-top:22px;
+
+    width:100%;
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:14px;
+
+    background:#0B8F43;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:700;
+
+}
+
+.settingItem:last-child{
+
+    margin-bottom:20px;
 
 }

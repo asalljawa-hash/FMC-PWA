@@ -144,9 +144,37 @@ window.onload = async function(){
 
     try{
 
+        /* MODE */
+
+        const mode = localStorage.getItem("fmcMode");
+
+        if(mode==="desktop"){
+
+            document.body.classList.add("desktop");
+
+        }else{
+
+            document.body.classList.remove("desktop");
+
+        }
+
+        updateModeIndicator();
+
+        /* THEME */
+
+        loadTheme();
+
         updateJam();
 
+        /* Tunggu browser selesai menghitung layout */
+
+        await new Promise(resolve=>requestAnimationFrame(resolve));
+
+        /* Baru render dashboard */
+
         await showPage("dashboard");
+
+        /* Splash */
 
         setTimeout(()=>{
 
@@ -164,13 +192,11 @@ window.onload = async function(){
 
             }
 
-        },800);
+        },500);
 
     }catch(err){
 
         console.error(err);
-
-        alert(err.message);
 
     }
 
@@ -203,7 +229,8 @@ window.addEventListener("offline",()=>{
 });
 
 statusServer(navigator.onLine);
-showUpdateToast("Tes Notifikasi FMC");
+alert("APP.JS VERSI BARU BERHASIL DIMUAT");
+
 // ==========================================
 // UPDATE TOAST
 // ==========================================
@@ -223,6 +250,92 @@ function showUpdateToast(text){
         toast.classList.remove("show");
 
     },4000);
+
+}
+
+// ==========================================
+// REFRESH DATA V13
+// ==========================================
+
+async function refreshData(){
+
+    try{
+
+        await showPage(currentPage);
+
+        updateJam();
+
+        showUpdateToast("Data berhasil diperbarui");
+
+    }catch(err){
+
+        console.error(err);
+
+        showUpdateToast("Gagal memperbarui data");
+
+    }
+
+}
+
+// ==========================================
+// CLEAR CACHE V13
+// ==========================================
+
+async function clearCache(){
+
+    if(!confirm("Hapus cache aplikasi FMC?")){
+        return;
+    }
+
+    try{
+
+        if("caches" in window){
+
+            const keys = await caches.keys();
+
+            await Promise.all(
+                keys.map(key => caches.delete(key))
+            );
+
+        }
+
+        showUpdateToast("Cache berhasil dibersihkan");
+
+        setTimeout(()=>{
+
+            location.reload();
+
+        },1000);
+
+    }catch(err){
+
+        console.error(err);
+
+        showUpdateToast("Gagal membersihkan cache");
+
+    }
+
+}
+
+// ==========================================
+// ABOUT PANEL V13 FINAL
+// ==========================================
+
+function showAbout(){
+
+    const panel = document.getElementById("aboutPanel");
+
+    if(!panel){
+
+        alert("aboutPanel TIDAK ditemukan!");
+
+        return;
+
+    }
+
+    alert("aboutPanel ditemukan!");
+
+    panel.classList.add("show");
 
 }
 
@@ -260,6 +373,171 @@ async function installApp(){
 
     if(btn){
         btn.style.display = "none";
+    }
+
+}
+
+// ==========================================
+// SETTING PANEL V12
+// ==========================================
+
+let settingPanelOpen = false;
+
+function toggleSettingPanel(){
+
+    const panel = document.getElementById("settingPanel");
+
+    if(!panel) return;
+
+    if(settingPanelOpen){
+
+        panel.classList.remove("show");
+        settingPanelOpen = false;
+
+    }else{
+
+        panel.classList.add("show");
+        settingPanelOpen = true;
+
+    }
+
+}
+
+// Tutup panel jika area luar ditekan
+
+document.addEventListener("click", function(e){
+
+    const panel = document.getElementById("settingPanel");
+    const fab = document.getElementById("fabSetting");
+
+    if(!panel || !fab) return;
+
+    if(settingPanelOpen){
+
+        if(
+            !panel.contains(e.target) &&
+            !fab.contains(e.target)
+        ){
+
+            panel.classList.remove("show");
+            document.body.classList.remove("setting-open");
+
+            settingPanelOpen = false;
+
+        }
+
+    }
+
+});
+
+// ==========================================
+// MODE MOBILE / DESKTOP V12
+// ==========================================
+
+function setMobileMode(){
+
+    document.body.classList.remove("desktop");
+
+    localStorage.setItem("fmcMode","mobile");
+
+    updateModeIndicator();
+
+}
+
+function setDesktopMode(){
+
+    document.body.classList.add("desktop");
+
+    localStorage.setItem("fmcMode","desktop");
+
+    updateModeIndicator();
+
+}
+
+// Memuat mode terakhir saat aplikasi dibuka
+
+// ==========================================
+// UPDATE MODE INDICATOR
+// ==========================================
+
+function updateModeIndicator(){
+
+    const mobile = document.getElementById("mobileCheck");
+    const desktop = document.getElementById("desktopCheck");
+
+    if(!mobile || !desktop) return;
+
+    mobile.classList.remove("modeActive");
+    desktop.classList.remove("modeActive");
+
+    if(document.body.classList.contains("desktop")){
+
+        desktop.classList.add("modeActive");
+
+    }else{
+
+        mobile.classList.add("modeActive");
+
+    }
+
+}
+
+// ==========================================
+// DARK MODE V12
+// ==========================================
+
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark");
+
+    const darkCheck = document.getElementById("darkModeCheck");
+
+    if(document.body.classList.contains("dark")){
+
+        localStorage.setItem("fmcTheme","dark");
+
+        if(darkCheck){
+            darkCheck.classList.add("modeActive");
+        }
+
+    }else{
+
+        localStorage.setItem("fmcTheme","light");
+
+        if(darkCheck){
+            darkCheck.classList.remove("modeActive");
+        }
+
+    }
+
+}
+
+// ==========================================
+// LOAD THEME
+// ==========================================
+
+function loadTheme(){
+
+    const theme = localStorage.getItem("fmcTheme");
+
+    const darkCheck = document.getElementById("darkModeCheck");
+
+    if(theme==="dark"){
+
+        document.body.classList.add("dark");
+
+        if(darkCheck){
+            darkCheck.classList.add("modeActive");
+        }
+
+    }else{
+
+        document.body.classList.remove("dark");
+
+        if(darkCheck){
+            darkCheck.classList.remove("modeActive");
+        }
+
     }
 
 }

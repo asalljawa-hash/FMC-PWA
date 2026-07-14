@@ -437,10 +437,131 @@ UPDATE TOAST
 📢 Data harian peternakan telah diperbarui
 
 </div>
-
 <!-- ======================================
 BOTTOM NAVIGATION
 ====================================== -->
+<!-- ======================================
+FAB SETTINGS
+====================================== -->
+
+<button id="fabSetting" onclick="toggleSettingPanel()">
+
+<span class="material-symbols-rounded">
+
+settings
+
+</span>
+
+</button>
+
+<!-- ======================================
+SETTING PANEL
+====================================== -->
+
+<div id="settingPanel">
+
+<div class="panelHandle"></div>
+
+<h2>⚙️ Pengaturan FMC</h2>
+
+<!-- MODE MOBILE -->
+
+<div class="settingItem" onclick="setMobileMode()">
+
+    <span class="material-symbols-rounded">
+        phone_android
+    </span>
+
+    <span style="flex:1;">
+        Mode Mobile
+    </span>
+
+    <span id="mobileCheck"
+    class="material-symbols-rounded">
+
+        check_circle
+
+    </span>
+
+</div>
+
+<!-- MODE DESKTOP -->
+
+<div class="settingItem" onclick="setDesktopMode()">
+
+    <span class="material-symbols-rounded">
+        desktop_windows
+    </span>
+
+    <span style="flex:1;">
+        Mode Desktop
+    </span>
+
+    <span id="desktopCheck"
+    class="material-symbols-rounded">
+
+        check_circle
+
+    </span>
+
+</div>
+
+<div class="settingItem" onclick="toggleDarkMode()">
+
+    <span class="material-symbols-rounded">
+        dark_mode
+    </span>
+
+    <span style="flex:1;">
+        Tema Gelap
+    </span>
+
+    <span id="darkModeCheck"
+    class="material-symbols-rounded">
+
+        check_circle
+
+    </span>
+
+</div>
+
+<div class="settingItem" onclick="refreshData()">
+
+    <span class="material-symbols-rounded">
+        refresh
+    </span>
+
+    <span style="flex:1;">
+        Refresh Data
+    </span>
+
+</div>
+
+<div class="settingItem" onclick="clearCache()">
+
+    <span class="material-symbols-rounded">
+        cleaning_services
+    </span>
+
+    <span style="flex:1;">
+        Bersihkan Cache
+    </span>
+
+</div>
+
+<div class="settingItem" onclick="showAbout()">
+
+    <span class="material-symbols-rounded">
+        info
+    </span>
+
+    <span style="flex:1;">
+        Tentang FMC
+    </span>
+
+</div>
+
+</div>
 
 <nav class="bottomNav">
 
@@ -527,6 +648,196 @@ AI
 </button>
 
 </nav>
+
+<!-- ======================================
+ABOUT FMC PANEL
+====================================== -->
+
+<div id="aboutPanel">
+
+<div class="panelHandle"></div>
+
+<div class="aboutLogo">
+🐔
+</div>
+
+<h2>FMC BROILER MOBILE</h2>
+
+<div class="aboutVersion">
+Version 13 Stable
+</div>
+
+<p class="aboutMoto">
+Smart Farming • Smart Decision • Better Productivity
+</p>
+
+<hr>
+
+<h3>Farm Management Control System</h3>
+
+<p class="aboutDesc">
+
+<b>FMC Broiler Mobile</b> merupakan sistem manajemen peternakan broiler berbasis <b>Progressive Web App (PWA)</b> yang dirancang untuk membantu peternak melakukan monitoring, pencatatan, analisis, dan pengelolaan data secara <b>real-time</b>, <b>cepat</b>, <b>akurat</b>, dan <b>efisien</b>.
+
+</p>
+
+<hr>
+
+<h3>Informasi Sistem</h3>
+
+<div class="aboutInfo">
+
+<div>
+<b>Platform</b><br>
+Progressive Web App (PWA)
+</div>
+
+<div>
+<b>Database</b><br>
+Google Sheets Cloud
+</div>
+
+<div>
+<b>Backend</b><br>
+Google Apps Script
+</div>
+
+<div>
+<b>Hosting</b><br>
+GitHub + Netlify
+</div>
+
+<div>
+<b>Core Engine</b><br>
+Gembus JavaScript Engine
+</div>
+
+<div>
+<b>Development</b><br>
+By Pregol Agin Ribut
+</div>
+
+</div>
+
+<hr>
+
+<h3>Fitur Utama</h3>
+
+<ul class="aboutList">
+
+<li>📊 Dashboard Analytics</li>
+
+<li>🐔 Monitoring Flok</li>
+
+<li>📝 Data Harian</li>
+
+<li>💰 Analisis Keuangan</li>
+
+<li>🤖 AI Assistant</li>
+
+<li>🌙 Dark Mode</li>
+
+<li>📱 Mobile Mode</li>
+
+<li>🖥 Desktop Mode</li>
+
+<li>🔄 Refresh Data</li>
+
+<li>🧹 Bersihkan Cache</li>
+
+</ul>
+
+<hr>
+
+<h3>Tentang FMC</h3>
+
+<p class="aboutDesc">
+
+<b>FMC Broiler Mobile</b> dikembangkan sebagai sistem manajemen peternakan broiler modern yang <b>ringan</b>, <b>cepat</b>, <b>responsif</b>, dan <b>mudah digunakan</b>.
+
+Aplikasi ini dapat dijalankan langsung melalui browser sebagai <b>Progressive Web App (PWA)</b> tanpa proses instalasi, serta dapat diunduh dan dipasang sebagai aplikasi apabila diperlukan sehingga memberikan pengalaman penggunaan layaknya aplikasi Android.
+
+Dirancang untuk membantu peternak mengelola data produksi, performa flok, operasional, dan analisis keuangan secara <b>lebih akurat</b>, <b>efisien</b>, dan <b>real-time</b>. Seluruh informasi penting dapat diakses kapan saja dan di mana saja untuk mendukung pengambilan keputusan yang lebih cepat, tepat, dan berbasis data.
+
+</p>
+
+<hr>
+
+<h3>Teknologi Inti</h3>
+
+<p class="aboutDesc">
+
+<b>Gembus JavaScript Engine</b> merupakan mesin inti yang menjadi fondasi pengembangan <b>FMC Broiler Mobile</b>.
+
+Engine ini bertanggung jawab dalam mengelola antarmuka pengguna, navigasi aplikasi, sinkronisasi data, pengolahan informasi, serta berbagai proses utama agar aplikasi tetap <b>ringan</b>, <b>stabil</b>, <b>cepat</b>, dan <b>responsif</b> pada berbagai perangkat.
+
+Dengan dukungan <b>Progressive Web App (PWA)</b>, FMC mampu memberikan pengalaman penggunaan modern baik melalui browser maupun saat dipasang sebagai aplikasi.
+
+</p>
+
+<hr>
+
+<h3>Visi FMC</h3>
+
+<p class="aboutDesc">
+
+"Menyediakan sistem manajemen peternakan broiler yang modern, ringan, mudah digunakan, dan dapat diakses oleh setiap peternak untuk meningkatkan produktivitas melalui pemanfaatan teknologi digital."
+
+</p>
+
+<hr>
+
+<h3>Identitas Aplikasi</h3>
+
+<div class="aboutInfo">
+
+<div>
+<b>Nama</b><br>
+FMC Broiler Mobile
+</div>
+
+<div>
+<b>Versi</b><br>
+13 Stable
+</div>
+
+<div>
+<b>Kategori</b><br>
+Farm Management Control System
+</div>
+
+<div>
+<b>Teknologi</b><br>
+Progressive Web App
+</div>
+
+<div>
+<b>Core Engine</b><br>
+Gembus JavaScript Engine
+</div>
+
+<div>
+<b>Tahun</b><br>
+2026
+</div>
+
+</div>
+
+<div class="aboutFooter">
+
+© 2026 FMC Broiler Mobile<br>
+
+Developed by <b>Pregol Agin Ribut</b><br>
+
+All Rights Reserved
+
+</div>
+
+<button class="aboutClose" onclick="closeAbout()">
+Tutup
+</button>
+
+</div>
 
 <!-- ======================================
 JAVASCRIPT
