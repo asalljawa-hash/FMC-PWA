@@ -229,7 +229,6 @@ window.addEventListener("offline",()=>{
 });
 
 statusServer(navigator.onLine);
-alert("APP.JS VERSI BARU BERHASIL DIMUAT");
 
 // ==========================================
 // UPDATE TOAST
