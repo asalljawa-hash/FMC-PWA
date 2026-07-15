@@ -684,6 +684,12 @@ table tr:last-child td{
 
     padding:18px;
 
+    max-height:70vh;
+
+    overflow-y:auto;
+
+    padding-bottom:90px;
+
     box-shadow:0 -8px 30px rgba(0,0,0,.20);
 
     transition:bottom .35s ease;
@@ -1260,5 +1266,149 @@ body.dark .card b{
 .settingItem:last-child{
 
     margin-bottom:20px;
+
+}
+
+/* ==========================================
+   FMC DIALOG V13
+========================================== */
+
+.fmcDialog{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.25s;
+
+    z-index:10000;
+
+}
+
+.fmcDialog.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+.fmcDialogBox{
+
+    width:90%;
+
+    max-width:360px;
+
+    background:#fff;
+
+    border-radius:22px;
+
+    padding:22px;
+
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
+
+    animation:dialogPop .25s ease;
+
+}
+
+.fmcDialogBox h2{
+
+    margin:0 0 12px;
+
+    font-size:22px;
+
+    color:#0B8F43;
+
+    text-align:center;
+
+}
+
+.fmcDialogBox p{
+
+    margin:0;
+
+    color:#555;
+
+    font-size:15px;
+
+    line-height:1.6;
+
+    text-align:center;
+
+}
+
+.dialogButtons{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:22px;
+
+}
+
+.dialogButtons button{
+
+    flex:1;
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:14px;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+.dialogCancel{
+
+    background:#ECEFF1;
+
+    color:#555;
+
+}
+
+.dialogOk{
+
+    background:#0B8F43;
+
+    color:#fff;
+
+}
+
+@keyframes dialogPop{
+
+    from{
+
+        transform:scale(.9);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
 
 }

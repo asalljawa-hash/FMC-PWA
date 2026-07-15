@@ -282,37 +282,45 @@ async function refreshData(){
 
 async function clearCache(){
 
-    if(!confirm("Hapus cache aplikasi FMC?")){
-        return;
-    }
+    showDialog(
 
-    try{
+        "🧹 Bersihkan Cache",
 
-        if("caches" in window){
+        "Cache aplikasi akan dihapus.<br><br>Apakah Anda yakin ingin melanjutkan?",
 
-            const keys = await caches.keys();
+        async ()=>{
 
-            await Promise.all(
-                keys.map(key => caches.delete(key))
-            );
+            try{
+
+                if("caches" in window){
+
+                    const keys = await caches.keys();
+
+                    await Promise.all(
+                        keys.map(key=>caches.delete(key))
+                    );
+
+                }
+
+                showUpdateToast("🧹 Cache berhasil dibersihkan");
+
+                setTimeout(()=>{
+
+                    location.reload();
+
+                },1000);
+
+            }catch(err){
+
+                console.error(err);
+
+                showUpdateToast("Gagal membersihkan cache");
+
+            }
 
         }
 
-        showUpdateToast("Cache berhasil dibersihkan");
-
-        setTimeout(()=>{
-
-            location.reload();
-
-        },1000);
-
-    }catch(err){
-
-        console.error(err);
-
-        showUpdateToast("Gagal membersihkan cache");
-
-    }
+    );
 
 }
 
@@ -325,18 +333,71 @@ function showAbout(){
     const panel = document.getElementById("aboutPanel");
 
     if(!panel){
-
-        alert("aboutPanel TIDAK ditemukan!");
-
         return;
-
     }
-
-    alert("aboutPanel ditemukan!");
 
     panel.classList.add("show");
 
 }
+
+function closeAbout(){
+
+    const panel = document.getElementById("aboutPanel");
+
+    if(!panel){
+        return;
+    }
+
+    panel.classList.remove("show");
+
+}
+
+// ==========================================
+// FMC DIALOG V13
+// ==========================================
+
+let dialogCallback = null;
+
+function showDialog(title, message, callback){
+
+    document.getElementById("dialogTitle").innerHTML = title;
+    document.getElementById("dialogMessage").innerHTML = message;
+
+    dialogCallback = callback;
+
+    document
+        .getElementById("fmcDialog")
+        .classList.add("show");
+
+}
+
+function closeDialog(){
+
+    document
+        .getElementById("fmcDialog")
+        .classList.remove("show");
+
+}
+
+window.addEventListener("load", () => {
+
+    const dialogOk = document.getElementById("dialogOk");
+
+    if(!dialogOk) return;
+
+    dialogOk.onclick = function(){
+
+        closeDialog();
+
+        if(dialogCallback){
+
+            dialogCallback();
+
+        }
+
+    };
+
+});
 
 // ==========================================
 // INSTALL PWA

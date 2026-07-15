@@ -309,13 +309,65 @@
 
 }
 
+.heroActions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.heroShareBtn{
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,.18);
+
+    color:#fff;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    backdrop-filter:blur(6px);
+
+}
+
+.heroShareBtn:hover{
+
+    background:rgba(255,255,255,.28);
+
+    transform:translateY(-2px);
+
+}
+
+.heroShareBtn .material-symbols-rounded{
+
+    font-size:24px;
+
+}
+
 .heroLogo{
 
-    width:74px;
+    width:60px;
 
-    height:74px;
+    height:60px;
 
-    border-radius:22px;
+    border-radius:18px;
 
     display:flex;
 
