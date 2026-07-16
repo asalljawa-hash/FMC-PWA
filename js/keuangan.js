@@ -71,11 +71,12 @@ Ringkasan Produksi & Keuangan
 
 </div>
 
-<div class="heroLogo">
+<div class="heroAction"
+onclick="shareKeuangan()">
 
 <span class="material-symbols-rounded">
 
-account_balance_wallet
+share
 
 </span>
 

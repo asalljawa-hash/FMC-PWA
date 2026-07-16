@@ -69,55 +69,14 @@ ${harian.tanggal}
 
 </div>
 
-<div class="heroLogo">
+<div class="heroAction"
+onclick="shareHarian()">
 
 <span class="material-symbols-rounded">
 
-event_note
+share
 
 </span>
-
-</div>
-
-</div>
-
-<div class="card farmCard">
-
-<div class="farmHeader">
-
-<div>
-
-<h2>
-
-<span class="material-symbols-rounded">
-
-today
-
-</span>
-
-Tanggal Laporan
-
-</h2>
-
-<small>
-
-${harian.tanggal}
-
-</small>
-
-</div>
-
-<div class="onlineBadge">
-
-<span class="material-symbols-rounded">
-
-task_alt
-
-</span>
-
-HARI INI
-
-</div>
 
 </div>
 

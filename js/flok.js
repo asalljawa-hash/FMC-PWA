@@ -37,30 +37,24 @@ async function tampilFlok(){
 
     const flok=data.dashboard.flok || [];
 
-    let html=`
+let html = `
 
 <div class="dashboardHero">
 
     <div>
 
         <div class="heroSmall">
-
             FMC BOILER MOBILE V11
-
         </div>
 
         <h1>
-
             Data Flok
-
         </h1>
 
         <div class="heroDate">
 
             <span class="material-symbols-rounded">
-
-           pets
-
+                pets
             </span>
 
             Monitoring Produksi
@@ -69,7 +63,14 @@ async function tampilFlok(){
 
     </div>
 
-   
+    <div class="heroAction"
+         onclick="shareFlok()">
+
+        <span class="material-symbols-rounded">
+            share
+        </span>
+
+    </div>
 
 </div>
 

@@ -277,6 +277,34 @@ async function refreshData(){
 }
 
 // ==========================================
+// SHARE V13
+// ==========================================
+
+function shareDashboard(){
+
+    showUpdateToast("Fitur Share Dashboard segera hadir");
+
+}
+
+function shareFlok(){
+
+    showUpdateToast("Fitur Share Data Flok segera hadir");
+
+}
+
+function shareHarian(){
+
+    showUpdateToast("Fitur Share Laporan Harian segera hadir");
+
+}
+
+function shareKeuangan(){
+
+    showUpdateToast("Fitur Share Keuangan segera hadir");
+
+}
+
+// ==========================================
 // CLEAR CACHE V13
 // ==========================================
 
