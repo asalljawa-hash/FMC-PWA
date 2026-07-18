@@ -1539,3 +1539,21 @@ body.dark .dialogCancel:hover{
     background:#36414F;
 
 }
+
+/* ======================================
+   ABOUT BADGE
+====================================== */
+
+.aboutBadge{
+    display:inline-block;
+    margin-top:10px;
+    margin-bottom:10px;
+    padding:6px 18px;
+    background:#0B8F43;
+    color:#fff;
+    font-size:12px;
+    font-weight:600;
+    border-radius:20px;
+    letter-spacing:.5px;
+    box-shadow:0 4px 12px rgba(11,143,67,.25);
+}
