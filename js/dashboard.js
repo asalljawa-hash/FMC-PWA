@@ -79,13 +79,12 @@ let html=`
 
 </div>  
 
-<div class="heroLogo">  
+<div class="heroAction"
+onclick="openShareDialog(shareDashboard, exportDashboardPDF)">
 
-    <span class="material-symbols-rounded">  
-
-        dashboard  
-
-    </span>  
+    <span class="material-symbols-rounded">
+        share
+    </span>
 
 </div>
 

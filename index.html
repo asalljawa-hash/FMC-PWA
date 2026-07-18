@@ -66,6 +66,9 @@ href="css/weather.css">
 <link rel="stylesheet"
 href="css/index.css">
 
+<link rel="stylesheet"
+href="css/share.css">
+
 </head>
 
 <body>
@@ -539,9 +542,9 @@ SETTING PANEL
 
 <div class="settingItem" onclick="clearCache()">
 
-    <span class="material-symbols-rounded">
-        cleaning_services
-    </span>
+<span class="material-symbols-rounded">
+cleaning_services
+</span>
 
     <span style="flex:1;">
         Bersihkan Cache
@@ -658,7 +661,17 @@ ABOUT FMC PANEL
 <div class="panelHandle"></div>
 
 <div class="aboutLogo">
-🐔
+
+    <img
+        src="icons/icon-192.png"
+        alt="FMC Logo"
+        width="72"
+        height="72"
+        style="
+            border-radius:18px;
+            box-shadow:0 8px 20px rgba(0,0,0,.15);
+        ">
+
 </div>
 
 <h2>FMC BROILER MOBILE</h2>
@@ -714,7 +727,7 @@ Gembus JavaScript Engine
 
 <div>
 <b>Development</b><br>
-By Pregol Agin Ribut
+By Pregolabc123
 </div>
 
 </div>
@@ -843,21 +856,18 @@ Tutup
 JAVASCRIPT
 ====================================== -->
 
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script src="js/api.js"></script>
-
 <script src="js/weather.js"></script>
-
 <script src="js/dashboard.js"></script>
-
 <script src="js/flok.js"></script>
-
 <script src="js/harian.js"></script>
-
 <script src="js/keuangan.js"></script>
-
 <script src="js/ai.js"></script>
-
 <script src="js/app.js"></script>
+<script src="js/share.js"></script>
 
 <script>
 
@@ -903,16 +913,16 @@ FMC DIALOG
         <div class="dialogButtons">
 
             <button
-            class="dialogCancel"
-            onclick="closeDialog()">
+                class="dialogCancel"
+                onclick="closeDialog()">
 
                 Batal
 
             </button>
 
             <button
-            id="dialogOk"
-            class="dialogOk">
+                id="dialogOk"
+                class="dialogOk">
 
                 OK
 
@@ -924,6 +934,100 @@ FMC DIALOG
 
 </div>
 
+<!-- ======================================
+SHARE DIALOG
+====================================== -->
+
+<div id="shareDialog" class="fmcDialog">
+
+    <div class="fmcDialogBox">
+
+        <h2>
+            Bagikan Laporan
+        </h2>
+
+        <p>
+            Pilih cara membagikan laporan FMC.
+        </p>
+
+        <div
+        class="dialogButtons"
+        style="
+        display:flex;
+        flex-direction:column;
+        gap:12px;">
+
+            <button
+            id="btnShareText"
+            class="dialogOk">
+
+                <span class="material-symbols-rounded">
+                    chat
+                </span>
+
+                Share sebagai Teks
+
+            </button>
+
+            <button
+            id="btnShareImage"
+            class="dialogOk">
+
+                <span class="material-symbols-rounded">
+                    picture_as_pdf
+                </span>
+
+                Export PDF
+
+            </button>
+
+            <button
+            class="dialogCancel"
+            onclick="closeShareDialog()">
+
+                <span class="material-symbols-rounded">
+                    close
+                </span>
+
+                Tutup
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ======================================
+SHARE CARD
+====================================== -->
+
+<div id="shareCard" class="shareCard">
+
+    <div class="shareHeader">
+
+        <h2 id="shareTitle">
+            FMC BROILER MOBILE
+        </h2>
+
+        <small id="shareSubtitle">
+            Dashboard
+        </small>
+
+    </div>
+
+    <div id="shareContent">
+
+    </div>
+
+    <div class="shareFooter">
+
+        Powered by FMC Broiler Mobile
+
+    </div>
+
+</div>
 </body>
 
 </html>

@@ -277,42 +277,228 @@ async function refreshData(){
 }
 
 // ==========================================
-// SHARE V13
+// SHARE FMC V13
 // ==========================================
 
-function shareDashboard(){
+async function shareText(title, text){
 
-    showUpdateToast("Fitur Share Dashboard segera hadir");
+    if(navigator.share){
+
+        try{
+
+            await navigator.share({
+                title: title,
+                text: text
+            });
+
+        }catch(e){
+            console.log(e);
+        }
+
+    }else{
+
+        await navigator.clipboard.writeText(text);
+
+        showUpdateToast("📋 Teks disalin ke clipboard");
+
+    }
 
 }
 
-function shareFlok(){
+async function shareDashboard(){
 
-    showUpdateToast("Fitur Share Data Flok segera hadir");
+    const data = await ambilDataServer();
+
+    if(!data) return;
+
+    const farm = data.dashboard.farm;
+    const kpi = data.dashboard.kpi;
+
+    const text =
+
+`🐔 *FMC BROILER MOBILE*
+
+📍 *${farm.namaFarm.toUpperCase()}*
+📅 Periode : ${farm.periode}
+🐣 Chick In : ${farm.chickIn}
+
+━━━━━━━━━━━━━━━━
+
+📦 DOC IN        : ${kpi.docIn} ekor
+🐔 Ayam Hidup    : ${kpi.ayamHidup} ekor
+💀 Mati          : ${kpi.mati} ekor
+🚫 Afkir         : ${kpi.afkir} ekor
+
+📉 Mortalitas    : ${kpi.mortalitas}
+📊 Deplesi       : ${kpi.deplesi}
+🍗 FCR           : ${kpi.fcr}
+🏆 IP            : ${kpi.ip}
+
+━━━━━━━━━━━━━━━━
+
+🤖 Powered by *FMC Broiler Mobile*`;
+
+    shareText("Dashboard FMC", text);
 
 }
 
-function shareHarian(){
+async function shareFlok(){
 
-    showUpdateToast("Fitur Share Laporan Harian segera hadir");
+    const data = await ambilDataServer();
+
+    if(!data) return;
+
+    const farm = data.dashboard.farm;
+    const flok = data.dashboard.flok || [];
+
+    let text =
+
+`🐔 *DATA FLOK*
+
+📍 *${farm.namaFarm.toUpperCase()}*
+📅 Periode : ${farm.periode}
+
+━━━━━━━━━━━━━━━━
+
+`;
+
+    flok.forEach(f=>{
+
+        text +=
+
+`🐓 Flok ${f.nama}
+
+🐔 Hidup        : ${f.hidup} ekor
+💀 Mati         : ${f.mati} ekor
+📉 Mortalitas   : ${f.mortalitas}
+🍗 FCR          : ${f.fcr}
+🏆 IP           : ${f.ip}
+✅ Status       : ${f.status}
+
+━━━━━━━━━━━━━━━━
+
+`;
+
+    });
+
+    text += "🤖 Powered by *FMC Broiler Mobile*";
+
+    shareText("Data Flok FMC", text);
 
 }
 
-function shareKeuangan(){
+async function shareHarian(){
 
-    showUpdateToast("Fitur Share Keuangan segera hadir");
+    const data = await ambilDataServer();
+
+    if(!data) return;
+
+    const farm = data.dashboard.farm;
+    const harian = data.harian;
+
+    let text =
+
+`🐔 *LAPORAN HARIAN*
+
+📍 *${farm.namaFarm.toUpperCase()}*
+📅 ${harian.tanggal}
+
+━━━━━━━━━━━━━━━━
+
+`;
+
+    harian.flok.forEach(f=>{
+
+        text +=
+
+`🐓 Flok ${f.nama}
+
+💀 Mati Hari Ini: ${f.mati} ekor
+📅 Umur         : ${f.umur} Hari
+📉 Mortalitas   : ${f.mortalitas}
+
+━━━━━━━━━━━━━━━━
+
+`;
+
+    });
+
+    text +=
+
+`💀 *TOTAL KEMATIAN HARI INI*
+${harian.totalMati} Ekor
+
+━━━━━━━━━━━━━━━━
+
+🤖 Powered by *FMC Broiler Mobile*`;
+
+    shareText("Laporan Harian FMC", text);
+
+}
+
+async function shareKeuangan(){
+
+    const data = await ambilDataServer();
+
+    if(!data) return;
+
+    const farm = data.dashboard.farm;
+    const k = data.keuangan;
+
+    const text =
+
+`💰 *RINGKASAN KEUANGAN*
+
+📍 *${farm.namaFarm.toUpperCase()}*
+📅 Periode : ${farm.periode}
+
+━━━━━━━━━━━━━━━━
+
+📦 Total Ekor Panen : ${k.totalEkor}
+⚖️ Total Tonase     : ${k.totalTonase}
+🐓 Flok Siap Panen  : ${k.flokPanen}
+
+🍗 Konsumsi Pakan   : ${k.totalPakan} Kg
+
+💵 Biaya Operasional
+Rp ${k.biayaOperasional}
+
+📈 Estimasi Omset
+Rp ${k.estimasiOmset}
+
+💹 Estimasi Laba
+Rp ${k.estimasiLaba}
+
+💰 Profit Owner / Ekor
+Rp ${k.profitOwner}
+
+━━━━━━━━━━━━━━━━
+
+🤖 Powered by *FMC Broiler Mobile*`;
+
+    shareText("Keuangan FMC", text);
 
 }
 
 // ==========================================
-// CLEAR CACHE V13
+// CLEAR CACHE V14
 // ==========================================
 
 async function clearCache(){
 
     showDialog(
 
-        "🧹 Bersihkan Cache",
+        `<span class="material-symbols-rounded"
+        style="
+        font-size:34px;
+        color:#0B8F43;
+        vertical-align:middle;
+        margin-right:8px;
+        ">
+        cleaning_services
+        </span>
+
+        Bersihkan Cache`,
 
         "Cache aplikasi akan dihapus.<br><br>Apakah Anda yakin ingin melanjutkan?",
 
@@ -330,7 +516,7 @@ async function clearCache(){
 
                 }
 
-                showUpdateToast("🧹 Cache berhasil dibersihkan");
+                showUpdateToast("✅ Cache berhasil dibersihkan");
 
                 setTimeout(()=>{
 
@@ -342,7 +528,7 @@ async function clearCache(){
 
                 console.error(err);
 
-                showUpdateToast("Gagal membersihkan cache");
+                showUpdateToast("❌ Gagal membersihkan cache");
 
             }
 

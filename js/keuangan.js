@@ -72,13 +72,14 @@ Ringkasan Produksi & Keuangan
 </div>
 
 <div class="heroAction"
-onclick="shareKeuangan()">
+     onclick="openShareDialog(
+    shareKeuangan,
+    exportKeuanganPDF
+)">
 
-<span class="material-symbols-rounded">
-
-share
-
-</span>
+    <span class="material-symbols-rounded">
+        share
+    </span>
 
 </div>
 

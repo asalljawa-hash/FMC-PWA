@@ -63,8 +63,8 @@ let html = `
 
     </div>
 
-    <div class="heroAction"
-         onclick="shareFlok()">
+<div class="heroAction"
+     onclick="openShareDialog(shareFlok, exportFlokPDF)">
 
         <span class="material-symbols-rounded">
             share

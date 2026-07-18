@@ -70,13 +70,14 @@ ${harian.tanggal}
 </div>
 
 <div class="heroAction"
-onclick="shareHarian()">
+     onclick="openShareDialog(
+    shareHarian,
+    exportHarianPDF
+)">
 
-<span class="material-symbols-rounded">
-
-share
-
-</span>
+    <span class="material-symbols-rounded">
+        share
+    </span>
 
 </div>
 

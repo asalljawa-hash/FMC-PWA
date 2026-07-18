@@ -1175,9 +1175,13 @@ body.dark .card b{
 
 .aboutLogo{
 
-    font-size:60px;
+    display:flex;
 
-    margin-bottom:12px;
+    justify-content:center;
+
+    align-items:center;
+
+    margin-bottom:16px;
 
 }
 
@@ -1266,6 +1270,77 @@ body.dark .card b{
 .settingItem:last-child{
 
     margin-bottom:20px;
+
+}
+
+/* ==========================================
+   ABOUT PANEL DARK MODE
+========================================== */
+
+body.dark #aboutPanel{
+
+    background:#1B212B;
+
+    color:#F5F5F5;
+
+}
+
+body.dark #aboutPanel h2,
+body.dark #aboutPanel h3{
+
+    color:#FFFFFF;
+
+}
+
+body.dark .aboutDesc,
+body.dark .aboutFooter,
+body.dark .aboutMoto{
+
+    color:#D1D5DB;
+
+}
+
+body.dark .aboutInfo div{
+
+    background:#2A323D;
+
+    color:#F5F5F5;
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+body.dark #aboutPanel hr{
+
+    background:rgba(255,255,255,.10);
+
+}
+
+body.dark .aboutClose{
+
+    background:#0B8F43;
+
+    color:#FFFFFF;
+
+}
+
+body.dark .aboutClose:hover{
+
+    background:#087438;
+
+}
+
+body.dark .aboutVersion{
+
+    background:#0B8F43;
+
+    color:#FFFFFF;
+
+}
+
+body.dark .aboutLogo{
+
+    filter:brightness(1.1);
 
 }
 
@@ -1410,5 +1485,57 @@ body.dark .card b{
         opacity:1;
 
     }
+
+}
+
+/* ======================================
+   DARK MODE DIALOG
+====================================== */
+
+body.dark .fmcDialog{
+
+    background:rgba(0,0,0,.65);
+
+}
+
+body.dark .fmcDialogBox{
+
+    background:#1B212B;
+    color:#F5F5F5;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 20px 45px rgba(0,0,0,.45);
+
+}
+
+body.dark .fmcDialogBox h2{
+
+    color:#FFFFFF;
+
+}
+
+body.dark .fmcDialogBox p{
+
+    color:#C8CDD5;
+
+}
+
+body.dark .dialogOk{
+
+    background:#0B8F43;
+    color:#FFFFFF;
+
+}
+
+body.dark .dialogCancel{
+
+    background:#2A323D;
+    color:#FFFFFF;
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+body.dark .dialogCancel:hover{
+
+    background:#36414F;
 
 }

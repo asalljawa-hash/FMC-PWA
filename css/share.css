@@ -1,0 +1,93 @@
+/* ==========================================
+   SHARE CARD
+========================================== */
+
+.shareCard{
+
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    width:720px;
+
+    background:#ffffff;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.18);
+
+    font-family:Inter,sans-serif;
+
+    visibility:hidden;
+
+    z-index:-1;
+
+}
+
+.shareHeader{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0B8F43,
+        #18B85B
+    );
+
+    color:#fff;
+
+    padding:36px;
+
+}
+
+.shareHeader h2{
+
+    margin:0;
+
+    font-size:34px;
+
+    font-weight:800;
+
+}
+
+.shareHeader small{
+
+    display:block;
+
+    margin-top:10px;
+
+    font-size:18px;
+
+    opacity:.95;
+
+}
+
+#shareContent{
+
+    padding:36px;
+
+    color:#222;
+
+    font-size:24px;
+
+    line-height:1.8;
+
+    white-space:pre-line;
+
+}
+
+.shareFooter{
+
+    border-top:1px solid #eee;
+
+    padding:24px;
+
+    text-align:center;
+
+    font-size:18px;
+
+    color:#777;
+
+}
