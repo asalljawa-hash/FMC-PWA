@@ -1,0 +1,60 @@
+/* ==========================================
+   FMC BROILER MOBILE V11
+   LIGHT TABLE
+========================================== */
+
+.tableEkonomi,
+.tableRealisasi{
+
+    background:#FCFEFC;
+
+    border:1px solid #DDEEDF;
+
+    border-radius:18px;
+
+    box-shadow:0 4px 12px rgba(34,197,94,.05);
+
+}
+
+.tableEkonomi thead,
+.tableRealisasi thead{
+
+    background:#F1FAF3;
+
+}
+
+.tableEkonomi th,
+.tableRealisasi th{
+
+    background:#F1FAF3;
+
+    color:#2E7D32;
+
+    border-bottom:1px solid #DDEEDF;
+
+}
+
+.tableEkonomi td,
+.tableRealisasi td{
+
+    background:#FCFEFC;
+
+    color:#374151;
+
+    border-bottom:1px solid #EEF5EF;
+
+}
+
+.tableEkonomi tbody tr:nth-child(even) td,
+.tableRealisasi tbody tr:nth-child(even) td{
+
+    background:#F8FCF8;
+
+}
+
+.tableEkonomi tbody tr:hover td,
+.tableRealisasi tbody tr:hover td{
+
+    background:#EEF8F0;
+
+}

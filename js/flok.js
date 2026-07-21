@@ -48,7 +48,7 @@ let html = `
         </div>
 
         <h1>
-            Data Flok
+            PERFORMA FLOK
         </h1>
 
         <div class="heroDate">
@@ -57,7 +57,7 @@ let html = `
                 pets
             </span>
 
-            Monitoring Produksi
+            Monitoring Performa Produksi
 
         </div>
 

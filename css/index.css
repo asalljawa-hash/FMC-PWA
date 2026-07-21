@@ -1557,3 +1557,177 @@ body.dark .dialogCancel:hover{
     letter-spacing:.5px;
     box-shadow:0 4px 12px rgba(11,143,67,.25);
 }
+
+/* ==========================================
+   FMC BROILER MOBILE V11
+   TABLE STYLE
+========================================== */
+
+.tableEkonomi,
+.tableRealisasi{
+
+    width:100%;
+    overflow:hidden;
+    border-radius:18px;
+    margin-top:10px;
+    margin-bottom:18px;
+    background:#ffffff;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+
+}
+
+.tableEkonomi table,
+.tableRealisasi table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+.tableEkonomi thead,
+.tableRealisasi thead{
+
+    background:#f4f6f9;
+
+}
+
+.tableEkonomi th,
+.tableRealisasi th{
+
+    padding:14px 10px;
+    font-size:13px;
+    font-weight:700;
+    color:#374151;
+    text-align:center;
+    border-bottom:1px solid #e5e7eb;
+
+}
+
+.tableEkonomi td,
+.tableRealisasi td{
+
+    padding:12px 10px;
+    text-align:center;
+    font-size:13px;
+    color:#374151;
+    border-bottom:1px solid #eef2f7;
+
+}
+
+.tableEkonomi tbody tr:nth-child(even),
+.tableRealisasi tbody tr:nth-child(even){
+
+    background:#f9fafb;
+
+}
+
+.tableEkonomi tbody tr:hover,
+.tableRealisasi tbody tr:hover{
+
+    background:#f3f4f6;
+
+}
+
+
+/* ==========================================
+   DARK MODE
+========================================== */
+
+body.dark .tableEkonomi,
+body.dark .tableRealisasi{
+
+    background:#1f2937;
+    border:1px solid #374151;
+    box-shadow:none;
+
+}
+
+body.dark .tableEkonomi thead,
+body.dark .tableRealisasi thead{
+
+    background:#334155;
+
+}
+
+body.dark .tableEkonomi th,
+body.dark .tableRealisasi th{
+
+    background:#334155;
+    color:#f8fafc;
+    border-bottom:1px solid #475569;
+
+}
+
+body.dark .tableEkonomi td,
+body.dark .tableRealisasi td{
+
+    background:#1f2937;
+    color:#e5e7eb;
+    border-bottom:1px solid #374151;
+
+}
+
+body.dark .tableEkonomi tbody tr:nth-child(even) td,
+body.dark .tableRealisasi tbody tr:nth-child(even) td{
+
+    background:#273449;
+
+}
+
+body.dark .tableEkonomi tbody tr:hover td,
+body.dark .tableRealisasi tbody tr:hover td{
+
+    background:#334155;
+
+}
+
+/* ==========================================
+   FMC BROILER MOBILE V11
+   DARK MODE TABLE
+========================================== */
+
+body.dark .tableEkonomi,
+body.dark .tableRealisasi{
+
+    background:#1f2937;
+    border:1px solid #1f6b45;
+    box-shadow:0 0 12px rgba(34,197,94,.12);
+
+}
+
+body.dark .tableEkonomi thead,
+body.dark .tableRealisasi thead{
+
+    background:#184d36;
+
+}
+
+body.dark .tableEkonomi th,
+body.dark .tableRealisasi th{
+
+    background:#184d36;
+    color:#d9ffe8;
+    border-bottom:1px solid #2f7d58;
+
+}
+
+body.dark .tableEkonomi td,
+body.dark .tableRealisasi td{
+
+    color:#e5e7eb;
+
+}
+
+body.dark .tableEkonomi tbody tr:nth-child(even) td,
+body.dark .tableRealisasi tbody tr:nth-child(even) td{
+
+    background:#263342;
+
+}
+
+body.dark .tableEkonomi tbody tr:hover td,
+body.dark .tableRealisasi tbody tr:hover td{
+
+    background:#234833;
+
+}
