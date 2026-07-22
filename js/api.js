@@ -15,11 +15,16 @@ let lastDataVersion =
 localStorage.getItem("FMC_DATA_VERSION") || "";
 
 
-async function ambilDataServer(){
+async function ambilDataServer(force = false){
 
-console.log("STEP API");
+    // Gunakan cache jika sudah ada
+    if(serverData && !force){
+        return serverData;
+    }
 
-try{
+    console.log("STEP API");
+
+    try{
 
 const response = await fetch(
     API_URL + "&t=" + Date.now(),

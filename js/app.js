@@ -18,45 +18,60 @@ async function showPage(page){
         "flok",
         "keuangan",
         "harian",
+        "rhpp",
         "ai"
     ];
 
-    pages.forEach(p=>{
+    pages.forEach(p => {
 
-        document.getElementById(p+"Page").style.display="none";
+        const el = document.getElementById(p + "Page");
+
+        if(el){
+            el.style.display = "none";
+        }
 
     });
 
-    document.getElementById(page+"Page").style.display="block";
+    const activePage = document.getElementById(page + "Page");
+
+    if(activePage){
+        activePage.style.display = "block";
+    }
 
     switch(page){
 
         case "dashboard":
-            if(typeof tampilDashboard==="function"){
+            if(typeof tampilDashboard === "function"){
                 await tampilDashboard();
             }
         break;
 
         case "flok":
-            if(typeof tampilFlok==="function"){
+            if(typeof tampilFlok === "function"){
                 await tampilFlok();
             }
         break;
 
         case "keuangan":
-            if(typeof tampilKeuangan==="function"){
+            if(typeof tampilKeuangan === "function"){
                 await tampilKeuangan();
             }
         break;
 
         case "harian":
-            if(typeof tampilHarian==="function"){
+            if(typeof tampilHarian === "function"){
                 await tampilHarian();
             }
         break;
 
+        case "rhpp":
+    if(typeof renderRHPP === "function"){
+        await renderRHPP();
+    }
+break;
+
         case "ai":
-            if(typeof tampilAI==="function"){
+            if(typeof tampilAI === "function"){
                 await tampilAI();
             }
         break;
@@ -208,7 +223,15 @@ window.onload = async function(){
 
 setInterval(async()=>{
 
-    await showPage(currentPage);
+    if(currentPage === "rhpp"){
+        return;
+    }
+
+    serverData = null;
+
+await ambilDataServer(true);
+
+await showPage(currentPage);
 
 },30000);
 
@@ -259,6 +282,10 @@ function showUpdateToast(text){
 async function refreshData(){
 
     try{
+
+        serverData = null;
+
+        await ambilDataServer(true);
 
         await showPage(currentPage);
 
