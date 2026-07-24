@@ -119,106 +119,145 @@ Ekor
 </div>
 
 `;
+harian.flok.forEach(f=>{
 
-    harian.flok.forEach(f=>{
-
-        html+=`
+    html += `
 
 <div class="card">
 
-<div class="farmHeader">
+    <div class="farmHeader">
 
-<div>
+        <div>
 
-<h2>
+            <h2>Flok ${f.nama}</h2>
 
-Flok ${f.nama}
+            <small>Laporan Harian</small>
 
-</h2>
+        </div>
 
-<small>
+        <div class="onlineBadge">
 
-Laporan Harian
+            <span class="material-symbols-rounded">
 
-</small>
+                check_circle
 
-</div>
+            </span>
 
-<div class="onlineBadge">
+            AKTIF
 
-<span class="material-symbols-rounded">
+        </div>
 
-check_circle
-
-</span>
-
-AKTIF
-
-</div>
-
-</div>
+    </div>
 
 <div
 style="
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:16px;
-margin-top:18px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-top:18px;
 ">
 
-<div>
+    <div
+    style="
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        min-height:130px;
+    ">
 
-<div class="kpiIcon">
+        <div class="kpiIcon">
 
-<span class="material-symbols-rounded">
+            <span class="material-symbols-rounded">
 
-schedule
+                schedule
 
-</span>
+            </span>
 
-</div>
+        </div>
 
-<h4>Umur</h4>
+        <h4 style="margin:10px 0 6px;">
 
-<b>${f.umur} Hari</b>
+            Umur
 
-</div>
+        </h4>
 
-<div>
+        <b style="margin:0;">
 
-<div class="kpiIcon">
+            ${f.umur} Hari
 
-<span class="material-symbols-rounded">
+        </b>
 
-warning
+    </div>
 
-</span>
+    <div
+    style="
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        min-height:130px;
+    ">
 
-</div>
+        <div class="kpiIcon">
 
-<h4>Mati</h4>
+            <span class="material-symbols-rounded">
 
-<b>${f.mati}</b>
+                warning
 
-</div>
+            </span>
 
-<div>
+        </div>
 
-<div class="kpiIcon">
+        <h4 style="margin:10px 0 6px;">
 
-<span class="material-symbols-rounded">
+            Mati
 
-pie_chart
+        </h4>
 
-</span>
+        <b style="margin:0;">
 
-</div>
+            ${f.mati}
 
-<h4>Mortalitas</h4>
+        </b>
 
-<b>${f.mortalitas}</b>
+    </div>
 
-</div>
+    <div
+    style="
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        min-height:130px;
+    ">
+
+        <div class="kpiIcon">
+
+            <span class="material-symbols-rounded">
+
+                pie_chart
+
+            </span>
+
+        </div>
+
+        <h4 style="margin:10px 0 6px;">
+
+            Mortalitas
+
+        </h4>
+
+        <b style="margin:0;">
+
+            ${f.mortalitas}
+
+        </b>
+
+    </div>
 
 </div>
 
@@ -226,9 +265,9 @@ pie_chart
 
 `;
 
-    });
+});
 
-    html+=`
+html += `
 
 <div
 style="
@@ -244,6 +283,6 @@ Powered by Dasbor FMC Analytics
 
 `;
 
-    document.getElementById("harianPage").innerHTML=html;
+document.getElementById("harianPage").innerHTML = html;
 
 }

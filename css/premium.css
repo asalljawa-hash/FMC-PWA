@@ -1,0 +1,185 @@
+/* ==========================================================
+   FMC PREMIUM THEME V15
+   PART 1
+========================================================== */
+
+/* ==========================================
+   GLOBAL
+========================================== */
+
+body.desktop{
+
+    background:#eef3f1;
+
+}
+
+/* ==========================================
+   HERO
+========================================== */
+
+body.desktop .dashboardHero{
+
+    background:linear-gradient(135deg,#0B8F43,#1BC85F);
+
+    border-radius:20px;
+
+    padding:20px 26px;
+
+    min-height:90px;
+
+    box-shadow:
+        0 10px 30px rgba(11,143,67,.18);
+
+}
+
+body.desktop .dashboardHero h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    color:#fff;
+
+    margin:4px 0;
+
+    letter-spacing:.3px;
+
+}
+
+body.desktop .heroSmall{
+
+    color:rgba(255,255,255,.8);
+
+    font-size:13px;
+
+    font-weight:600;
+
+    letter-spacing:1px;
+
+}
+
+body.desktop .heroDate{
+
+    color:rgba(255,255,255,.95);
+
+    font-size:15px;
+
+}
+
+body.desktop .heroAction{
+
+    width:54px;
+
+    height:54px;
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(10px);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.25s;
+
+}
+
+body.desktop .heroAction:hover{
+
+    transform:scale(1.08);
+
+    background:rgba(255,255,255,.28);
+
+}
+/* ==========================================
+   FMC PREMIUM FLOK V16
+========================================== */
+
+.flokInfo{
+
+margin-top:18px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+}
+
+.flokRow{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:12px 16px;
+
+background:#f8faf9;
+
+border-radius:14px;
+
+transition:.25s;
+
+}
+
+.flokRow:hover{
+
+background:#eef8f2;
+
+transform:translateX(4px);
+
+}
+
+.flokRow span{
+
+font-size:15px;
+
+font-weight:500;
+
+color:#555;
+
+}
+
+.flokRow b{
+
+font-size:22px;
+
+font-weight:800;
+
+color:#1b1b1b;
+
+}
+
+/* =====================================
+   FLOK CARD RESPONSIVE
+===================================== */
+
+.flokGrid{
+
+    display:grid;
+    grid-template-columns:1fr;
+
+    gap:16px;
+
+}
+
+
+/* DESKTOP MODE */
+
+@media(min-width:768px){
+
+    .flokGrid{
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+    }
+
+}

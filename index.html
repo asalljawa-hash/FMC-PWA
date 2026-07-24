@@ -58,10 +58,12 @@ rel="stylesheet">
 <link rel="stylesheet" href="css/index.css">
 <link rel="stylesheet" href="css/share.css">
 <link rel="stylesheet" href="css/rhpp.css">
+<link rel="stylesheet" href="css/setting.css">
+<link rel="stylesheet" href="css/premium.css">
 
 </head>
 
-<body>
+<body id="appBody">
 
 <!-- ======================================
 HEADER V11
@@ -596,6 +598,8 @@ SETTING PANEL
 
 </div>
 
+<hr>
+
 <div class="settingItem" onclick="showAbout()">
 
     <span class="material-symbols-rounded">
@@ -604,6 +608,24 @@ SETTING PANEL
 
     <span style="flex:1;">
         Tentang FMC
+    </span>
+
+    <span class="material-symbols-rounded">
+        chevron_right
+    </span>
+
+</div>
+
+<hr>
+
+<div class="settingItem" onclick="exitFMC()">
+
+    <span class="material-symbols-rounded">
+        logout
+    </span>
+
+    <span style="flex:1;">
+        Keluar
     </span>
 
 </div>

@@ -4,6 +4,12 @@
    BAGIAN 1
 ========================================================== */
 
+html,
+body{
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+}
+
 /* =========================
    RESET
 ========================= */
@@ -436,65 +442,24 @@ table tr:last-child td{
 
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:480px){
-
-    #app{
-
-        padding:12px;
-
-    }
-
-    .gridCard{
-
-        grid-template-columns:1fr;
-
-        gap:14px;
-
-    }
-
-    .dashboardHero{
-
-        padding:18px;
-
-        border-radius:18px;
-
-        margin-bottom:12px;
-
-        min-height:unset;
-
-    }
-
-    .dashboardHero h1{
-
-        font-size:24px;
-
-        font-weight:700;
-
-        margin-bottom:6px;
-
-    }
-
 /* ==========================================
    HERO DETAIL V13
 ========================================== */
 
 .heroSmall{
 
-    font-size:11px;
+    font-size:10px;
 
     font-weight:600;
 
-    letter-spacing:1px;
+    letter-spacing:.8px;
 
     color:rgba(255,255,255,.85);
 
-    margin-bottom:4px;
+    margin-bottom:3px;
 
 }
+
 
 .heroDate{
 
@@ -502,45 +467,50 @@ table tr:last-child td{
 
     align-items:center;
 
-    gap:6px;
+    gap:5px;
 
-    margin-top:6px;
+    margin-top:4px;
 
-    font-size:13px;
+    font-size:12px;
 
     color:rgba(255,255,255,.92);
 
 }
 
+
 .heroDate .material-symbols-rounded{
 
-    font-size:18px;
+    font-size:16px;
 
 }
 
-    .heroLogo{
 
-        width:56px;
+.heroLogo{
 
-        height:56px;
+    width:44px;
 
-    }
+    height:44px;
 
-    .heroLogo .material-symbols-rounded{
+}
 
-        font-size:32px;
 
-    }
+.heroLogo .material-symbols-rounded{
 
-    .farmHeader{
+    font-size:26px;
 
-        flex-direction:column;
+}
 
-        align-items:flex-start;
 
-        gap:12px;
+.farmHeader{
 
-    }
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:8px;
+
+}
+
 
 }
 
@@ -552,11 +522,11 @@ table tr:last-child td{
 
     #app{
 
-        padding-left:max(16px,env(safe-area-inset-left));
+        padding-left:max(8px,env(safe-area-inset-left));
 
-        padding-right:max(16px,env(safe-area-inset-right));
+        padding-right:max(8px,env(safe-area-inset-right));
 
-        padding-bottom:max(16px,env(safe-area-inset-bottom));
+        padding-bottom:max(12px,env(safe-area-inset-bottom));
 
     }
 
@@ -612,7 +582,6 @@ table tr:last-child td{
 
 }
 
-
 /* ==========================================
    FAB SETTING V12
 ========================================== */
@@ -664,6 +633,18 @@ table tr:last-child td{
 
 }
 
+/* Saat panel dibuka, sembunyikan tombol FAB */
+
+body.setting-open #fabSetting{
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:scale(.8);
+
+}
+
 /* ==========================================
    SETTING PANEL V13
 ========================================== */
@@ -706,7 +687,9 @@ table tr:last-child td{
 
 #settingPanel h2{
 
-    margin:0 0 18px;
+    margin:10px 0 20px;
+
+    text-align:center;
 
     font-size:20px;
 
@@ -756,6 +739,28 @@ table tr:last-child td{
 
 }
 
+/* ==========================================
+   EXIT MENU
+========================================== */
+
+.settingItem.exitItem{
+
+    color:#D32F2F;
+
+}
+
+.settingItem.exitItem
+.material-symbols-rounded{
+
+    color:#D32F2F;
+
+}
+
+.settingItem.exitItem:active{
+
+    background:#FDECEC;
+
+}
 
 /* ==========================================
    HANDLE
@@ -776,24 +781,24 @@ table tr:last-child td{
 }
 
 /* =========================
-   DESKTOP MODE V13.1
+   DESKTOP MODE V14 - TEST 1
 ========================= */
 
 body.desktop{
 
-    background:#eef3f1;
+    background:#EEF3F1;
 
 }
 
 body.desktop main{
 
-    width:96%;
-    max-width:1700px;
-    margin:20px auto;
+    width:min(96%,1700px);
 
-    display:grid;
+    margin:20px auto 110px;
 
-    grid-template-columns:repeat(2,minmax(420px,1fr));
+    display:flex;
+
+    flex-direction:column;
 
     gap:20px;
 
@@ -803,90 +808,35 @@ body.desktop main{
 
 body.desktop section{
 
+    width:100%;
+
     display:block !important;
 
 }
 
 body.desktop .header{
 
-    width:96%;
-    max-width:1700px;
+    width:min(96%,1700px);
+
     margin:auto;
 
 }
 
 body.desktop .bottomNav{
 
-    width:96%;
-    max-width:1700px;
+    width:min(96%,1700px);
 
     left:50%;
+
     transform:translateX(-50%);
 
 }
 
-body.desktop .card{
-
-    margin:0;
-
-}
+body.desktop .card,
 
 body.desktop .weatherCard{
 
     margin:0;
-
-}
-
-/* ==========================================
-   TABLET MODE (768px - 1199px)
-========================================== */
-
-@media (min-width:768px) and (max-width:1199px){
-
-body.desktop main{
-
-    width:92%;
-
-    grid-template-columns:repeat(2,1fr);
-
-    gap:18px;
-
-}
-
-}
-
-/* ==========================================
-   DESKTOP MODE BESAR (1200px+)
-========================================== */
-
-@media (min-width:1200px){
-
-body.desktop main{
-
-    width:86%;
-
-    max-width:1600px;
-
-    grid-template-columns:repeat(3,minmax(0,1fr));
-
-}
-
-body.desktop .header,
-body.desktop .bottomNav{
-
-    width:86%;
-
-    max-width:1600px;
-
-}
-
-}
-
-body.desktop main{
-
-    grid-template-columns:repeat(3,1fr);
-
-}
 
 }
 
@@ -1134,7 +1084,7 @@ body.dark .card b{
 }
 
 /* ==========================================
-   ABOUT FMC PANEL V13 FINAL
+   ABOUT FMC PANEL V14
 ========================================== */
 
 #aboutPanel{
@@ -1149,27 +1099,32 @@ body.dark .card b{
 
     background:#fff;
 
-    border-radius:26px 26px 0 0;
+    border-radius:28px 28px 0 0;
 
     padding:24px;
 
-    transition:.35s;
+    padding-bottom:40px;
+
+    transition:bottom .35s ease;
 
     z-index:10000;
 
-    box-shadow:0 -10px 35px rgba(0,0,0,.25);
+    box-shadow:
+        0 -12px 40px rgba(0,0,0,.22);
 
     text-align:center;
 
     max-height:90vh;
 
-    overflow:auto;
+    overflow-y:auto;
+
+    -webkit-overflow-scrolling:touch;
 
 }
 
 #aboutPanel.show{
 
-    bottom:0 !important;
+    bottom:0;
 
 }
 
@@ -1181,17 +1136,21 @@ body.dark .card b{
 
     align-items:center;
 
-    margin-bottom:16px;
+    margin:8px 0 18px;
 
 }
 
 .aboutVersion{
 
-    display:inline-block;
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
 
     margin:12px 0;
 
-    padding:6px 16px;
+    padding:7px 18px;
 
     border-radius:999px;
 
@@ -1203,13 +1162,17 @@ body.dark .card b{
 
     font-weight:700;
 
+    letter-spacing:.3px;
+
 }
 
 .aboutDesc{
 
     margin:18px 0;
 
-    line-height:1.7;
+    line-height:1.8;
+
+    color:#555;
 
 }
 
@@ -1221,41 +1184,55 @@ body.dark .card b{
 
     gap:14px;
 
-    margin:22px 0;
+    margin:24px 0;
 
 }
 
 .aboutInfo div{
 
-    background:#F5F7F8;
+    background:#F7F8FA;
 
-    padding:14px;
+    border:1px solid rgba(0,0,0,.05);
 
-    border-radius:14px;
+    padding:15px;
+
+    border-radius:16px;
+
+    transition:.25s;
+
+}
+
+.aboutInfo div:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
 
 }
 
 .aboutFooter{
 
-    margin-top:20px;
+    margin-top:22px;
 
     color:#666;
 
-    line-height:1.7;
+    line-height:1.8;
+
+    font-size:13px;
 
 }
 
 .aboutClose{
 
-    margin-top:22px;
+    margin-top:24px;
 
     width:100%;
 
     border:none;
 
-    border-radius:14px;
+    border-radius:16px;
 
-    padding:14px;
+    padding:15px;
 
     background:#0B8F43;
 
@@ -1264,6 +1241,16 @@ body.dark .card b{
     font-size:15px;
 
     font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.aboutClose:hover{
+
+    filter:brightness(1.08);
 
 }
 
@@ -1729,5 +1716,202 @@ body.dark .tableEkonomi tbody tr:hover td,
 body.dark .tableRealisasi tbody tr:hover td{
 
     background:#234833;
+
+}
+
+/* ==========================================
+   SETTING PANEL - DARK MODE
+========================================== */
+
+body.dark #settingPanel{
+
+    background:#1b1b1b;
+
+    color:#f5f5f5;
+
+}
+
+body.dark .settingItem{
+
+    background:#2a2a2a;
+
+    color:#f5f5f5;
+
+}
+
+body.dark .settingItem:active{
+
+    background:#34463a;
+
+}
+
+body.dark .panelHandle{
+
+    background:#666;
+
+}
+
+body.dark #settingPanel h2{
+
+    color:#55d67f;
+
+}
+
+body.dark .settingItem
+.material-symbols-rounded{
+
+    color:#55d67f;
+
+}
+
+body.dark.setting-open::before{
+
+    background:rgba(0,0,0,.35);
+
+}
+
+/* ==========================================
+   FMC REAL MOBILE COMPACT FIX
+========================================== */
+
+@media (max-width:480px){
+
+    html{
+        -webkit-text-size-adjust:90%;
+        text-size-adjust:90%;
+    }
+
+
+    body{
+        font-size:13px;
+    }
+
+
+    #app{
+        padding:6px;
+        max-width:100%;
+    }
+
+
+    .gridCard{
+        gap:8px;
+    }
+
+
+    .card,
+    .gridCard > div{
+        padding:10px;
+        border-radius:12px;
+    }
+
+
+    .dashboardHero{
+        padding:12px;
+        margin-bottom:10px;
+        border-radius:14px;
+    }
+
+
+    .dashboardHero h1{
+        font-size:20px;
+    }
+
+
+    h1{
+        font-size:20px;
+    }
+
+
+    h2{
+        font-size:16px;
+    }
+
+
+    h3{
+        font-size:14px;
+    }
+
+
+    p,
+    span,
+    td,
+    th{
+        font-size:12px;
+    }
+
+
+    table{
+        font-size:12px;
+    }
+
+
+    th,
+    td{
+        padding:5px 4px;
+    }
+
+}
+
+/* ==========================================
+   FMC DESKTOP ENGINE V14
+========================================== */
+
+body.desktop{
+
+    background:#eef3f1;
+
+    overflow-x:hidden;
+
+}
+
+body.desktop main{
+
+    width:100%;
+
+    max-width:1800px;
+
+    margin:20px auto;
+
+    padding:0 24px 100px;
+
+    box-sizing:border-box;
+
+}
+
+body.desktop #dashboardPage,
+body.desktop #harianPage,
+body.desktop #keuanganPage,
+body.desktop #rhppPage,
+body.desktop #settingPage{
+
+    width:100%;
+
+    max-width:100%;
+
+}
+
+body.desktop .dashboardHero,
+body.desktop .card,
+body.desktop .weatherCard{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+}
+
+body.desktop .gridCard{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:18px;
+
+}
+
+body.desktop table{
+
+    width:100%;
 
 }

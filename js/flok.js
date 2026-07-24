@@ -9,7 +9,7 @@ async function tampilFlok(){
 
     if(!data){
 
-        document.getElementById("flokPage").innerHTML=`
+        document.getElementById("flokPage").innerHTML = `
 
         <div class="card">
 
@@ -17,7 +17,7 @@ async function tampilFlok(){
 
                 <span class="material-symbols-rounded">
 
-                cloud_off
+                    cloud_off
 
                 </span>
 
@@ -35,199 +35,184 @@ async function tampilFlok(){
 
     }
 
-    const flok=data.dashboard.flok || [];
+    const flok = data.dashboard.flok || [];
 
-let html = `
+    let html = `
 
-<div class="dashboardHero">
+    <div class="dashboardHero">
 
-    <div>
+        <div>
 
-        <div class="heroSmall">
-            FMC BOILER MOBILE V11
+            <div class="heroSmall">
+
+                FMC BOILER MOBILE V11
+
+            </div>
+
+            <h1>
+
+                PERFORMA FLOK
+
+            </h1>
+
+            <div class="heroDate">
+
+                <span class="material-symbols-rounded">
+
+                    pets
+
+                </span>
+
+                Monitoring Performa Produksi
+
+            </div>
+
         </div>
 
-        <h1>
-            PERFORMA FLOK
-        </h1>
-
-        <div class="heroDate">
+        <div class="heroAction"
+             onclick="openShareDialog(shareFlok, exportFlokPDF)">
 
             <span class="material-symbols-rounded">
-                pets
-            </span>
 
-            Monitoring Performa Produksi
+                share
+
+            </span>
 
         </div>
 
     </div>
 
-<div class="heroAction"
-     onclick="openShareDialog(shareFlok, exportFlokPDF)">
+    <div class="flokGrid">
 
-        <span class="material-symbols-rounded">
-            share
-        </span>
-
-    </div>
-
-</div>
-
-`;
+    `;
 
     flok.forEach(item=>{
 
-        html+=`
+        html += `
 
-<div class="card">
+        <div class="card">
 
-<div class="farmHeader">
+            <div class="farmHeader">
 
-<div>
+                <div>
 
-<h2>
+                    <h2>
 
-Flok ${item.nama}
+                        Flok ${item.nama}
 
-</h2>
+                    </h2>
 
-<small>
+                    <small>
 
-Monitoring Produksi
+                        Monitoring Produksi
 
-</small>
+                    </small>
 
-</div>
+                </div>
 
-<div class="onlineBadge">
+                <div class="onlineBadge">
 
-<span class="material-symbols-rounded">
+                    <span class="material-symbols-rounded">
 
-verified
+                        verified
 
-</span>
+                    </span>
 
-AKTIF
+                    AKTIF
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-<div style="
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:16px;
-margin-top:18px;">
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(2,1fr);
+                gap:16px;
+                margin-top:18px;
+            ">
 
-<div>
+                <div>
 
-<div class="kpiIcon">
+                    <div class="kpiIcon">🐔</div>
 
-<span class="material-symbols-rounded">
+                    <h4>Ayam Hidup</h4>
 
-🐔
+                    <b>${item.hidup ?? "-"}</b>
 
-</span>
+                </div>
 
-</div>
+                <div>
 
-<h4>Ayam Hidup</h4>
+                    <div class="kpiIcon">💀</div>
 
-<b>${item.hidup ?? "-"}</b>
+                    <h4>Mati</h4>
 
-</div>
+                    <b>${item.mati ?? "-"}</b>
 
-<div>
+                </div>
 
-<div class="kpiIcon">
+                <div>
 
-<span class="material-symbols-rounded">
+                    <div class="kpiIcon">📉</div>
 
-💀
+                    <h4>Mortalitas</h4>
 
-</span>
+                    <b>${item.mortalitas ?? "-"}</b>
 
-</div>
+                </div>
 
-<h4>Mati</h4>
+                <div>
 
-<b>${item.mati ?? "-"}</b>
+                    <div class="kpiIcon">🍗</div>
 
-</div>
+                    <h4>FCR</h4>
 
-<div>
+                    <b>${item.fcr ?? "-"}</b>
 
-<div class="kpiIcon">
+                </div>
 
-📉
+                <div>
 
-</div>
+                    <div class="kpiIcon">🏆</div>
 
-<h4>Mortalitas</h4>
+                    <h4>IP</h4>
 
-<b>${item.mortalitas ?? "-"}</b>
+                    <b>${item.ip ?? "-"}</b>
 
-</div>
+                </div>
 
-<div>
+                <div>
 
-<div class="kpiIcon">
+                    <div class="kpiIcon">
 
-🍗
+                        <span class="material-symbols-rounded">
 
-</div>
+                            assignment_turned_in
 
-<h4>FCR</h4>
+                        </span>
 
-<b>${item.fcr ?? "-"}</b>
+                    </div>
 
-</div>
+                    <h4>Status</h4>
 
-<div>
+                    <b>${item.status ?? "BELUM"}</b>
 
-<div class="kpiIcon">
+                </div>
 
-<span class="material-symbols-rounded">
+            </div>
 
-🏆
+        </div>
 
-</span>
-
-</div>
-
-<h4>IP</h4>
-
-<b>${item.ip ?? "-"}</b>
-
-</div>
-
-<div>
-
-<div class="kpiIcon">
-
-<span class="material-symbols-rounded">
-
-assignment_turned_in
-
-</span>
-
-</div>
-
-<h4>Status</h4>
-
-<b>${item.status ?? "BELUM"}</b>
-
-</div>
-
-</div>
-
-</div>
-
-`;
+        `;
 
     });
 
-    document.getElementById("flokPage").innerHTML=html;
+    html += `
+
+    </div>
+
+    `;
+
+    document.getElementById("flokPage").innerHTML = html;
 
 }

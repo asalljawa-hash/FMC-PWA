@@ -693,18 +693,58 @@ function toggleSettingPanel(){
     if(settingPanelOpen){
 
         panel.classList.remove("show");
+
+        document.body.classList.remove("setting-open");
+
         settingPanelOpen = false;
 
     }else{
 
         panel.classList.add("show");
+
+        document.body.classList.add("setting-open");
+
         settingPanelOpen = true;
+
+        // Agar tombol Back Android
+        // menutup panel terlebih dahulu
+        history.pushState(
+            {settingPanel:true},
+            "",
+            location.href
+        );
 
     }
 
 }
 
-// Tutup panel jika area luar ditekan
+// ==========================================
+// BACK BUTTON ANDROID
+// ==========================================
+
+window.addEventListener("popstate", function(){
+
+    if(settingPanelOpen){
+
+        const panel = document.getElementById("settingPanel");
+
+        if(panel){
+
+            panel.classList.remove("show");
+
+        }
+
+        document.body.classList.remove("setting-open");
+
+        settingPanelOpen = false;
+
+    }
+
+});
+
+// ==========================================
+// TUTUP PANEL JIKA AREA LUAR DITEKAN
+// ==========================================
 
 document.addEventListener("click", function(e){
 
@@ -721,6 +761,7 @@ document.addEventListener("click", function(e){
         ){
 
             panel.classList.remove("show");
+
             document.body.classList.remove("setting-open");
 
             settingPanelOpen = false;
@@ -840,5 +881,47 @@ function loadTheme(){
         }
 
     }
+
+}
+
+// ==========================================
+// EXIT FMC
+// ==========================================
+
+function exitFMC(){
+
+    showDialog(
+
+        "Keluar FMC",
+
+        "Apakah Anda yakin ingin keluar dari FMC Broiler Mobile?",
+
+        function(){
+
+            // Tutup panel pengaturan
+            const panel = document.getElementById("settingPanel");
+
+            if(panel){
+                panel.classList.remove("show");
+            }
+
+            document.body.classList.remove("setting-open");
+
+            settingPanelOpen = false;
+
+            // Kembali jika ada riwayat
+            if(history.length > 1){
+
+                history.back();
+
+            }else{
+
+                showPage("dashboard");
+
+            }
+
+        }
+
+    );
 
 }

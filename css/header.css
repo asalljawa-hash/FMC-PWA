@@ -199,3 +199,33 @@
     }
 
 }
+
+/* ==========================================
+   FMC DESKTOP HEADER V14
+========================================== */
+
+body.desktop .header{
+
+    width:100% !important;
+
+    max-width:none !important;
+
+    left:0;
+
+    right:0;
+
+    margin:0;
+
+    padding-left:24px;
+
+    padding-right:24px;
+
+    box-sizing:border-box;
+
+}
+
+body.desktop .dashboardHero{
+
+    width:100%;
+
+}
