@@ -183,3 +183,27 @@ color:#1b1b1b;
     }
 
 }
+/* ==========================================
+   FMC LAYOUT ENGINE V12
+========================================== */
+
+/* MODE MOBILE */
+body.mobile-layout .kpiGrid,
+body.mobile-layout .flokGrid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:16px;
+}
+
+/* MODE DESKTOP */
+body.desktop-layout .kpiGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:18px;
+}
+
+body.desktop-layout .flokGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:18px;
+}

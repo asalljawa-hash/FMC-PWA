@@ -6,14 +6,16 @@
 
     background:var(--card);
 
+    width:calc(100% - 16px);
+
+    margin:0 auto;
+
     border-radius:14px;
 
     box-shadow:
     0 6px 16px rgba(0,0,0,.06);
 
     padding:12px;
-
-    margin:0;
 
     transition:.25s;
 
@@ -78,7 +80,7 @@
 
     margin:0 0 10px;
 
-    font-size:18px;
+    font-size:17px;
 
     font-weight:700;
 
@@ -90,7 +92,7 @@
 
     margin:0 0 8px;
 
-    font-size:16px;
+    font-size:15px;
 
     font-weight:700;
 
@@ -102,7 +104,7 @@
 
     margin:8px 0 4px;
 
-    font-size:13px;
+    font-size:12px;
 
     font-weight:600;
 
@@ -129,9 +131,9 @@
 
 .kpiIcon{
 
-    width:40px;
+    width:34px;
 
-    height:40px;
+    height:34px;
 
     border-radius:10px;
 
@@ -157,7 +159,7 @@
 
 .kpiIcon .material-symbols-rounded{
 
-    font-size:20px;
+    font-size:18px;
 
 }
 
@@ -191,7 +193,7 @@
 
     color:#fff;
 
-    padding:12px;
+    padding:10px;
 
 }
 
@@ -209,7 +211,7 @@
 
 .farmHeader h2{
 
-    color:#fff;
+    color:var(--text);
 
     margin:0;
 
@@ -219,16 +221,26 @@
 
 }
 
+.farmCard .farmHeader h2{
+    color:#fff;
+}
+
 .farmHeader small{
 
     display:block;
 
     margin-top:3px;
 
-    color:rgba(255,255,255,.9);
+    color:var(--text-soft);
 
     font-size:12px;
 
+    font-weight:500;
+
+}
+
+.farmCard .farmHeader small{
+    color:rgba(255,255,255,.9);
 }
 
 .onlineBadge{
@@ -249,7 +261,7 @@
 
     font-size:10px;
 
-    font-weight:700;
+    font-weight:600;
 
 }
 
@@ -295,11 +307,11 @@
 
     align-items:center;
 
-    margin:10px;
+    margin:8px;
 
-    padding:14px;
+    padding:16px;
 
-    border-radius:18px;
+    border-radius:16px;
 
     background:
     linear-gradient(
@@ -311,29 +323,33 @@
     color:#fff;
 
     box-shadow:
-    0 8px 18px rgba(11,143,67,.22);
+    0 6px 16px rgba(11,143,67,.20);
 
 }
 
 .dashboardHero h1{
 
-    margin:4px 0;
+    margin:2px 0;
 
     font-size:22px;
 
     font-weight:700;
 
+    line-height:1.2;
+
 }
 
 .heroSmall{
 
-    font-size:10px;
+    font-size:11px;
+
+    font-weight:600;
 
     letter-spacing:1px;
 
     text-transform:uppercase;
 
-    opacity:.85;
+    opacity:.82;
 
 }
 
@@ -345,9 +361,11 @@
 
     gap:6px;
 
-    margin-top:4px;
+    margin-top:6px;
 
-    font-size:12px;
+    font-size:13px;
+
+    opacity:.95;
 
 }
 
@@ -363,13 +381,13 @@
 
 .heroShareBtn{
 
-    width:38px;
+    width:36px;
 
-    height:38px;
+    height:36px;
 
     border:none;
 
-    border-radius:12px;
+    border-radius:10px;
 
     background:rgba(255,255,255,.18);
 
@@ -389,19 +407,25 @@
 
 }
 
+.heroShareBtn:hover{
+
+    background:rgba(255,255,255,.26);
+
+}
+
 .heroShareBtn .material-symbols-rounded{
 
-    font-size:18px;
+    font-size:17px;
 
 }
 
 .heroLogo{
 
-    width:44px;
+    width:40px;
 
-    height:44px;
+    height:40px;
 
-    border-radius:14px;
+    border-radius:12px;
 
     display:flex;
 
@@ -415,7 +439,7 @@
 
 .heroLogo .material-symbols-rounded{
 
-    font-size:28px;
+    font-size:24px;
 
     color:#fff;
 
@@ -530,5 +554,119 @@ body.desktop .gridCard .card:hover{
 
     box-shadow:
         0 12px 30px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+   HARIAN CARD V12
+========================================== */
+
+.harianGrid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:8px;
+
+    margin-top:8px;
+
+}
+
+.harianItem{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:4px 2px;
+
+}
+
+.harianItem .kpiIcon{
+
+    width:30px;
+
+    height:30px;
+
+    margin-bottom:6px;
+
+}
+
+.harianItem .kpiIcon .material-symbols-rounded{
+
+    font-size:16px;
+
+}
+
+.harianItem h4{
+
+    margin:2px 0 2px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.harianItem b{
+
+    margin-top:2px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   HARIAN HEADER V13
+========================================== */
+
+.harianHeader{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:10px;
+
+}
+
+.harianTitle h2{
+
+    margin:0;
+
+    font-size:17px;
+
+    font-weight:700;
+
+}
+
+.harianTitle small{
+
+    display:block;
+
+    margin-top:2px;
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+    font-weight:500;
+
+}
+
+body.dark .harianTitle small{
+
+    color:#D1D5DB;
 
 }

@@ -583,69 +583,6 @@ table tr:last-child td{
 }
 
 /* ==========================================
-   FAB SETTING V12
-========================================== */
-
-#fabSetting{
-
-    position:fixed;
-
-    right:18px;
-
-    bottom:85px;
-
-    width:58px;
-
-    height:58px;
-
-    border:none;
-
-    border-radius:50%;
-
-    background:#0B8F43;
-
-    color:#fff;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    box-shadow:0 10px 24px rgba(0,0,0,.25);
-
-    cursor:pointer;
-
-    z-index:9998;
-
-    transition:.25s;
-
-}
-
-#fabSetting:hover{
-
-    transform:scale(1.08);
-}
-
-#fabSetting .material-symbols-rounded{
-
-    font-size:28px;
-
-}
-
-/* Saat panel dibuka, sembunyikan tombol FAB */
-
-body.setting-open #fabSetting{
-
-    opacity:0;
-
-    pointer-events:none;
-
-    transform:scale(.8);
-
-}
-
-/* ==========================================
    SETTING PANEL V13
 ========================================== */
 

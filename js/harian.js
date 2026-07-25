@@ -125,17 +125,17 @@ harian.flok.forEach(f=>{
 
 <div class="card">
 
-    <div class="farmHeader">
+<div class="harianHeader">
 
-        <div>
+    <div class="harianTitle">
 
-            <h2>Flok ${f.nama}</h2>
+        <h2>Flok ${f.nama}</h2>
 
-            <small>Laporan Harian</small>
+        <small>Laporan Harian</small>
 
-        </div>
+    </div>
 
-        <div class="onlineBadge">
+    <div class="onlineBadge">
 
             <span class="material-symbols-rounded">
 
@@ -149,113 +149,47 @@ harian.flok.forEach(f=>{
 
     </div>
 
-<div
-style="
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:16px;
-    margin-top:18px;
-">
+<div class="harianGrid">
 
-    <div
-    style="
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        min-height:130px;
-    ">
+    <div class="harianItem">
 
         <div class="kpiIcon">
-
             <span class="material-symbols-rounded">
-
                 schedule
-
             </span>
-
         </div>
 
-        <h4 style="margin:10px 0 6px;">
+        <h4>Umur</h4>
 
-            Umur
-
-        </h4>
-
-        <b style="margin:0;">
-
-            ${f.umur} Hari
-
-        </b>
+        <b>${f.umur} Hari</b>
 
     </div>
 
-    <div
-    style="
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        min-height:130px;
-    ">
+    <div class="harianItem">
 
         <div class="kpiIcon">
-
             <span class="material-symbols-rounded">
-
                 warning
-
             </span>
-
         </div>
 
-        <h4 style="margin:10px 0 6px;">
+        <h4>Mati</h4>
 
-            Mati
-
-        </h4>
-
-        <b style="margin:0;">
-
-            ${f.mati}
-
-        </b>
+        <b>${f.mati}</b>
 
     </div>
 
-    <div
-    style="
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        min-height:130px;
-    ">
+    <div class="harianItem">
 
         <div class="kpiIcon">
-
             <span class="material-symbols-rounded">
-
                 pie_chart
-
             </span>
-
         </div>
 
-        <h4 style="margin:10px 0 6px;">
+        <h4>Mortalitas</h4>
 
-            Mortalitas
-
-        </h4>
-
-        <b style="margin:0;">
-
-            ${f.mortalitas}
-
-        </b>
+        <b>${f.mortalitas}</b>
 
     </div>
 

@@ -54,7 +54,6 @@ rel="stylesheet">
 <link rel="stylesheet" href="css/card.css">
 <link rel="stylesheet" href="css/table.css">
 <link rel="stylesheet" href="css/navigation.css">
-<link rel="stylesheet" href="css/weather.css">
 <link rel="stylesheet" href="css/index.css">
 <link rel="stylesheet" href="css/share.css">
 <link rel="stylesheet" href="css/rhpp.css">
@@ -462,20 +461,16 @@ UPDATE TOAST
 📢 Data harian peternakan telah diperbarui
 
 </div>
-<!-- ======================================
-BOTTOM NAVIGATION
-====================================== -->
+
 <!-- ======================================
 FAB SETTINGS
 ====================================== -->
 
 <button id="fabSetting" onclick="toggleSettingPanel()">
 
-<span class="material-symbols-rounded">
-
-settings
-
-</span>
+    <span class="material-symbols-rounded">
+        tune
+    </span>
 
 </button>
 
@@ -485,9 +480,19 @@ SETTING PANEL
 
 <div id="settingPanel">
 
-<div class="panelHandle"></div>
+    <div class="panelHandle"></div>
 
-<h2>⚙️ Pengaturan FMC</h2>
+<h2>
+
+    <span class="settingIcon">
+        <span class="material-symbols-rounded">
+            tune
+        </span>
+    </span>
+
+    Panel Kontrol FMC
+
+</h2>
 
 <!-- MODE MOBILE -->
 
@@ -946,7 +951,6 @@ JAVASCRIPT
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script src="js/api.js"></script>
-<script src="js/weather.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/flok.js"></script>
 <script src="js/harian.js"></script>

@@ -1,65 +1,153 @@
 /* ==========================================
-   FMC BROILER MOBILE V13
-   SETTING PANEL
+   FAB PREMIUM FMC V17
 ========================================== */
-
-/* FAB SETTINGS */
 
 #fabSetting{
 
     position:fixed;
 
-    right:18px;
+    right:20px;
+
     bottom:90px;
 
-    width:58px;
-    height:58px;
+    width:60px;
 
-    border:none;
-    border-radius:50%;
-
-    background:linear-gradient(
-        135deg,
-        #15b45b,
-        #0B8F43
-    );
-
-    color:#fff;
+    height:60px;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
-    box-shadow:
-        0 10px 25px rgba(11,143,67,.35),
-        0 4px 10px rgba(0,0,0,.18);
+    border:none;
+
+    border-radius:50%;
 
     cursor:pointer;
 
-    transition:.25s;
-    z-index:999;
+    overflow:hidden;
+
+    z-index:9999;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(214,248,225,.96),
+            rgba(181,239,202,.92),
+            rgba(160,230,187,.88)
+        );
+
+    backdrop-filter:blur(22px);
+
+    -webkit-backdrop-filter:blur(22px);
+
+    border:1px solid rgba(11,143,67,.18);
+
+    box-shadow:
+        0 10px 24px rgba(0,0,0,.14),
+        0 0 0 1px rgba(11,143,67,.10),
+        0 0 18px rgba(11,143,67,.15),
+        0 0 40px rgba(11,143,67,.08);
+
+    color:#0B8F43;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+
 }
+
+/* HOVER */
 
 #fabSetting:hover{
 
-    transform:translateY(-2px);
+    transform:translateY(-3px) scale(1.05);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(224,252,233,1),
+            rgba(193,244,213,.95),
+            rgba(167,235,193,.92)
+        );
+
+    box-shadow:
+        0 16px 34px rgba(0,0,0,.18),
+        0 0 0 1px rgba(11,143,67,.12),
+        0 0 24px rgba(11,143,67,.20),
+        0 0 48px rgba(11,143,67,.10);
 
 }
+
+/* TEKAN */
 
 #fabSetting:active{
 
-    transform:scale(.94);
+    transform:scale(.95);
 
 }
 
+/* ICON */
+
 #fabSetting .material-symbols-rounded{
 
-    font-size:28px;
+    font-size:30px;
+
+    color:#0B8F43;
+
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 500;
+
+}
+
+/* FAB HILANG SAAT PANEL TERBUKA */
+
+body.setting-open #fabSetting{
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:scale(.80);
+
+}
+
+
+
+/* ==========================================
+   FAB DARK MODE
+========================================== */
+
+body.dark #fabSetting{
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(38,45,42,.95),
+            rgba(24,30,28,.92)
+        );
+
+    border:1px solid rgba(74,222,128,.15);
+
+    box-shadow:
+        0 12px 28px rgba(0,0,0,.45),
+        0 0 16px rgba(74,222,128,.10);
+
+}
+
+/* Hilangkan pantulan putih saat dark mode */
+
+body.dark #fabSetting::before{
+
+    display:none;
 
 }
 
 /* ==========================================
-   PANEL
+   PANEL FMC PREMIUM GLASS V16
 ========================================== */
 
 #settingPanel{
@@ -67,31 +155,71 @@
     position:fixed;
 
     left:0;
+
     right:0;
+
     bottom:0;
 
-    background:#ffffff;
+
+    background:
+
+        linear-gradient(
+
+            180deg,
+
+            rgba(255,255,255,.90),
+
+            rgba(245,252,248,.88)
+
+        );
+
+
+    backdrop-filter:blur(24px);
+
+    -webkit-backdrop-filter:blur(24px);
+
 
     border-radius:28px 28px 0 0;
 
+
+    border:1px solid rgba(11,143,67,.12);
+
+
     box-shadow:
-        0 -8px 30px rgba(0,0,0,.15);
+
+        0 -12px 35px rgba(0,0,0,.18),
+
+        0 -4px 20px rgba(11,143,67,.10);
+
+
 
     transform:translateY(105%);
 
-    transition:.35s cubic-bezier(.22,.61,.36,1);
+
+    transition:
+
+        .38s cubic-bezier(.22,.61,.36,1);
+
 
     z-index:998;
 
-    padding:18px 20px 110px;
+
+    padding:
+
+        18px 20px 110px;
+
 
     max-height:85vh;
 
+
     overflow-y:auto;
+
 
     -webkit-overflow-scrolling:touch;
 
 }
+
+
 
 #settingPanel.show{
 
@@ -99,37 +227,78 @@
 
 }
 
+
+
 /* ==========================================
-   HANDLE
+   HANDLE FMC
 ========================================== */
 
 .panelHandle{
 
-    width:70px;
+    width:72px;
 
     height:6px;
 
     border-radius:20px;
 
-    background:#d5d5d5;
+
+    background:
+
+        linear-gradient(
+
+            90deg,
+
+            #0B8F43,
+
+            #55c98a
+
+        );
+
+
+    opacity:.65;
+
 
     margin:0 auto 18px;
 
 }
 
+
+
 /* ==========================================
-   JUDUL
+   JUDUL PANEL
 ========================================== */
 
 #settingPanel h2{
 
-    text-align:center;
+    display:flex;
 
-    margin-bottom:18px;
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+
+    margin-bottom:22px;
+
 
     color:#0B8F43;
 
+
+    font-size:21px;
+
+    font-weight:700;
+
 }
+
+
+#settingPanel h2 .material-symbols-rounded{
+
+    font-size:28px;
+
+}
+
+
 
 /* ==========================================
    ITEM
@@ -143,17 +312,23 @@
 
     gap:14px;
 
+
     padding:14px 16px;
+
 
     border-radius:16px;
 
+
     margin-bottom:10px;
 
+
     background:#f7f9fb;
+
 
     transition:.2s;
 
 }
+
 
 .settingItem:active{
 
@@ -163,11 +338,14 @@
 
 }
 
+
 .settingItem .material-symbols-rounded{
 
     color:#0B8F43;
 
 }
+
+
 
 /* ==========================================
    MODE AKTIF
@@ -179,33 +357,44 @@
 
 }
 
+
+
 /* ==========================================
    BACKDROP BLUR
 ========================================== */
 
-body::before{
+body:before{
 
     content:"";
 
+
     position:fixed;
+
 
     inset:0;
 
+
     background:rgba(0,0,0,.15);
+
 
     backdrop-filter:blur(8px);
 
     -webkit-backdrop-filter:blur(8px);
 
+
     opacity:0;
+
 
     visibility:hidden;
 
+
     transition:.30s;
+
 
     z-index:997;
 
 }
+
 
 body.setting-open::before{
 
@@ -215,8 +404,10 @@ body.setting-open::before{
 
 }
 
+
+
 /* ==========================================
-   SETTING DIVIDER
+   DIVIDER
 ========================================== */
 
 #settingPanel hr{
@@ -225,14 +416,92 @@ body.setting-open::before{
 
     height:1px;
 
+
     background:rgba(0,0,0,.08);
+
 
     margin:12px 0;
 
 }
 
+
 body.dark #settingPanel hr{
 
     background:rgba(255,255,255,.08);
+
+}
+
+/* ==========================================
+   ICON PANEL GLASS FMC
+========================================== */
+
+.settingIcon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(11,143,67,.18),
+            rgba(85,201,138,.35)
+        );
+
+
+    backdrop-filter:blur(12px);
+
+    -webkit-backdrop-filter:blur(12px);
+
+
+    border:
+
+        1px solid rgba(11,143,67,.20);
+
+
+    box-shadow:
+
+        0 8px 20px rgba(11,143,67,.18);
+
+}
+
+
+.settingIcon .material-symbols-rounded{
+
+    font-size:28px;
+
+    color:#0B8F43;
+
+}
+
+body.dark .settingIcon{
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(74,222,128,.15),
+            rgba(74,222,128,.30)
+        );
+
+
+    border-color:rgba(74,222,128,.25);
+
+}
+
+
+body.dark .settingIcon .material-symbols-rounded{
+
+    color:#4ade80;
 
 }
