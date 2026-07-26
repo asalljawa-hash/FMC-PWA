@@ -122,9 +122,7 @@ ${cardKeuangan("card_giftcard","Bonus Pasar","Rp "+(k.bonusPasar||"0"))}
 <h2>
 
 <span class="material-symbols-rounded">
-
 monitoring
-
 </span>
 
 Estimasi Laba Produksi
@@ -133,10 +131,11 @@ Estimasi Laba Produksi
 
 <div
 style="
-font-size:38px;
-font-weight:800;
-margin-top:18px;
-color:${labaNegatif?"#E53935":"#16A34A"};
+font-size:26px;
+font-weight:700;
+margin-top:16px;
+line-height:1.2;
+color:${labaNegatif ? "#E53935" : "#16A34A"};
 ">
 
 Rp ${k.estimasiLaba}
@@ -150,9 +149,7 @@ Rp ${k.estimasiLaba}
 <h2>
 
 <span class="material-symbols-rounded">
-
 paid
-
 </span>
 
 Profit / Ekor
@@ -161,13 +158,14 @@ Profit / Ekor
 
 <div
 style="
-font-size:34px;
-font-weight:800;
-margin-top:18px;
+font-size:24px;
+font-weight:700;
+margin-top:16px;
+line-height:1.2;
 color:var(--primary);
 ">
 
-Rp ${k.profitOwner||"-"}
+Rp ${k.profitOwner || "-"}
 
 </div>
 
