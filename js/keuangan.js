@@ -155,7 +155,7 @@ paid
 
 </span>
 
-Profit Owner / Ekor
+Profit / Ekor
 
 </h2>
 
