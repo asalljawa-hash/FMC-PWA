@@ -1,0 +1,374 @@
+/* ================================================= */
+/* FMC BROILER MOBILE                                */
+/* Register CSS                                      */
+/* Version : 1.0.0                                   */
+/* ================================================= */
+
+/* ======================================
+REGISTER PAGE
+====================================== */
+
+#registerPage{
+
+display:flex;
+justify-content:center;
+align-items:flex-start;
+
+width:100%;
+height:100vh;
+
+overflow-y:auto;
+overflow-x:hidden;
+
+padding:30px 20px;
+
+box-sizing:border-box;
+
+background:
+linear-gradient(
+135deg,
+#0f5132,
+#198754,
+#20c997);
+
+}
+
+/* ======================================
+REGISTER CONTAINER
+====================================== */
+
+.registerContainer{
+
+width:100%;
+max-width:430px;
+
+margin:0 auto;
+padding:28px 28px 50px;
+
+border-radius:24px;
+
+background:rgba(255,255,255,.12);
+
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid
+rgba(255,255,255,.18);
+
+box-shadow:
+0 15px 40px
+rgba(0,0,0,.25);
+
+}
+
+/* ======================================
+LOGO
+====================================== */
+
+.registerLogo{
+
+display:block;
+
+width:110px;
+
+margin:0 auto 18px;
+
+}
+
+/* ======================================
+TITLE
+====================================== */
+
+.registerContainer h1{
+
+margin:0;
+
+text-align:center;
+
+font-size:28px;
+
+font-weight:700;
+
+color:#ffffff;
+
+}
+
+/* ======================================
+SUB TITLE
+====================================== */
+
+.registerSub{
+
+margin-top:8px;
+margin-bottom:28px;
+
+text-align:center;
+
+font-size:14px;
+
+line-height:1.6;
+
+color:rgba(255,255,255,.85);
+
+}
+
+/* ======================================
+REGISTER FORM
+====================================== */
+
+#registerForm{
+
+display:flex;
+flex-direction:column;
+
+gap:16px;
+
+}
+
+/* ======================================
+LABEL
+====================================== */
+
+#registerForm label{
+
+font-size:14px;
+
+font-weight:600;
+
+color:#ffffff;
+
+margin-bottom:-8px;
+
+}
+
+/* ======================================
+INPUT
+====================================== */
+
+#registerForm input,
+
+#registerForm textarea,
+
+#registerForm select{
+
+width:100%;
+
+padding:14px 16px;
+
+border:none;
+
+outline:none;
+
+border-radius:14px;
+
+font-size:15px;
+
+font-family:inherit;
+
+background:rgba(255,255,255,.92);
+
+color:#333;
+
+box-sizing:border-box;
+
+transition:.25s;
+
+}
+
+/* ======================================
+TEXTAREA
+====================================== */
+
+#registerForm textarea{
+
+resize:none;
+
+min-height:90px;
+
+}
+
+/* ======================================
+FOCUS
+====================================== */
+
+#registerForm input:focus,
+
+#registerForm textarea:focus,
+
+#registerForm select:focus{
+
+background:#ffffff;
+
+box-shadow:
+0 0 0 3px
+rgba(32,201,151,.35);
+
+}
+/* ======================================
+AGREE BOX
+====================================== */
+
+.agreeBox{
+
+display:flex;
+align-items:flex-start;
+
+gap:12px;
+
+margin-top:10px;
+
+font-size:14px;
+
+line-height:1.6;
+
+color:#ffffff;
+
+}
+
+.agreeBox input{
+
+width:20px !important;
+height:20px !important;
+
+margin-top:2px;
+
+accent-color:#0B8F43;
+
+flex-shrink:0;
+
+}
+
+.agreeBox{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin-top:10px;
+    color:#fff;
+}
+
+.agreeBox span{
+    flex:1;
+    line-height:1.7;
+}
+
+.agreeBox a{
+    color:#FFE66D;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.agreeBox a:hover{
+    text-decoration:underline;
+}
+
+
+/* ======================================
+REGISTER BUTTON
+====================================== */
+
+.registerBtn{
+
+width:100%;
+
+height:58px;
+
+margin-top:10px;
+
+border:none;
+
+border-radius:16px;
+
+background:#0B8F43;
+
+color:#ffffff;
+
+font-size:20px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.3s;
+
+box-shadow:
+
+0 10px 25px
+
+rgba(11,143,67,.35);
+
+}
+
+.registerBtn:hover{
+
+transform:translateY(-2px);
+
+background:#08793a;
+
+}
+
+.registerBtn:active{
+
+transform:scale(.98);
+
+}
+/* ======================================
+LOGIN LINK
+====================================== */
+
+.registerLoginBox{
+
+margin-top:24px;
+
+text-align:center;
+
+font-size:15px;
+
+color:#ffffff;
+
+}
+
+.registerLoginBox a{
+
+text-decoration:none;
+
+font-weight:700;
+
+color:#FFE66D;
+
+}
+
+/* ======================================
+VERSION
+====================================== */
+
+.registerVersion{
+
+margin-top:18px;
+
+text-align:center;
+
+font-size:13px;
+
+color:rgba(255,255,255,.75);
+
+}
+
+/* ======================================
+REGISTER MESSAGE
+====================================== */
+
+#registerMessage{
+
+display:none;
+
+margin-top:16px;
+padding:14px 16px;
+
+border-radius:12px;
+
+font-size:14px;
+line-height:1.5;
+
+text-align:center;
+
+}

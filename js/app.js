@@ -185,9 +185,13 @@ window.onload = async function(){
 
         await new Promise(resolve=>requestAnimationFrame(resolve));
 
-        /* Baru render dashboard */
+        /* Sembunyikan Dashboard */
 
-        await showPage("dashboard");
+        document.getElementById("app").style.display = "none";
+
+        /* Tampilkan Login */
+
+        document.getElementById("loginPage").style.display = "flex";
 
         /* Splash */
 
@@ -888,7 +892,7 @@ function loadTheme(){
 // EXIT FMC
 // ==========================================
 
-function exitFMC(){
+function exitFMC() {
 
     showDialog(
 
@@ -896,29 +900,29 @@ function exitFMC(){
 
         "Apakah Anda yakin ingin keluar dari FMC Broiler Mobile?",
 
-        function(){
+        function () {
 
-            // Tutup panel pengaturan
-            const panel = document.getElementById("settingPanel");
+            // Hapus session login
+            logoutUser();
 
-            if(panel){
+            // Tutup panel setting
+            const panel =
+                document.getElementById("settingPanel");
+
+            if (panel) {
+
                 panel.classList.remove("show");
+
             }
 
-            document.body.classList.remove("setting-open");
+            document.body.classList.remove(
+                "setting-open"
+            );
 
             settingPanelOpen = false;
 
-            // Kembali jika ada riwayat
-            if(history.length > 1){
-
-                history.back();
-
-            }else{
-
-                showPage("dashboard");
-
-            }
+            // Kembali ke halaman Login
+            location.reload();
 
         }
 

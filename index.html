@@ -46,6 +46,9 @@ rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0"
 rel="stylesheet">
 
+<link rel="stylesheet" href="css/login.css">
+<link rel="stylesheet" href="css/register.css">
+
 <!-- CSS -->
 
 <link rel="stylesheet" href="css/theme.css">
@@ -63,7 +66,364 @@ rel="stylesheet">
 </head>
 
 <body id="appBody">
+  
+<!-- ======================================
+SPLASH SCREEN V11
+====================================== -->
 
+<div id="splash">
+
+<img
+src="icons/splash.png"
+class="splashLogo"
+alt="FMC Logo">
+
+<h1>
+
+FMC BROILER
+
+</h1>
+
+<p>
+
+Farm Management Control System
+
+</p>
+
+<div class="loadingBox">
+
+<div class="loadingFill"></div>
+
+</div>
+
+<div class="loadingText">
+
+Menyiapkan Dashboard...
+
+</div>
+
+</div>
+
+<!-- ======================================
+LOGIN PAGE
+====================================== -->
+
+<section id="loginPage">
+
+    <div class="loginContainer">
+
+        <img
+            src="icons/logo.png"
+            class="loginLogo"
+            alt="FMC Logo">
+
+        <h1>FMC BROILER</h1>
+
+        <p class="loginSub">
+            Farm Management Control System
+        </p>
+
+        <div
+            id="serverStatus"
+            class="serverStatus">
+
+            <span class="dot"></span>
+            Memeriksa Server...
+
+        </div>
+
+        <!-- LOGIN FORM -->
+
+        <form
+            id="loginForm"
+            autocomplete="off">
+
+            <label for="loginEmail">Email</label>
+
+            <input
+                type="email"
+                id="loginEmail"
+                name="email"
+                autocomplete="email"
+                maxlength="100"
+                placeholder="Masukkan Email"
+                required>
+
+            <label for="loginPin">PIN</label>
+
+            <input
+                type="password"
+                id="loginPin"
+                name="pin"
+                inputmode="numeric"
+                maxlength="6"
+                autocomplete="current-password"
+                placeholder="Masukkan PIN 6 Digit"
+                required>
+
+            <!-- LOGIN MESSAGE -->
+
+            <div
+                id="loginMessage"
+                class="loginMessage"
+                style="display:none;">
+            </div>
+
+            <button
+                type="button"
+                id="btnLogin"
+                class="loginBtn">
+
+                <span class="material-symbols-rounded">
+                    login
+                </span>
+
+                MASUK KE FMC
+
+            </button>
+
+        </form>
+
+        <div class="registerBox">
+
+            Belum punya akun?
+
+            <a
+                href="#"
+                id="btnDaftar"
+                onclick="showRegister(); return false;">
+
+                Daftar
+
+            </a>
+
+        </div>
+
+        <div class="loginVersion">
+
+            Version 1.0 • Secure Login
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ======================================
+REGISTER PAGE
+====================================== -->
+
+<section id="registerPage" style="display:none;">
+
+    <div class="registerContainer">
+
+        <img
+            src="icons/logo.png"
+            class="registerLogo"
+            alt="FMC Logo">
+
+        <h1>Buat Akun</h1>
+
+        <p class="registerSub">
+            Silakan lengkapi data di bawah untuk membuat akun
+            <strong>FMC Broiler Mobile</strong>.
+        </p>
+
+        <!-- ======================================
+        REGISTER FORM
+        ====================================== -->
+
+        <form id="registerForm" autocomplete="off">
+
+            <label for="regName">Nama Lengkap</label>
+            <input
+                type="text"
+                id="regName"
+                name="fullName"
+                autocomplete="name"
+                maxlength="100"
+                placeholder="Contoh: Budi Santoso"
+                required>
+
+            <label for="regEmail">Email</label>
+            <input
+                type="email"
+                id="regEmail"
+                name="email"
+                autocomplete="email"
+                maxlength="100"
+                placeholder="Contoh: budi@email.com"
+                required>
+
+            <label for="regPhone">Nomor HP (WhatsApp Aktif)</label>
+            <input
+                type="tel"
+                id="regPhone"
+                name="phone"
+                autocomplete="tel"
+                inputmode="numeric"
+                maxlength="15"
+                placeholder="Contoh: 081234567890"
+                required>
+
+            <label for="regCompany">Nama Perusahaan / Farm</label>
+            <input
+                type="text"
+                id="regCompany"
+                name="company"
+                autocomplete="organization"
+                maxlength="100"
+                placeholder="Contoh: CV Maju Jaya Farm"
+                required>
+
+            <label for="regAddress">Alamat</label>
+            <textarea
+                id="regAddress"
+                name="address"
+                rows="3"
+                maxlength="255"
+                autocomplete="street-address"
+                placeholder="Masukkan alamat lengkap"
+                required></textarea>
+
+            <label for="regProvince">Provinsi</label>
+            <select
+                id="regProvince"
+                name="province"
+                required>
+
+                <option value="">Pilih Provinsi</option>
+
+            </select>
+
+            <label for="regCity">Kota / Kabupaten</label>
+            <select
+                id="regCity"
+                name="city"
+                required>
+
+                <option value="">Pilih Kota / Kabupaten</option>
+
+            </select>
+
+            <label for="regBusiness">Jenis Usaha</label>
+            <select
+                id="regBusiness"
+                name="business"
+                required>
+
+                <option value="">Pilih Jenis Usaha</option>
+                <option value="broiler">Broiler</option>
+                <option value="layer">Layer</option>
+                <option value="breeding">Breeding</option>
+
+            </select>
+
+            <label for="regFarm">Jumlah Farm</label>
+            <input
+                type="text"
+                id="regFarm"
+                name="farm"
+                inputmode="numeric"
+                maxlength="3"
+                placeholder="Contoh: 2"
+                required>
+
+            <label for="regCage">Jumlah Kandang</label>
+            <input
+                type="text"
+                id="regCage"
+                name="cage"
+                inputmode="numeric"
+                maxlength="4"
+                placeholder="Contoh: 8"
+                required>
+
+            <label for="regPin">PIN (6 Digit)</label>
+            <input
+                type="password"
+                id="regPin"
+                name="pin"
+                maxlength="6"
+                inputmode="numeric"
+                autocomplete="new-password"
+                placeholder="******"
+                required>
+
+            <label for="regConfirmPin">Konfirmasi PIN</label>
+            <input
+                type="password"
+                id="regConfirmPin"
+                name="confirmPin"
+                maxlength="6"
+                inputmode="numeric"
+                autocomplete="new-password"
+                placeholder="******"
+                required>
+
+            <label class="agreeBox">
+
+                <input
+                    type="checkbox"
+                    id="agree"
+                    required>
+
+                <span>
+                    Saya menyetujui
+                    <a href="#" id="termsLink">Syarat &amp; Ketentuan</a>
+                    serta
+                    <a href="#" id="privacyLink">Kebijakan Privasi</a>.
+                </span>
+
+            </label>
+
+<button
+    type="submit"
+    id="btnRegister"
+    class="registerBtn">
+
+    DAFTAR SEKARANG
+
+</button>
+
+            <div
+                id="registerMessage"
+                class="registerMessage"
+                style="display:none;">
+            </div>
+
+            <div class="registerLoginBox">
+
+                Sudah punya akun?
+                <a
+                    href="#"
+                    id="btnMasuk"
+                    onclick="showLogin(); return false;">
+
+                    Masuk
+
+                </a>
+
+            </div>
+
+            <div class="registerVersion">
+
+                Version 1.0 • Register Account
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+<!-- ======================================
+APP FMC
+====================================== -->
+
+<div id="app" style="display:none;">
+  
 <!-- ======================================
 HEADER V11
 ====================================== -->
@@ -134,141 +494,10 @@ download
 </header>
 
 <!-- ======================================
-SPLASH SCREEN V11
-====================================== -->
-
-<div id="splash">
-
-<img
-src="icons/splash.png"
-class="splashLogo"
-alt="FMC Logo">
-
-<h1>
-
-FMC BROILER
-
-</h1>
-
-<p>
-
-Farm Management Control System
-
-</p>
-
-<div class="loadingBox">
-
-<div class="loadingFill"></div>
-
-</div>
-
-<div class="loadingText">
-
-Menyiapkan Dashboard...
-
-</div>
-
-</div>
-
-<!-- ======================================
-CONTENT
-====================================== -->
-
-<main id="app">
-
-<!-- ======================================
 DASHBOARD
 ====================================== -->
 
 <section id="dashboardPage">
-
-<div class="weatherCard">
-
-<div class="weatherTop">
-
-<div>
-
-<div class="weatherLabel">
-
-CUACA HARI INI
-
-</div>
-
-<h2 id="weatherTemp">
-
---°C
-
-</h2>
-
-<p id="weatherDesc">
-
-Mengambil data cuaca...
-
-</p>
-
-</div>
-
-<div id="weatherIcon">
-
-<span class="material-symbols-rounded">
-
-wb_sunny
-
-</span>
-
-</div>
-
-</div>
-
-<div class="weatherInfo">
-
-<div>
-
-<span class="material-symbols-rounded">
-
-water_drop
-
-</span>
-
-<div id="weatherHumidity">
-
---%
-
-</div>
-
-</div>
-
-<div>
-
-<span class="material-symbols-rounded">
-
-air
-
-</span>
-
-<div id="weatherWind">
-
--- km/j
-
-</div>
-
-</div>
-
-</div>
-
-<div id="weatherLocation">
-
-<span class="material-symbols-rounded">
-
-location_on
-
-</span>
-
-Menunggu lokasi...
-
-</div>
-
-</div>
 
 <div class="card">
 
@@ -461,18 +690,6 @@ UPDATE TOAST
 📢 Data harian peternakan telah diperbarui
 
 </div>
-
-<!-- ======================================
-FAB SETTINGS
-====================================== -->
-
-<button id="fabSetting" onclick="toggleSettingPanel()">
-
-    <span class="material-symbols-rounded">
-        tune
-    </span>
-
-</button>
 
 <!-- ======================================
 SETTING PANEL
@@ -944,47 +1161,14 @@ Tutup
 </div>
 
 <!-- ======================================
-JAVASCRIPT
+FAB SETTINGS
 ====================================== -->
 
-<!-- jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script src="js/api.js"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/flok.js"></script>
-<script src="js/harian.js"></script>
-<script src="js/keuangan.js"></script>
-<script src="js/ai.js"></script>
-<script src="js/app.js"></script>
-<script src="js/share.js"></script>
-<script src="js/rhpp.js"></script>
-<script src="js/rhpp-pdf.js"></script>
-
-<script>
-
-if("serviceWorker" in navigator){
-
-window.addEventListener("load",()=>{
-
-navigator.serviceWorker
-.register("./service-worker.js")
-.then(()=>{
-
-console.log("✅ Service Worker Aktif");
-
-})
-.catch(err=>{
-
-console.error("❌ Service Worker Error :",err);
-
-});
-
-});
-
-}
-
-</script>
+<button id="fabSetting" onclick="toggleSettingPanel()">
+    <span class="material-symbols-rounded">
+        tune
+    </span>
+</button>
 
 <!-- ======================================
 FMC DIALOG
@@ -1090,7 +1274,6 @@ SHARE DIALOG
     </div>
 
 </div>
-
 <!-- ======================================
 SHARE CARD
 ====================================== -->
@@ -1120,6 +1303,32 @@ SHARE CARD
     </div>
 
 </div>
-</body>
+<!-- =================================================
+     JAVASCRIPT
+================================================= -->
 
+<!-- Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Core -->
+<script src="js/app.js"></script>
+
+<!-- API (HARUS LEBIH DULU) -->
+<script src="js/api.js"></script>
+
+<!-- Authentication -->
+<script src="js/register.js"></script>
+<script src="js/login.js"></script>
+
+<!-- Modules -->
+<script src="js/dashboard.js"></script>
+<script src="js/flok.js"></script>
+<script src="js/harian.js"></script>
+<script src="js/keuangan.js"></script>
+<script src="js/rhpp.js"></script>
+<script src="js/rhpp-pdf.js"></script>
+<script src="js/share.js"></script>
+<script src="js/ai.js"></script>
+
+</body>
 </html>
