@@ -152,22 +152,22 @@ function updateJam(){
 }
 
 // ==========================================
-// SPLASH
+// STARTUP FMC
 // ==========================================
 
-window.onload = async function(){
+window.onload = async function () {
 
-    try{
+    try {
 
         /* MODE */
 
         const mode = localStorage.getItem("fmcMode");
 
-        if(mode==="desktop"){
+        if (mode === "desktop") {
 
             document.body.classList.add("desktop");
 
-        }else{
+        } else {
 
             document.body.classList.remove("desktop");
 
@@ -181,39 +181,39 @@ window.onload = async function(){
 
         updateJam();
 
-        /* Tunggu browser selesai menghitung layout */
+        await new Promise(resolve =>
+            requestAnimationFrame(resolve)
+        );
 
-        await new Promise(resolve=>requestAnimationFrame(resolve));
+        /* SEMBUNYIKAN SPLASH */
 
-        /* Sembunyikan Dashboard */
+        const splash =
+            document.getElementById("splash");
 
-        document.getElementById("app").style.display = "none";
+        if (splash) {
 
-        /* Tampilkan Login */
+            splash.style.display = "none";
+            splash.classList.remove("hide");
 
-        document.getElementById("loginPage").style.display = "flex";
+        }
 
-        /* Splash */
+        /* CEK SESSION */
 
-        setTimeout(()=>{
+        if (isLoggedIn()) {
 
-            const splash=document.getElementById("splash");
+            await autoLogin();
 
-            if(splash){
+        } else {
 
-                splash.classList.add("hide");
+            document.getElementById("app").style.display = "none";
 
-                setTimeout(()=>{
+            document.getElementById("loginPage").style.display = "flex";
 
-                    splash.remove();
+        }
 
-                },700);
+    }
 
-            }
-
-        },500);
-
-    }catch(err){
+    catch (err) {
 
         console.error(err);
 

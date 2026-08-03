@@ -273,35 +273,68 @@ async function loginUser() {
 
         loginState.loggedIn = true;
 
-        showLoginMessage(
+        /* ==========================
+           TAMPILKAN SPLASH
+        ========================== */
 
-            "Login berhasil.",
+        const loginPage =
+            document.getElementById("loginPage");
 
-            "success"
+        const splash =
+            document.getElementById("splash");
 
-        );
+        const app =
+            document.getElementById("app");
 
-        // Tunggu sebentar agar pesan sukses terlihat
+        if (loginPage) {
+
+            loginPage.style.display = "none";
+
+        }
+
+        if (splash) {
+
+            splash.style.display = "flex";
+
+            splash.classList.remove("hide");
+
+        }
+
+        /* ==========================
+           MUAT DASHBOARD
+        ========================== */
+
         setTimeout(async () => {
 
-            const loginPage = document.getElementById("loginPage");
-            const app = document.getElementById("app");
-
-            if (loginPage) {
-                loginPage.style.display = "none";
-            }
-
             if (app) {
+
                 app.style.display = "block";
+
             }
 
             if (typeof showPage === "function") {
+
                 await showPage("dashboard");
+
             } else if (typeof tampilDashboard === "function") {
+
                 await tampilDashboard();
+
             }
 
-        }, 500);
+            if (splash) {
+
+                splash.classList.add("hide");
+
+                setTimeout(() => {
+
+                    splash.style.display = "none";
+
+                },700);
+
+            }
+
+        },1200);
 
     }
 
@@ -379,7 +412,7 @@ function logoutUser() {
    AUTO LOGIN
 ====================================== */
 
-function autoLogin() {
+async function autoLogin() {
 
     if (!isLoggedIn()) {
 
@@ -389,12 +422,38 @@ function autoLogin() {
 
     const user = getLoginUser();
 
-    console.log("AUTO LOGIN", user);
+    console.log("AUTO LOGIN :", user);
 
-    /*
-     * NEXT
-     * showDashboard();
-     */
+    loginState.loggedIn = true;
+
+    const loginPage =
+        document.getElementById("loginPage");
+
+    const app =
+        document.getElementById("app");
+
+    if (loginPage) {
+
+        loginPage.style.display = "none";
+
+    }
+
+    if (app) {
+
+        app.style.display = "block";
+
+    }
+
+    if (typeof showPage === "function") {
+
+        await showPage("dashboard");
+
+    }
+    else if (typeof tampilDashboard === "function") {
+
+        await tampilDashboard();
+
+    }
 
 }
 
