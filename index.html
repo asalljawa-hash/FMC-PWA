@@ -229,192 +229,182 @@ REGISTER PAGE
             <strong>FMC Broiler Mobile</strong>.
         </p>
 
-        <!-- ======================================
-        REGISTER FORM
-        ====================================== -->
+<!-- ======================================
+REGISTER FORM
+====================================== -->
 
-        <form id="registerForm" autocomplete="off">
+<form id="registerForm" autocomplete="off">
 
-            <label for="regName">Nama Lengkap</label>
-            <input
-                type="text"
-                id="regName"
-                name="fullName"
-                autocomplete="name"
-                maxlength="100"
-                placeholder="Contoh: Budi Santoso"
-                required>
+    <label for="regName">Nama Lengkap</label>
+    <input
+        type="text"
+        id="regName"
+        name="fullName"
+        autocomplete="name"
+        maxlength="100"
+        placeholder="Contoh: Budi Santoso"
+        required>
 
-            <label for="regEmail">Email</label>
-            <input
-                type="email"
-                id="regEmail"
-                name="email"
-                autocomplete="email"
-                maxlength="100"
-                placeholder="Contoh: budi@email.com"
-                required>
+    <label for="regEmail">Email</label>
+    <input
+        type="email"
+        id="regEmail"
+        name="email"
+        autocomplete="email"
+        maxlength="100"
+        placeholder="Contoh: budi@email.com"
+        required>
 
-            <label for="regPhone">Nomor HP (WhatsApp Aktif)</label>
-            <input
-                type="tel"
-                id="regPhone"
-                name="phone"
-                autocomplete="tel"
-                inputmode="numeric"
-                maxlength="15"
-                placeholder="Contoh: 081234567890"
-                required>
+    <label for="regPhone">Nomor HP (WhatsApp Aktif)</label>
+    <input
+        type="tel"
+        id="regPhone"
+        name="phone"
+        autocomplete="tel"
+        inputmode="numeric"
+        maxlength="15"
+        placeholder="Contoh: 081234567890"
+        required>
 
-            <label for="regCompany">Nama Perusahaan / Farm</label>
-            <input
-                type="text"
-                id="regCompany"
-                name="company"
-                autocomplete="organization"
-                maxlength="100"
-                placeholder="Contoh: CV Maju Jaya Farm"
-                required>
+    <label for="regCompany">Nama Perusahaan / Farm</label>
+    <input
+        type="text"
+        id="regCompany"
+        name="company"
+        autocomplete="organization"
+        maxlength="100"
+        placeholder="Contoh: CV Maju Jaya Farm"
+        required>
 
-            <label for="regAddress">Alamat</label>
-            <textarea
-                id="regAddress"
-                name="address"
-                rows="3"
-                maxlength="255"
-                autocomplete="street-address"
-                placeholder="Masukkan alamat lengkap"
-                required></textarea>
+    <label for="regAddress">Alamat</label>
+    <textarea
+        id="regAddress"
+        name="address"
+        rows="3"
+        maxlength="255"
+        autocomplete="street-address"
+        placeholder="Masukkan alamat lengkap"
+        required></textarea>
 
-            <label for="regProvince">Provinsi</label>
-            <select
-                id="regProvince"
-                name="province"
-                required>
+    <label for="regProvince">Provinsi</label>
+    <select
+        id="regProvince"
+        name="province"
+        required>
 
-                <option value="">Pilih Provinsi</option>
+        <option value="">Pilih Provinsi</option>
 
-            </select>
+    </select>
 
-            <label for="regCity">Kota / Kabupaten</label>
-            <select
-                id="regCity"
-                name="city"
-                required>
+    <label for="regCity">Kota / Kabupaten</label>
+    <select
+        id="regCity"
+        name="city"
+        required>
 
-                <option value="">Pilih Kota / Kabupaten</option>
+        <option value="">Pilih Kota / Kabupaten</option>
 
-            </select>
+    </select>
 
-            <label for="regBusiness">Jenis Usaha</label>
-            <select
-                id="regBusiness"
-                name="business"
-                required>
+    <label for="regBusiness">Jenis Usaha</label>
+    <select
+        id="regBusiness"
+        name="business"
+        required>
 
-                <option value="">Pilih Jenis Usaha</option>
-                <option value="broiler">Broiler</option>
-                <option value="layer">Layer</option>
-                <option value="breeding">Breeding</option>
+        <option value="">Pilih Jenis Usaha</option>
+        <option value="broiler">Broiler</option>
+        <option value="layer">Layer</option>
+        <option value="breeding">Breeding</option>
 
-            </select>
+    </select>
 
-            <label for="regFarm">Jumlah Farm</label>
-            <input
-                type="text"
-                id="regFarm"
-                name="farm"
-                inputmode="numeric"
-                maxlength="3"
-                placeholder="Contoh: 2"
-                required>
+    <label for="regCage">Jumlah Kandang</label>
+    <input
+        type="text"
+        id="regCage"
+        name="cage"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="Contoh: 8"
+        required>
 
-            <label for="regCage">Jumlah Kandang</label>
-            <input
-                type="text"
-                id="regCage"
-                name="cage"
-                inputmode="numeric"
-                maxlength="4"
-                placeholder="Contoh: 8"
-                required>
+    <label for="regPin">PIN (6 Digit)</label>
+    <input
+        type="password"
+        id="regPin"
+        name="pin"
+        maxlength="6"
+        inputmode="numeric"
+        autocomplete="new-password"
+        placeholder="******"
+        required>
 
-            <label for="regPin">PIN (6 Digit)</label>
-            <input
-                type="password"
-                id="regPin"
-                name="pin"
-                maxlength="6"
-                inputmode="numeric"
-                autocomplete="new-password"
-                placeholder="******"
-                required>
+    <label for="regConfirmPin">Konfirmasi PIN</label>
+    <input
+        type="password"
+        id="regConfirmPin"
+        name="confirmPin"
+        maxlength="6"
+        inputmode="numeric"
+        autocomplete="new-password"
+        placeholder="******"
+        required>
 
-            <label for="regConfirmPin">Konfirmasi PIN</label>
-            <input
-                type="password"
-                id="regConfirmPin"
-                name="confirmPin"
-                maxlength="6"
-                inputmode="numeric"
-                autocomplete="new-password"
-                placeholder="******"
-                required>
+    <label class="agreeBox">
 
-            <label class="agreeBox">
+        <input
+            type="checkbox"
+            id="agree"
+            required>
 
-                <input
-                    type="checkbox"
-                    id="agree"
-                    required>
+        <span>
+            Saya menyetujui
+            <a href="#" id="termsLink">Syarat &amp; Ketentuan</a>
+            serta
+            <a href="#" id="privacyLink">Kebijakan Privasi</a>.
+        </span>
 
-                <span>
-                    Saya menyetujui
-                    <a href="#" id="termsLink">Syarat &amp; Ketentuan</a>
-                    serta
-                    <a href="#" id="privacyLink">Kebijakan Privasi</a>.
-                </span>
+    </label>
 
-            </label>
+    <button
+        type="submit"
+        id="btnRegister"
+        class="registerBtn">
 
-<button
-    type="submit"
-    id="btnRegister"
-    class="registerBtn">
+        DAFTAR SEKARANG
 
-    DAFTAR SEKARANG
+    </button>
 
-</button>
+    <div
+        id="registerMessage"
+        class="registerMessage"
+        style="display:none;">
+    </div>
 
-            <div
-                id="registerMessage"
-                class="registerMessage"
-                style="display:none;">
-            </div>
+    <div class="registerLoginBox">
 
-            <div class="registerLoginBox">
+        Sudah punya akun?
+        <a
+            href="#"
+            id="btnMasuk"
+            onclick="showLogin(); return false;">
 
-                Sudah punya akun?
-                <a
-                    href="#"
-                    id="btnMasuk"
-                    onclick="showLogin(); return false;">
+            Masuk
 
-                    Masuk
-
-                </a>
-
-            </div>
-
-            <div class="registerVersion">
-
-                Version 1.0 • Register Account
-
-            </div>
-
-        </form>
+        </a>
 
     </div>
+
+    <div class="registerVersion">
+
+        Version 1.0 • Register Account
+
+    </div>
+
+</form>
+
+</div>
 
 </section>
 

@@ -52,9 +52,6 @@ document.getElementById("regCity");
 const regBusiness =
 document.getElementById("regBusiness");
 
-const regFarm =
-document.getElementById("regFarm");
-
 const regCage =
 document.getElementById("regCage");
 
@@ -601,11 +598,6 @@ async function processRegister() {
         formData.append(
             "business",
             regBusiness.value
-        );
-
-        formData.append(
-            "farm",
-            regFarm.value.trim()
         );
 
         formData.append(
