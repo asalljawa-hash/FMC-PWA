@@ -48,6 +48,7 @@ rel="stylesheet">
 
 <link rel="stylesheet" href="css/login.css">
 <link rel="stylesheet" href="css/register.css">
+<link rel="stylesheet" href="css/forgot.css">
 
 <!-- CSS -->
 
@@ -138,7 +139,9 @@ LOGIN PAGE
             id="loginForm"
             autocomplete="off">
 
-            <label for="loginEmail">Email</label>
+            <label for="loginEmail">
+                Email
+            </label>
 
             <input
                 type="email"
@@ -149,7 +152,9 @@ LOGIN PAGE
                 placeholder="Masukkan Email"
                 required>
 
-            <label for="loginPin">PIN</label>
+            <label for="loginPin">
+                PIN
+            </label>
 
             <input
                 type="password"
@@ -160,6 +165,25 @@ LOGIN PAGE
                 autocomplete="current-password"
                 placeholder="Masukkan PIN 6 Digit"
                 required>
+
+            <!-- FORGOT PIN -->
+
+            <div class="forgotPinBox">
+
+                <a
+                    href="#"
+                    id="btnForgotPin"
+                    onclick="showForgotPin(); return false;">
+
+                    <span class="material-symbols-rounded">
+                        lock_reset
+                    </span>
+
+                    Lupa PIN?
+
+                </a>
+
+            </div>
 
             <!-- LOGIN MESSAGE -->
 
@@ -405,6 +429,159 @@ REGISTER FORM
 </form>
 
 </div>
+
+</section>
+
+<!-- ======================================
+FORGOT PIN PAGE
+====================================== -->
+
+<section id="forgotPage" style="display:none;">
+
+    <div class="loginContainer">
+
+        <img
+            src="icons/logo.png"
+            class="loginLogo"
+            alt="FMC Logo">
+
+        <h1>FMC BROILER</h1>
+
+        <p class="loginSub">
+            Farm Management Control System
+        </p>
+
+        <div class="serverStatus">
+
+            <span class="material-symbols-rounded">
+                lock_reset
+            </span>
+
+            Reset PIN
+
+        </div>
+
+        <form
+            id="forgotForm"
+            autocomplete="off">
+
+            <!-- EMAIL -->
+
+            <label for="resetEmail">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="resetEmail"
+                autocomplete="email"
+                maxlength="100"
+                placeholder="Masukkan Email"
+                required>
+
+            <!-- AREA OTP -->
+
+            <div
+                id="otpArea"
+                style="display:none;">
+
+                <label for="resetOTP">
+                    Kode OTP
+                </label>
+
+                <input
+                    type="text"
+                    id="resetOTP"
+                    maxlength="6"
+                    inputmode="numeric"
+                    placeholder="Masukkan Kode OTP">
+
+                <label for="resetPIN">
+                    PIN Baru
+                </label>
+
+                <input
+                    type="password"
+                    id="resetPIN"
+                    maxlength="6"
+                    inputmode="numeric"
+                    placeholder="Masukkan PIN Baru">
+
+                <label for="resetConfirmPIN">
+                    Konfirmasi PIN
+                </label>
+
+                <input
+                    type="password"
+                    id="resetConfirmPIN"
+                    maxlength="6"
+                    inputmode="numeric"
+                    placeholder="Ulangi PIN Baru">
+
+            </div>
+
+            <!-- MESSAGE -->
+
+            <div
+                id="forgotMessage"
+                class="loginMessage"
+                style="display:none;">
+            </div>
+
+            <!-- STEP 1 -->
+
+            <button
+                type="button"
+                id="btnSendResetOTP"
+                class="loginBtn">
+
+                <span class="material-symbols-rounded">
+                    mail
+                </span>
+
+                KIRIM OTP
+
+            </button>
+
+            <!-- STEP 2 -->
+
+            <button
+                type="button"
+                id="btnResetPIN"
+                class="loginBtn"
+                style="display:none;">
+
+                <span class="material-symbols-rounded">
+                    lock_reset
+                </span>
+
+                SIMPAN PIN
+
+            </button>
+
+        </form>
+
+        <div class="registerBox">
+
+            Sudah ingat PIN?
+
+            <a
+                href="#"
+                onclick="closeForgotPin(); return false;">
+
+                Login
+
+            </a>
+
+        </div>
+
+        <div class="loginVersion">
+
+            Version 1.0 • Secure Reset
+
+        </div>
+
+    </div>
 
 </section>
 
@@ -1264,6 +1441,7 @@ SHARE DIALOG
     </div>
 
 </div>
+
 <!-- ======================================
 SHARE CARD
 ====================================== -->
@@ -1307,8 +1485,10 @@ SHARE CARD
 <script src="js/api.js"></script>
 
 <!-- Authentication -->
+
 <script src="js/register.js"></script>
 <script src="js/login.js"></script>
+<script src="js/forgot.js"></script>
 
 <!-- Modules -->
 <script src="js/dashboard.js"></script>

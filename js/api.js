@@ -382,7 +382,61 @@ async function verifikasiOTP(
     );
 
 }
+// ==========================================
+// RESET PIN API
+// ==========================================
 
+async function sendResetOTPAPI(email){
+
+    return await apiPost(
+
+        "sendResetOTP",
+
+        {
+
+            email: email
+
+        }
+
+    );
+
+}
+
+async function verifyResetOTPAPI(email, otp){
+
+    return await apiPost(
+
+        "verifyResetOTP",
+
+        {
+
+            email: email,
+
+            code: otp
+
+        }
+
+    );
+
+}
+
+async function resetPINAPI(email, pin){
+
+    return await apiPost(
+
+        "resetPIN",
+
+        {
+
+            email: email,
+
+            pin: pin
+
+        }
+
+    );
+
+}
 // ==========================================
 // SESSION
 // ==========================================

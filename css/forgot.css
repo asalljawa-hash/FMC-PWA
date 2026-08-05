@@ -1,0 +1,20 @@
+/* ======================================
+   FORGOT PIN
+====================================== */
+
+.forgotPinBox{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:10px;
+    margin-bottom:18px;
+}
+
+.forgotPinBox a{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:#ffffff;
+    text-decoration:none;
+    font-weight:600;
+}
+
