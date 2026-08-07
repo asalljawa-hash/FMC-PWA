@@ -102,15 +102,19 @@
 
 .bottomNav button .material-symbols-rounded{
 
-    font-size:26px;
+    font-size:25px;
 
     line-height:1;
 
-    transition:.25s ease;
+    color:#111111;
+
+    transition:
+        color .25s ease,
+        transform .25s ease;
 
     font-variation-settings:
-    'FILL' 1,
-    'wght' 500,
+    'FILL' 0,
+    'wght' 300,
     'GRAD' 0,
     'opsz' 24;
 
@@ -118,7 +122,15 @@
 
 .bottomNav button.active .material-symbols-rounded{
 
-    transform:translateY(-2px) scale(1.08);
+    color:var(--primary);
+
+    transform:translateY(-2px);
+
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
 
 }
 
@@ -209,5 +221,43 @@
 .bottomNav button:hover .navEmoji{
 
     transform:scale(1.05);
+
+}
+/* ==========================================
+   DARK MODE
+========================================== */
+
+body.dark .bottomNav{
+
+    background:rgba(22,28,36,.96);
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+    0 -6px 20px rgba(0,0,0,.35);
+
+}
+
+body.dark .bottomNav button{
+
+    color:#AEB6C2;
+
+}
+
+body.dark .bottomNav button .material-symbols-rounded{
+
+    color:#AEB6C2;
+
+}
+
+body.dark .bottomNav button.active{
+
+    color:var(--primary);
+
+}
+
+body.dark .bottomNav button.active .material-symbols-rounded{
+
+    color:var(--primary);
 
 }

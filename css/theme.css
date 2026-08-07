@@ -1,19 +1,47 @@
 /* ==========================================
-   FMC BOILER MOBILE V11
+   FMC BROILER MOBILE V11
    THEME SYSTEM
 ========================================== */
 
 :root{
 
     /* ======================================
+       RESPONSIVE
+       (Hanya Variabel - Tidak Mengubah Layout)
+    ====================================== */
+
+    --container-max:480px;
+
+    --header-height:64px;
+
+    --bottom-nav-height:72px;
+
+    --safe-top:env(safe-area-inset-top);
+
+    --safe-bottom:env(safe-area-inset-bottom);
+
+    --safe-left:env(safe-area-inset-left);
+
+    --safe-right:env(safe-area-inset-right);
+
+    --content-spacing:16px;
+
+    --section-spacing:24px;
+
+    --card-spacing:20px;
+
+    /* ======================================
        BRAND
     ====================================== */
 
     --primary:#0B8F43;
+
     --primary-light:#18B85B;
+
     --primary-dark:#087438;
 
     --secondary:#2563EB;
+
     --secondary-light:#60A5FA;
 
     /* ======================================
@@ -95,7 +123,6 @@
     --speed-slow:.4s;
 
 }
-
 /* ==========================================
    GLOBAL SELECTION
 ========================================== */
@@ -187,7 +214,6 @@ hr{
     color:var(--danger);
 
 }
-
 /* ==========================================
    MATERIAL SYMBOL
 ========================================== */
@@ -198,9 +224,11 @@ hr{
 
     line-height:1;
 
+    font-size:24px;
+
     font-variation-settings:
-    'FILL' 1,
-    'wght' 500,
+    'FILL' 0,
+    'wght' 300,
     'GRAD' 0,
     'opsz' 24;
 
@@ -210,12 +238,21 @@ hr{
    SMOOTH TRANSITION
 ========================================== */
 
-*{
+body,
+.card,
+.weatherCard,
+.header,
+.bottomNav,
+button,
+input,
+select,
+textarea,
+#settingPanel{
 
     transition:
-    background-color var(--speed),
-    color var(--speed),
-    border-color var(--speed),
-    box-shadow var(--speed);
+        background-color var(--speed),
+        color var(--speed),
+        border-color var(--speed),
+        box-shadow var(--speed);
 
 }

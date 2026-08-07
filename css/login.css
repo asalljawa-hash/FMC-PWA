@@ -1,18 +1,24 @@
 /* ======================================
-   FMC LOGIN PREMIUM V20
+   FMC LOGIN PREMIUM V21
 ====================================== */
 
 #loginPage{
 
-    min-height:100vh;
+    min-height:100dvh;
 
     display:flex;
 
-    justify-content:center;
+    justify-content:flex-start;
 
     align-items:center;
 
-    padding:25px;
+    padding:30px 20px;
+
+    overflow-y:auto;
+
+    overflow-x:hidden;
+
+    -webkit-overflow-scrolling:touch;
 
     background:
     radial-gradient(circle at top left,#32d56d 0%,transparent 35%),
@@ -27,25 +33,75 @@
 
 .loginContainer{
 
-    width:100%;
-    max-width:420px;
+    width:min(92vw,420px);
+
+    margin:auto;
 
     padding:40px 30px;
 
-    text-align:center;
-
     border-radius:30px;
 
-    background:rgba(255,255,255,.22);
+    background:rgba(255,255,255,.26);
 
-    backdrop-filter:blur(22px);
-    -webkit-backdrop-filter:blur(22px);
+    backdrop-filter:blur(32px);
 
-    border:1px solid rgba(255,255,255,.35);
+    -webkit-backdrop-filter:blur(32px);
+
+    border:1px solid rgba(255,255,255,.40);
 
     box-shadow:
-    0 20px 50px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.25);
+        0 24px 60px rgba(0,0,0,.20),
+        inset 0 1px 0 rgba(255,255,255,.45);
+
+}
+
+/* =========================
+   REGISTER
+========================= */
+
+.registerBox{
+
+    margin-top:28px;
+
+    text-align:center;
+
+    font-size:15px;
+
+    color:rgba(17,24,39,.78);
+
+}
+
+.registerBox a{
+
+    color:#0B8F43;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+}
+
+.registerBox a:hover{
+
+    text-decoration:underline;
+
+}
+
+/* =========================
+   VERSION
+========================= */
+
+.loginVersion{
+
+    margin-top:18px;
+
+    margin-bottom:4px;
+
+    text-align:center;
+
+    font-size:13px;
+
+    color:rgba(255,255,255,.72);
 
 }
 
@@ -291,11 +347,13 @@ opacity:1;
 
 .registerBox{
 
-    margin-top:24px;
+    margin-top:30px;
 
-    color:#6B7280;
+    text-align:center;
 
     font-size:15px;
+
+    color:rgba(17,24,39,.70);
 
 }
 
@@ -303,17 +361,23 @@ opacity:1;
 
     color:#0B8F43;
 
-    text-decoration:none;
-
     font-weight:700;
 
-    margin-left:6px;
+    text-decoration:none;
 
 }
 
-.registerBox a:hover{
+.loginVersion{
 
-    text-decoration:underline;
+    margin-top:18px;
+
+    margin-bottom:0;
+
+    text-align:center;
+
+    font-size:13px;
+
+    color:rgba(255,255,255,.65);
 
 }
 
@@ -489,6 +553,164 @@ opacity:1;
         opacity:1;
 
         transform:translateY(0);
+
+    }
+
+}
+/* ======================================
+   LOGIN RESPONSIVE ENGINE V21
+====================================== */
+
+@media (max-height:760px){
+
+    #loginPage{
+
+        align-items:flex-start;
+
+        padding:18px;
+
+    }
+
+    .loginContainer{
+
+        max-width:400px;
+
+        padding:26px 22px;
+
+        margin:18px auto;
+
+        border-radius:22px;
+
+    }
+
+    .loginLogo{
+
+        width:82px;
+
+        margin-bottom:14px;
+
+    }
+
+    .loginContainer h1{
+
+        font-size:30px;
+
+    }
+
+    .loginSub{
+
+        font-size:13px;
+
+        margin-top:4px;
+
+        margin-bottom:14px;
+
+    }
+
+    .serverStatus{
+
+        margin:16px auto;
+
+        padding:9px 16px;
+
+        font-size:12px;
+
+    }
+
+    #loginPage label{
+
+        margin-top:14px;
+
+        margin-bottom:6px;
+
+        font-size:13px;
+
+    }
+
+    #loginPage input{
+
+        padding:14px;
+
+        border-radius:15px;
+
+        font-size:16px;
+
+    }
+
+    .loginBtn{
+
+        margin-top:20px;
+
+        padding:15px;
+
+        border-radius:15px;
+
+        font-size:16px;
+
+    }
+
+    .registerBox{
+
+        margin-top:18px;
+
+        font-size:14px;
+
+    }
+
+    .loginVersion{
+
+        margin-top:16px;
+
+        font-size:11px;
+
+    }
+
+}
+
+@media (max-height:650px){
+
+    .loginContainer{
+
+        padding:20px;
+
+    }
+
+    .loginLogo{
+
+        width:72px;
+
+    }
+
+    .loginContainer h1{
+
+        font-size:26px;
+
+    }
+
+    .serverStatus{
+
+        margin:12px auto;
+
+    }
+
+}
+@media (max-height:700px){
+
+    .loginContainer{
+
+        padding:32px 24px;
+
+    }
+
+    .loginLogo{
+
+        width:90px;
+
+    }
+
+    .loginContainer h1{
+
+        font-size:34px;
 
     }
 

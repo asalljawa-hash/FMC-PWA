@@ -96,7 +96,6 @@
     color:#1f6b45;
 
 }
-
 /* ==========================================
    RHPP TABLE
 ========================================== */
@@ -190,7 +189,6 @@
     color:#6EEB83;
 
 }
-
 /* ==========================================
    RHPP SIGNATURE
 ========================================== */
@@ -248,5 +246,64 @@
 .rhppIdentitas td:last-child{
 
     text-align:right;
+
+}
+/* ==========================================
+   RHPP DARK MODE
+========================================== */
+
+.dark .rhppHeader h1{
+
+    color:#6EEB83;
+
+}
+
+.dark .rhppHeader small{
+
+    color:#BFC7D5;
+
+}
+
+.dark .rhppPage h3{
+
+    color:#FFFFFF;
+
+}
+
+.dark .rhppItem{
+
+    background:#1F2937;
+
+    border:1px solid #374151;
+
+}
+
+.dark .rhppItem span{
+
+    color:#9CA3AF;
+
+}
+
+.dark .rhppItem b{
+
+    color:#FFFFFF;
+
+}
+
+.dark .rhppIdentitas td{
+
+    border-bottom:1px dashed #4B5563;
+
+}
+
+.dark .rhppIdentitas td:first-child{
+
+    color:#D1D5DB;
+
+}
+
+.dark .rhppIdentitas td:last-child{
+
+    color:#FFFFFF;
 
 }

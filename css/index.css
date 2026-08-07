@@ -316,51 +316,6 @@ button:active{
 }
 
 /* =========================
-   TABLE
-========================= */
-
-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-    background:#fff;
-
-    border-radius:18px;
-
-    overflow:hidden;
-
-}
-
-table td,
-table th{
-
-    padding:12px;
-
-    border-bottom:1px solid #ECECEC;
-
-    font-size:14px;
-
-}
-
-table th{
-
-    background:#F8FAF9;
-
-    color:var(--text);
-
-    font-weight:700;
-
-}
-
-table tr:last-child td{
-
-    border-bottom:none;
-
-}
-
-/* =========================
    SCROLLBAR
 ========================= */
 
@@ -717,66 +672,6 @@ table tr:last-child td{
 
 }
 
-/* =========================
-   DESKTOP MODE V14 - TEST 1
-========================= */
-
-body.desktop{
-
-    background:#EEF3F1;
-
-}
-
-body.desktop main{
-
-    width:min(96%,1700px);
-
-    margin:20px auto 110px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:20px;
-
-    padding:0;
-
-}
-
-body.desktop section{
-
-    width:100%;
-
-    display:block !important;
-
-}
-
-body.desktop .header{
-
-    width:min(96%,1700px);
-
-    margin:auto;
-
-}
-
-body.desktop .bottomNav{
-
-    width:min(96%,1700px);
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-}
-
-body.desktop .card,
-
-body.desktop .weatherCard{
-
-    margin:0;
-
-}
-
 /* ==========================================
    MOBILE MODE V12
 ========================================== */
@@ -851,50 +746,6 @@ body:not(.desktop) .bottomNav{
 .modeActive{
 
     display:block !important;
-
-}
-
-/* ==========================================
-   DARK MODE V12
-========================================== */
-
-body.dark{
-
-    background:#111827;
-
-    color:#F3F4F6;
-
-}
-
-body.dark .header{
-
-    background:#1F2937;
-
-}
-
-body.dark .card,
-body.dark .weatherCard,
-body.dark #settingPanel{
-
-    background:#1F2937;
-
-    color:#F9FAFB;
-
-    border:1px solid rgba(255,255,255,.05);
-
-}
-
-body.dark .settingItem:hover{
-
-    background:#374151;
-
-}
-
-#darkModeCheck{
-
-    color:#22C55E;
-
-    display:none;
 
 }
 
@@ -1552,7 +1403,6 @@ body.dark .dialogCancel:hover{
 
 }
 
-
 /* ==========================================
    DARK MODE
 ========================================== */
@@ -1560,48 +1410,54 @@ body.dark .dialogCancel:hover{
 body.dark .tableEkonomi,
 body.dark .tableRealisasi{
 
-    background:#1f2937;
-    border:1px solid #374151;
-    box-shadow:none;
+    background:#1B2430;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 4px 14px rgba(0,0,0,.18);
 
 }
 
 body.dark .tableEkonomi thead,
 body.dark .tableRealisasi thead{
 
-    background:#334155;
+    background:#263240;
 
 }
 
 body.dark .tableEkonomi th,
 body.dark .tableRealisasi th{
 
-    background:#334155;
-    color:#f8fafc;
-    border-bottom:1px solid #475569;
+    background:#263240;
+
+    color:#F8FAFC;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
 
 }
 
 body.dark .tableEkonomi td,
 body.dark .tableRealisasi td{
 
-    background:#1f2937;
-    color:#e5e7eb;
-    border-bottom:1px solid #374151;
+    background:#1B2430;
+
+    color:#E5E7EB;
+
+    border-bottom:1px solid rgba(255,255,255,.06);
 
 }
 
 body.dark .tableEkonomi tbody tr:nth-child(even) td,
 body.dark .tableRealisasi tbody tr:nth-child(even) td{
 
-    background:#273449;
+    background:#222D3A;
 
 }
 
 body.dark .tableEkonomi tbody tr:hover td,
 body.dark .tableRealisasi tbody tr:hover td{
 
-    background:#334155;
+    background:#2C3A4B;
 
 }
 
@@ -1613,32 +1469,40 @@ body.dark .tableRealisasi tbody tr:hover td{
 body.dark .tableEkonomi,
 body.dark .tableRealisasi{
 
-    background:#1f2937;
-    border:1px solid #1f6b45;
-    box-shadow:0 0 12px rgba(34,197,94,.12);
+    background:#1F2937;
+
+    border:1px solid rgba(24,77,54,.65);
+
+    box-shadow:0 4px 14px rgba(34,197,94,.10);
 
 }
 
 body.dark .tableEkonomi thead,
 body.dark .tableRealisasi thead{
 
-    background:#184d36;
+    background:#184D36;
 
 }
 
 body.dark .tableEkonomi th,
 body.dark .tableRealisasi th{
 
-    background:#184d36;
-    color:#d9ffe8;
-    border-bottom:1px solid #2f7d58;
+    background:#184D36;
+
+    color:#E8FFF2;
+
+    border-bottom:1px solid rgba(47,125,88,.75);
 
 }
 
 body.dark .tableEkonomi td,
 body.dark .tableRealisasi td{
 
-    color:#e5e7eb;
+    background:#1F2937;
+
+    color:#E5E7EB;
+
+    border-bottom:1px solid rgba(255,255,255,.05);
 
 }
 
@@ -1657,134 +1521,103 @@ body.dark .tableRealisasi tbody tr:hover td{
 }
 
 /* ==========================================
+   FMC BROILER MOBILE V11
    SETTING PANEL - DARK MODE
 ========================================== */
 
 body.dark #settingPanel{
 
-    background:#1b1b1b;
+    background:#1F2937;
 
-    color:#f5f5f5;
+    color:#F8FAFC;
+
+    border-top:1px solid rgba(255,255,255,.08);
 
 }
 
 body.dark .settingItem{
 
-    background:#2a2a2a;
+    background:#263342;
 
-    color:#f5f5f5;
+    color:#F8FAFC;
+
+    border:1px solid rgba(255,255,255,.05);
 
 }
 
 body.dark .settingItem:active{
 
-    background:#34463a;
+    background:#234833;
 
 }
 
 body.dark .panelHandle{
 
-    background:#666;
+    background:#6B7280;
 
 }
 
 body.dark #settingPanel h2{
 
-    color:#55d67f;
+    color:#6EEB83;
 
 }
 
-body.dark .settingItem
-.material-symbols-rounded{
+body.dark .settingItem .material-symbols-rounded{
 
-    color:#55d67f;
+    color:#6EEB83;
+
+}
+
+body.dark .settingItem small{
+
+    color:#B8C2CC;
 
 }
 
 body.dark.setting-open::before{
 
-    background:rgba(0,0,0,.35);
+    background:rgba(0,0,0,.45);
+
+    backdrop-filter:blur(3px);
+
+    -webkit-backdrop-filter:blur(3px);
 
 }
 
-/* ==========================================
-   FMC REAL MOBILE COMPACT FIX
-========================================== */
-
 @media (max-width:480px){
 
-    html{
-        -webkit-text-size-adjust:90%;
-        text-size-adjust:90%;
-    }
-
-
-    body{
-        font-size:13px;
-    }
-
-
     #app{
-        padding:6px;
-        max-width:100%;
-    }
 
+        padding:6px;
+
+        max-width:100%;
+
+    }
 
     .gridCard{
-        gap:8px;
-    }
 
+        gap:8px;
+
+    }
 
     .card,
     .gridCard > div{
-        padding:10px;
-        border-radius:12px;
-    }
 
+        padding:10px;
+
+        border-radius:12px;
+
+    }
 
     .dashboardHero{
+
         padding:12px;
+
         margin-bottom:10px;
+
         border-radius:14px;
-    }
 
-
-    .dashboardHero h1{
-        font-size:20px;
-    }
-
-
-    h1{
-        font-size:20px;
-    }
-
-
-    h2{
-        font-size:16px;
-    }
-
-
-    h3{
-        font-size:14px;
-    }
-
-
-    p,
-    span,
-    td,
-    th{
-        font-size:12px;
-    }
-
-
-    table{
-        font-size:12px;
-    }
-
-
-    th,
-    td{
-        padding:5px 4px;
     }
 
 }
@@ -1795,7 +1628,7 @@ body.dark.setting-open::before{
 
 body.desktop{
 
-    background:#eef3f1;
+    background:#EEF3F1;
 
     overflow-x:hidden;
 
@@ -1807,9 +1640,9 @@ body.desktop main{
 
     max-width:1800px;
 
-    margin:20px auto;
+    margin:24px auto;
 
-    padding:0 24px 100px;
+    padding:0 28px 100px;
 
     box-sizing:border-box;
 
@@ -1841,9 +1674,9 @@ body.desktop .gridCard{
 
     display:grid;
 
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
 
-    gap:18px;
+    gap:20px;
 
 }
 
@@ -1852,4 +1685,70 @@ body.desktop table{
     width:100%;
 
 }
+/* ==========================================
+   DESKTOP DARK MODE
+========================================== */
 
+body.dark.desktop{
+
+    background:#12181F;
+
+}
+
+body.dark.desktop main{
+
+    background:transparent;
+
+}
+
+body.dark.desktop .dashboardHero{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0A5C31,
+        #0B8F43
+    );
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.30);
+
+}
+
+body.dark.desktop .card,
+body.dark.desktop .weatherCard{
+
+    background:#1F2937;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    box-shadow:
+        0 6px 20px rgba(0,0,0,.22);
+
+}
+
+body.dark.desktop .gridCard .card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 10px 26px rgba(0,0,0,.32);
+
+}
+
+body.dark.desktop h1,
+body.dark.desktop h2,
+body.dark.desktop h3,
+body.dark.desktop b{
+
+    color:#F8FAFC;
+
+}
+
+body.dark.desktop p,
+body.dark.desktop small,
+body.dark.desktop span{
+
+    color:#CBD5E1;
+
+}

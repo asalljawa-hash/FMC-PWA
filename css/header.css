@@ -10,7 +10,7 @@
     left:0;
     right:0;
 
-    height:78px;
+    height:70px;
 
     display:flex;
 
@@ -18,7 +18,7 @@
 
     align-items:center;
 
-    padding:0 18px;
+    padding:0 16px;
 
     background:
     linear-gradient(
@@ -31,7 +31,7 @@
     color:#fff;
 
     box-shadow:
-    0 10px 30px rgba(0,0,0,.18);
+    0 8px 24px rgba(0,0,0,.16);
 
     z-index:1000;
 
@@ -47,7 +47,7 @@
 
     align-items:center;
 
-    gap:14px;
+    gap:12px;
 
     flex:1;
 
@@ -55,20 +55,20 @@
 
 .headerLogo{
 
-    width:52px;
+    width:46px;
 
-    height:52px;
+    height:46px;
 
     object-fit:contain;
 
-    border-radius:14px;
+    border-radius:12px;
 
     background:rgba(255,255,255,.12);
 
-    padding:6px;
+    padding:5px;
 
     box-shadow:
-    0 6px 16px rgba(0,0,0,.18);
+    0 5px 14px rgba(0,0,0,.16);
 
 }
 
@@ -82,29 +82,55 @@
 
     flex-direction:column;
 
+    justify-content:center;
+
+    gap:1px;
+
 }
 
 #farmNama{
 
     margin:0;
 
-    font-size:20px;
+    font-size:16px;
 
     font-weight:800;
 
     color:#fff;
 
-    letter-spacing:.3px;
+    letter-spacing:.2px;
+
+    line-height:1.05;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+.headerSub{
+
+    margin:0;
+
+    font-size:10px;
+
+    line-height:1.1;
+
+    color:rgba(255,255,255,.88);
 
 }
 
 #updateTime{
 
-    margin-top:4px;
+    margin:0;
 
-    font-size:12px;
+    font-size:9px;
 
-    color:rgba(255,255,255,.88);
+    line-height:1.1;
+
+    color:rgba(255,255,255,.72);
 
 }
 
@@ -118,7 +144,7 @@
 
     align-items:center;
 
-    gap:10px;
+    gap:8px;
 
 }
 
@@ -130,7 +156,7 @@
 
     gap:6px;
 
-    padding:8px 14px;
+    padding:7px 12px;
 
     border-radius:999px;
 
@@ -140,7 +166,7 @@
 
     -webkit-backdrop-filter:blur(12px);
 
-    font-size:12px;
+    font-size:11px;
 
     font-weight:700;
 
@@ -152,7 +178,7 @@
 
 #statusServer .material-symbols-rounded{
 
-    font-size:18px;
+    font-size:16px;
 
 }
 
@@ -164,37 +190,37 @@
 
     .header{
 
-        height:74px;
+        height:68px;
 
-        padding:0 14px;
+        padding:0 12px;
 
     }
 
     .headerLogo{
 
-        width:46px;
+        width:42px;
 
-        height:46px;
+        height:42px;
 
     }
 
     #farmNama{
 
-        font-size:18px;
+        font-size:17px;
 
     }
 
     #updateTime{
 
-        font-size:11px;
+        font-size:10px;
 
     }
 
     #statusServer{
 
-        padding:7px 10px;
+        padding:6px 10px;
 
-        font-size:11px;
+        font-size:10px;
 
     }
 
@@ -215,6 +241,8 @@ body.desktop .header{
     right:0;
 
     margin:0;
+
+    height:70px;
 
     padding-left:24px;
 

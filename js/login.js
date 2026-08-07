@@ -544,7 +544,6 @@ function initLogin() {
 
 }
 
-
 document.addEventListener(
 
     "DOMContentLoaded",

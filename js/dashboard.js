@@ -143,14 +143,7 @@ Periode ${farm.periode}
 
 <div class="onlineBadge">
 
-<span class="material-symbols-rounded">
-
-wifi
-
-</span>
-
-
-ONLINE
+    ONLINE
 
 </div>
 

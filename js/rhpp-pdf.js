@@ -122,103 +122,111 @@ function rupiah(nilai){
 
     pdf.line(20,38,190,38);
 
-    // ==========================================
-    // INFORMASI FARM
-    // ==========================================
+// ==========================================
+// INFORMASI FARM V13
+// ==========================================
 
-    let y = 46;
+let y = 46;
 
-    pdf.setDrawColor(180);
-    pdf.setLineWidth(0.3);
+const namaFarm = pdf.splitTextToSize(
+    String(farm.namaFarm || "-"),
+    35
+);
 
-    pdf.roundedRect(
-        18,
-        y,
-        174,
-        34,
-        2,
-        2
-    );
+const offsetY = (namaFarm.length - 1) * 5;
+const tinggiBox = 34 + offsetY;
 
-    pdf.setFont("helvetica","bold");
-    pdf.setFontSize(11);
+pdf.setDrawColor(180);
+pdf.setLineWidth(0.3);
 
-    pdf.text(
-        "INFORMASI FARM",
-        22,
-        y+7
-    );
+pdf.roundedRect(
+    18,
+    y,
+    174,
+    tinggiBox,
+    2,
+    2
+);
 
-    pdf.setFont("helvetica","normal");
-    pdf.setFontSize(10);
+pdf.setFont("helvetica","bold");
+pdf.setFontSize(11);
 
-    // kiri
+pdf.text(
+    "INFORMASI FARM",
+    22,
+    y + 7
+);
 
-    pdf.text("Nama Farm",22,y+16);
-    pdf.text(":",56,y+16);
-    pdf.text(String(farm.namaFarm || "-"),60,y+16);
+pdf.setFont("helvetica","normal");
+pdf.setFontSize(10);
 
-    pdf.text("Periode",22,y+25);
-    pdf.text(":",56,y+25);
-    pdf.text(String(farm.periode || "-"),60,y+25);
+// ==========================================
+// KOLOM KIRI
+// ==========================================
 
-    // kanan
+pdf.text("Nama Farm",22,y+16);
+pdf.text(":",56,y+16);
+pdf.text(namaFarm,60,y+16);
 
-    pdf.text("Chick In",110,y+16);
-    pdf.text(":",145,y+16);
-    pdf.text(String(farm.chickIn || "-"),149,y+16);
+pdf.text("Periode",22,y+25+offsetY);
+pdf.text(":",56,y+25+offsetY);
+pdf.text(String(farm.periode || "-"),60,y+25+offsetY);
 
-    pdf.text("Tanggal Cetak",110,y+25);
-    pdf.text(":",145,y+25);
+// ==========================================
+// KOLOM KANAN
+// ==========================================
 
-    pdf.text(
+pdf.text("Chick In",110,y+16);
+pdf.text(":",145,y+16);
+pdf.text(String(farm.chickIn || "-"),149,y+16);
 
-        new Date().toLocaleDateString("id-ID"),
+pdf.text("Tanggal Cetak",110,y+25);
+pdf.text(":",145,y+25);
 
-        149,
+pdf.text(
+    new Date().toLocaleDateString("id-ID"),
+    149,
+    y+25
+);
 
-        y+25
+// ==========================================
+// KPI
+// ==========================================
 
-    );
+y += tinggiBox + 12;
 
-    // ==========================================
-    // KPI
-    // ==========================================
+pdf.setFont("helvetica","bold");
+pdf.setFontSize(12);
 
-    y += 46;
+pdf.text(
+    "RINGKASAN KPI PRODUKSI",
+    20,
+    y
+);
 
-    pdf.setFont("helvetica","bold");
-    pdf.setFontSize(12);
+y += 10;
 
-    pdf.text(
-        "RINGKASAN KPI PRODUKSI",
-        20,
-        y
-    );
+pdf.setFont("helvetica","normal");
+pdf.setFontSize(10);
 
-    y += 10;
+function row(label,value){
 
-    pdf.setFont("helvetica","normal");
-    pdf.setFontSize(10);
+    pdf.text(label,20,y);
 
-    function row(label,value){
+    pdf.text(":",70,y);
 
-        pdf.text(label,20,y);
+    pdf.text(String(value ?? "-"),75,y);
 
-        pdf.text(":",70,y);
+    y += 7;
 
-        pdf.text(String(value ?? "-"),75,y);
+}
 
-        y += 7;
-
-    }
-
-    row("DOC IN",kpi.docIn);
-    row("Ayam Hidup",kpi.ayamHidup);
-    row("Mortalitas",kpi.mortalitas);
-    row("Deplesi",kpi.deplesi);
-    row("FCR",kpi.fcr);
-    row("IP",kpi.ip);
+row("DOC IN",kpi.docIn);
+row("Ayam Hidup",kpi.ayamHidup);
+row("Mortalitas",kpi.mortalitas);
+row("Deplesi",kpi.deplesi);
+row("FCR",kpi.fcr);
+row("IP",kpi.ip);
 
     // ==========================================
     // EKONOMI FLOK

@@ -1,4 +1,5 @@
 /* ==========================================
+   FMC BROILER MOBILE V11
    SHARE CARD
 ========================================== */
 
@@ -10,8 +11,11 @@
     top:0;
 
     width:720px;
+    max-width:720px;
 
-    background:#ffffff;
+    box-sizing:border-box;
+
+    background:var(--card);
 
     border-radius:24px;
 
@@ -20,6 +24,10 @@
     box-shadow:0 15px 40px rgba(0,0,0,.18);
 
     font-family:Inter,sans-serif;
+
+    -webkit-font-smoothing:antialiased;
+
+    text-rendering:optimizeLegibility;
 
     visibility:hidden;
 
@@ -32,8 +40,8 @@
     background:
     linear-gradient(
         135deg,
-        #0B8F43,
-        #18B85B
+        var(--primary),
+        var(--primary-light)
     );
 
     color:#fff;
@@ -50,6 +58,8 @@
 
     font-weight:800;
 
+    line-height:1.2;
+
 }
 
 .shareHeader small{
@@ -62,13 +72,15 @@
 
     opacity:.95;
 
+    line-height:1.5;
+
 }
 
 #shareContent{
 
     padding:36px;
 
-    color:#222;
+    color:var(--text);
 
     font-size:24px;
 
@@ -76,11 +88,13 @@
 
     white-space:pre-line;
 
+    word-break:break-word;
+
 }
 
 .shareFooter{
 
-    border-top:1px solid #eee;
+    border-top:1px solid var(--border);
 
     padding:24px;
 
@@ -88,6 +102,6 @@
 
     font-size:18px;
 
-    color:#777;
+    color:var(--text-soft);
 
 }
