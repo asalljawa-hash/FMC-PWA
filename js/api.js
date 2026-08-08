@@ -10,6 +10,9 @@ const API_BASE =
 const API_DATA =
 API_BASE + "?api=data";
 
+const API_TENANT =
+API_BASE + "?action=tenantData";
+
 // ==========================================
 // CACHE
 // ==========================================
@@ -140,7 +143,7 @@ async function apiGet(params = {}) {
 }
 
 // ==========================================
-// DATA SERVER
+// DATA SERVER TENANT V1
 // ==========================================
 
 async function ambilDataServer(force = false) {
@@ -151,62 +154,64 @@ async function ambilDataServer(force = false) {
 
     try {
 
-        const data = await apiGet();
+        const user = getLoginUser();
 
-        if (!data) {
+        if (!user || !user.email) {
+
+            console.error(
+                "TENANT API: USER BELUM LOGIN"
+            );
+
             return null;
         }
 
-        serverData = data;
+        const url =
+            new URL(API_TENANT);
 
-        // ==================================
-        // CEK VERSI DATA
-        // ==================================
+        url.searchParams.set(
+            "email",
+            user.email
+        );
 
-        if (
-            data.system &&
-            data.system.dataVersion
-        ) {
+        url.searchParams.set(
+            "t",
+            Date.now()
+        );
 
-            if (lastDataVersion === "") {
+        const response =
+            await fetch(url, {
+                cache: "no-store"
+            });
 
-                lastDataVersion =
-                    data.system.dataVersion;
+        if (!response.ok) {
 
-                localStorage.setItem(
-                    "FMC_DATA_VERSION",
-                    lastDataVersion
-                );
-
-            }
-
-            else if (
-                lastDataVersion !==
-                data.system.dataVersion
-            ) {
-
-                lastDataVersion =
-                    data.system.dataVersion;
-
-                localStorage.setItem(
-                    "FMC_DATA_VERSION",
-                    lastDataVersion
-                );
-
-                if (
-                    typeof showUpdateToast ===
-                    "function"
-                ) {
-
-                    showUpdateToast(
-                        "Data harian peternakan telah diperbarui."
-                    );
-
-                }
-
-            }
+            throw new Error(
+                "HTTP " + response.status
+            );
 
         }
+
+        const result =
+            await response.json();
+
+        if (
+            !result ||
+            result.success !== true ||
+            !result.data
+        ) {
+
+            console.error(
+                "TENANT API ERROR:",
+                result
+            );
+
+            return null;
+        }
+
+        const data =
+            result.data;
+
+        serverData = data;
 
         // ==================================
         // STATUS SERVER
@@ -250,11 +255,10 @@ async function ambilDataServer(force = false) {
         return data;
 
     }
-
     catch (error) {
 
         console.error(
-            "DATA SERVER ERROR:",
+            "TENANT DATA ERROR:",
             error
         );
 
@@ -268,7 +272,6 @@ async function ambilDataServer(force = false) {
         }
 
         return null;
-
     }
 
 }
