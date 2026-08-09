@@ -238,6 +238,54 @@ function validateRegister() {
 
     clearRegisterMessage();
 
+
+    /* ==========================
+       VALIDASI JENIS USAHA
+    ========================== */
+
+    if (regBusiness.value !== "broiler") {
+
+        showMessage(
+            "Jenis usaha tersebut belum tersedia. Saat ini FMC hanya tersedia untuk Broiler.",
+            "warning"
+        );
+
+        regBusiness.focus();
+
+        return false;
+
+    }
+
+
+    /* ==========================
+       VALIDASI JUMLAH KANDANG
+    ========================== */
+
+    const cage =
+        Number(regCage.value);
+
+    if (
+        !Number.isInteger(cage) ||
+        cage < 1 ||
+        cage > 4
+    ) {
+
+        showMessage(
+            "Jumlah kandang harus antara 1 sampai 4 kandang.",
+            "error"
+        );
+
+        regCage.focus();
+
+        return false;
+
+    }
+
+
+    /* ==========================
+       VALIDASI PIN
+    ========================== */
+
     if (regPin.value.length !== 6) {
 
         showMessage(
@@ -250,6 +298,11 @@ function validateRegister() {
         return false;
 
     }
+
+
+    /* ==========================
+       KONFIRMASI PIN
+    ========================== */
 
     if (regPin.value !== regConfirmPin.value) {
 
@@ -264,6 +317,11 @@ function validateRegister() {
 
     }
 
+
+    /* ==========================
+       PERSETUJUAN
+    ========================== */
+
     if (!agree.checked) {
 
         showMessage(
@@ -276,6 +334,7 @@ function validateRegister() {
         return false;
 
     }
+
 
     return true;
 

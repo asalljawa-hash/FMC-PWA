@@ -382,3 +382,15 @@ line-height:1.5;
 text-align:center;
 
 }
+/* ======================================
+   REGISTER MESSAGE - WARNING / ERROR
+====================================== */
+
+#registerMessage.warning,
+#registerMessage.error{
+
+    color:#FFE66D;
+
+    font-weight:600;
+
+}

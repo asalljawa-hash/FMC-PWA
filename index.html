@@ -348,13 +348,15 @@ REGISTER FORM
 
     <label for="regCage">Jumlah Kandang</label>
     <input
-        type="text"
-        id="regCage"
-        name="cage"
-        inputmode="numeric"
-        maxlength="4"
-        placeholder="Contoh: 8"
-        required>
+      type="number"
+      id="regCage"
+      name="cage"
+      inputmode="numeric"
+      min="1"
+      max="4"
+      step="1"
+      placeholder="Jumlah kandang (1–4)"
+      required>
 
     <label for="regPin">PIN (6 Digit)</label>
     <input
