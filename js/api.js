@@ -30,40 +30,139 @@ async function apiPost(action, data = {}) {
 
     try {
 
-        const response = await fetch(API_BASE, {
+        // ==========================================
+        // SALIN DATA
+        // ==========================================
 
-            method: "POST",
+        const payload = {
+            ...data
+        };
 
-            headers: {
-                "Content-Type":
-                "application/x-www-form-urlencoded"
-            },
 
-            body: new URLSearchParams({
+        // ==========================================
+        // AUTH ACTION
+        // ==========================================
+        //
+        // Action berikut tidak menggunakan
+        // identitas Tenant otomatis karena
+        // digunakan sebelum / selama proses
+        // autentikasi.
+        //
+        // ==========================================
 
-                action,
+        const authActions = [
+            "login",
+            "register",
+            "sendOTP",
+            "verifyOTP",
+            "sendResetOTP",
+            "verifyResetOTP",
+            "resetPIN"
+        ];
 
-                ...data
 
-            })
+        // ==========================================
+        // TENANT IDENTITY V1
+        // ==========================================
+        //
+        // Semua action selain Auth dianggap
+        // sebagai action Tenant.
+        //
+        // Email diambil otomatis dari session
+        // FMC_USER.
+        //
+        // Modul berikut dapat memakai pola ini
+        // tanpa perubahan api.js lagi:
+        //
+        // DOC IN
+        // PAKAN
+        // OPERASIONAL
+        // INPUT FLOK
+        // MASTER KONTRAK
+        // OVK
+        // PLAN PANEN
+        // REALISASI PANEN
+        //
+        // ==========================================
 
-        });
+        if (
+            !authActions.includes(action)
+        ) {
+
+            const user =
+                getLoginUser();
+
+            if (
+                user &&
+                user.email
+            ) {
+
+                payload.email =
+                    String(
+                        user.email
+                    )
+                    .trim()
+                    .toLowerCase();
+
+            }
+
+        }
+
+
+        // ==========================================
+        // REQUEST KE GOOGLE APPS SCRIPT
+        // ==========================================
+
+        const response =
+            await fetch(
+                API_BASE,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                        "application/x-www-form-urlencoded"
+                    },
+
+                    body:
+                        new URLSearchParams({
+
+                            action,
+
+                            ...payload
+
+                        })
+
+                }
+            );
+
+
+        // ==========================================
+        // HTTP ERROR
+        // ==========================================
 
         if (!response.ok) {
 
             throw new Error(
-                "HTTP " + response.status
+                "HTTP " +
+                response.status
             );
 
         }
+
+
+        // ==========================================
+        // RESPONSE JSON
+        // ==========================================
 
         const result =
             await response.json();
 
         return result;
 
-    }
 
+    }
     catch (error) {
 
         console.error(
@@ -83,6 +182,7 @@ async function apiPost(action, data = {}) {
     }
 
 }
+
 
 // ==========================================
 // API GET
