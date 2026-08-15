@@ -1752,3 +1752,91 @@ body.dark.desktop span{
     color:#CBD5E1;
 
 }
+
+/* ==========================================
+   FMC FLOK CHICKEN ICON
+========================================== */
+
+.fmc-flok-icon{
+    width:26px;
+    height:26px;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    flex:0 0 26px;
+}
+
+.fmc-flok-icon svg{
+    width:26px;
+    height:26px;
+
+    display:block;
+
+    fill:currentColor;
+}
+/* ==========================================
+   MASTER KONTRAK ICON
+========================================== */
+
+.contractIcon{
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+}
+/* ==========================================
+   FMC CORN EMOJI ICON
+========================================== */
+
+.fmc-corn-emoji{
+    width:26px;
+    height:26px;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    flex:0 0 26px;
+
+    font-size:23px;
+    line-height:1;
+
+    /* Ubah emoji berwarna menjadi putih */
+    filter:
+        grayscale(1)
+        brightness(0)
+        invert(1);
+
+    /* Membuat rendering lebih lembut */
+    -webkit-font-smoothing:antialiased;
+    text-rendering:geometricPrecision;
+}
+
+/* ==========================================
+   MATERIAL SYMBOLS - STABIL
+   ========================================== */
+
+.material-symbols-rounded{
+    font-family:'Material Symbols Rounded';
+    font-weight:normal;
+    font-style:normal;
+    font-size:24px;
+    line-height:1;
+    letter-spacing:normal;
+    text-transform:none;
+    display:inline-block;
+    white-space:nowrap;
+    word-wrap:normal;
+    direction:ltr;
+    -webkit-font-feature-settings:'liga';
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:'liga';
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 500,
+        'GRAD' 0,
+        'opsz' 24;
+}

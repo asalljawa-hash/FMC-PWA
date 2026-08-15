@@ -49,7 +49,11 @@ rel="stylesheet">
 <link rel="stylesheet" href="css/login.css">
 <link rel="stylesheet" href="css/register.css">
 <link rel="stylesheet" href="css/forgot.css">
-
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/sidebar.css">
+<link rel="stylesheet" href="css/masterKontrak.css">
+<link rel="stylesheet" href="css/ovk.css">
+  
 <!-- CSS -->
 
 <link rel="stylesheet" href="css/theme.css">
@@ -57,13 +61,17 @@ rel="stylesheet">
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/card.css">
 <link rel="stylesheet" href="css/table.css">
-<link rel="stylesheet" href="css/navigation.css">
 <link rel="stylesheet" href="css/index.css">
 <link rel="stylesheet" href="css/share.css">
 <link rel="stylesheet" href="css/rhpp.css">
 <link rel="stylesheet" href="css/setting.css">
 <link rel="stylesheet" href="css/premium.css">
-
+<link rel="stylesheet" href="css/docin.css">
+<link rel="stylesheet" href="css/pakan.css">
+<link rel="stylesheet" href="css/operasional.css">
+<link rel="stylesheet" href="css/inputflok.css">
+<link rel="stylesheet" href="css/plan-panen.css">
+<link rel="stylesheet" href="css/realisasi-panen.css">
 </head>
 
 <body id="appBody">
@@ -604,6 +612,19 @@ HEADER V11
 
 <div class="headerBrand">
 
+<button
+    id="fmcMenuButton"
+    class="fmcMenuButton"
+    type="button"
+    onclick="toggleFmcSidebar()"
+    aria-label="Buka menu">
+
+    <span class="material-symbols-rounded">
+        menu
+    </span>
+
+</button>
+
 <img
 src="icons/icon-192.png"
 class="headerLogo"
@@ -664,7 +685,434 @@ download
 </div>
 
 </header>
+<!-- =================================================
+     FMC SIDEBAR
+================================================= -->
 
+<div
+    id="fmcSidebarOverlay">
+</div>
+
+
+<aside
+    id="fmcSidebar"
+    aria-label="Menu FMC">
+
+
+    <!-- HEADER -->
+
+    <div class="sidebarHeader">
+
+        <div class="sidebarHeaderTop">
+
+            <div class="sidebarBrand">
+
+                <img
+                    src="icons/icon-192.png"
+                    class="sidebarLogo"
+                    alt="FMC">
+
+                <div
+                    class="sidebarBrandText">
+
+                    <div
+                        class="sidebarTitle">
+
+                        FMC BROILER
+
+                    </div>
+
+                    <div
+                        id="sidebarFarmNama"
+                        class="sidebarFarm">
+
+                        FMC
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="sidebarClose"
+                onclick="closeFmcSidebar()"
+                aria-label="Tutup menu">
+
+                <span class="material-symbols-rounded">
+                    close
+                </span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MENU -->
+
+    <div class="sidebarMenu">
+
+
+        <!-- DASHBOARD -->
+
+<button
+    type="button"
+    class="sidebarItem active"
+    onclick="sidebarGo('dashboard')">
+
+    <span class="material-symbols-rounded">
+        space_dashboard
+    </span>
+
+    <span>
+        Dashboard
+    </span>
+
+</button>
+
+
+        <!-- INPUT DATA -->
+
+        <div
+            class="sidebarSectionTitle">
+
+            INPUT DATA
+
+        </div>
+
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarGo('docin')">
+
+    <span class="material-symbols-rounded">
+        description
+    </span>
+
+    <span>
+        DOC In
+    </span>
+
+</button>
+
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarGo('pakan')">
+
+    <span class="fmc-corn-emoji" aria-hidden="true">🌾</span>
+
+    <span>
+        Pakan
+    </span>
+
+</button>
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarGo('operasional')">
+
+    <span class="material-symbols-rounded">
+        payments
+    </span>
+
+    <span>
+        Operasional
+    </span>
+
+</button>
+
+
+<!-- =====================================================
+     MENU FLOK
+     A / B / C / D
+     
+     Setiap pilihan FLOK menggunakan sidebarFlok().
+     sidebarFlok() menyimpan FLOK aktif lalu membuka
+     halaman INPUT FLOK melalui showPage("inputflok").
+     
+     PERFORMA FLOK tetap berada pada halaman "flok"
+     dan tidak diubah di bagian ini.
+===================================================== -->
+
+<div
+    id="sidebarFlok"
+    class="sidebarFlok">
+
+
+    <!-- =================================================
+         TOMBOL UTAMA FLOK
+         Membuka / menutup submenu FLOK
+    ================================================== -->
+
+    <button
+        type="button"
+        class="sidebarItem"
+        onclick="toggleSidebarFlok()">
+
+        <span class="material-symbols-rounded">
+            home
+        </span>
+
+        <span>
+            Flok
+        </span>
+
+    </button>
+
+
+    <!-- =================================================
+         SUBMENU FLOK
+    ================================================== -->
+
+    <div
+        class="sidebarFlokList">
+
+
+        <!-- =============================================
+             FLOK A
+             → INPUT FLOK A
+        ============================================== -->
+
+        <button
+            type="button"
+            class="sidebarFlokItem"
+            onclick="sidebarFlok('A')">
+
+            <span class="material-symbols-rounded">
+                warehouse
+            </span>
+
+            <span>
+                A
+            </span>
+
+        </button>
+
+
+        <!-- =============================================
+             FLOK B
+             → INPUT FLOK B
+        ============================================== -->
+
+        <button
+            type="button"
+            class="sidebarFlokItem"
+            onclick="sidebarFlok('B')">
+
+            <span class="material-symbols-rounded">
+                warehouse
+            </span>
+
+            <span>
+                B
+            </span>
+
+        </button>
+
+
+        <!-- =============================================
+             FLOK C
+             → INPUT FLOK C
+        ============================================== -->
+
+        <button
+            type="button"
+            class="sidebarFlokItem"
+            onclick="sidebarFlok('C')">
+
+            <span class="material-symbols-rounded">
+                warehouse
+            </span>
+
+            <span>
+                C
+            </span>
+
+        </button>
+
+
+        <!-- =============================================
+             FLOK D
+             → INPUT FLOK D
+        ============================================== -->
+
+        <button
+            type="button"
+            class="sidebarFlokItem"
+            onclick="sidebarFlok('D')">
+
+            <span class="material-symbols-rounded">
+                warehouse
+            </span>
+
+            <span>
+                D
+            </span>
+
+        </button>
+
+
+    </div>
+
+</div>
+<!-- MASTER DATA -->
+
+<div class="sidebarSectionTitle">
+    MASTER DATA
+</div>
+
+
+<!-- MASTER KONTRAK -->
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarGo('masterKontrak')">
+
+    <span class="material-symbols-rounded contractIcon">
+        handshake
+    </span>
+
+    <span>
+        Master Kontrak
+    </span>
+
+</button>
+
+
+<!-- OVK -->
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarGo('ovk')">
+
+    <span class="material-symbols-rounded">
+        medication
+    </span>
+
+    <span>
+        OVK
+    </span>
+
+</button>
+
+<!-- PLAN & REALISASI -->
+
+<div
+    class="sidebarSectionTitle">
+
+    PLAN & REALISASI
+
+</div>
+
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarGo('planpanen')">
+
+    <span class="material-symbols-rounded">
+        calendar_month
+    </span>
+
+    <span>
+        Plan Panen
+    </span>
+
+</button>
+
+
+        <button
+            type="button"
+            class="sidebarItem"
+            onclick="sidebarComingSoon('Data Timbang')">
+
+            <span class="material-symbols-rounded">
+                scale
+            </span>
+
+            <span>
+                Data Timbang
+            </span>
+
+        </button>
+      
+<!-- realisasipanen -->
+      
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarGo('realisasipanen')">
+
+    <span class="material-symbols-rounded">
+        local_shipping
+    </span>
+
+    <span>
+        Realisasi Panen
+    </span>
+
+</button>
+
+
+    </div>
+
+
+<!-- FOOTER -->
+
+<div class="sidebarFooter">
+
+    <div class="sidebarDivider"></div>
+
+
+<!-- PENGATURAN -->
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="closeFmcSidebar(); toggleSettingPanel()">
+
+    <span class="material-symbols-rounded">
+        settings
+    </span>
+
+    <span>
+        Pengaturan
+    </span>
+
+</button>
+
+
+<!-- KELUAR -->
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="closeFmcSidebar(); exitFMC()">
+
+    <span class="material-symbols-rounded">
+        logout
+    </span>
+
+    <span>
+        Keluar
+    </span>
+
+</button>
+
+</div>
+
+
+</aside>
 <!-- ======================================
 DASHBOARD
 ====================================== -->
@@ -687,7 +1135,7 @@ Memuat Dashboard...
 
 <p>
 
-Transferring data from the server...
+Synchronizing server data...
 
 </p>
 
@@ -723,6 +1171,122 @@ Mengambil data produksi...
 
 </div>
 
+</section>
+
+<!-- ======================================
+     DOC IN
+====================================== -->
+
+<section
+    id="docinPage"
+    style="display:none;">
+
+    <div class="card">
+
+        <h2>
+
+            <span class="material-symbols-rounded">
+                description
+            </span>
+
+            DOC In
+
+        </h2>
+
+        <p>
+            Form DOC In akan digunakan untuk memasukkan
+            data awal periode dan populasi setiap flok.
+        </p>
+
+    </div>
+
+</section>
+
+  <!-- ======================================
+     PAKAN
+====================================== -->
+
+<section
+    id="pakanPage"
+    style="display:none;">
+
+    <div class="card">
+
+        <h2>
+
+            <span class="material-symbols-rounded">
+                local_shipping
+            </span>
+
+            Pakan
+
+        </h2>
+
+        <p>
+            Manajemen stok dan penerimaan pakan.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ======================================
+     OPERASIONAL
+====================================== -->
+
+<section
+    id="operasionalPage"
+    style="display:none;">
+
+</section>
+
+
+<!-- ======================================
+     MASTER KONTRAK
+====================================== -->
+
+<section
+    id="masterKontrakPage"
+    style="display:none;">
+
+</section>
+
+  <!-- ======================================
+     OVK
+====================================== -->
+
+<section
+    id="ovkPage"
+    style="display:none;">
+
+</section>
+
+<!-- ======================================
+     PLAN PANEN
+====================================== -->
+
+<section
+    id="planpanenPage"
+    style="display:none;">
+
+</section>
+  
+<!-- ======================================
+     REALISASI PANEN
+====================================== -->
+
+<section
+    id="realisasiPanenPage"
+    style="display:none;">
+</section>
+  
+<!-- ======================================
+     INPUT FLOK
+====================================== -->
+
+<section
+    id="inputFlokPage"
+    style="display:none;">
 </section>
 
 <!-- ======================================
@@ -1486,27 +2050,84 @@ SHARE CARD
 <!-- Library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- Core -->
-<script src="js/app.js"></script>
 
-<!-- API (HARUS LEBIH DULU) -->
+<!-- API -->
 <script src="js/api.js"></script>
 
-<!-- Authentication -->
 
+<!-- Sidebar -->
+<script src="js/sidebar.js"></script>
+
+
+<!-- Authentication -->
 <script src="js/register.js"></script>
 <script src="js/login.js"></script>
 <script src="js/forgot.js"></script>
 
+
 <!-- Modules -->
 <script src="js/dashboard.js"></script>
 <script src="js/flok.js"></script>
+<script src="js/inputflok.js"></script>
 <script src="js/harian.js"></script>
+<script src="js/docin.js"></script>
+<script src="js/pakan.js"></script>
+<script src="js/operasional.js"></script>
+<script src="js/masterKontrak.js"></script>
+<script src="js/ovk.js"></script>
+<script src="js/plan-panen.js"></script>
+<script src="js/realisasi-panen.js"></script>
 <script src="js/keuangan.js"></script>
 <script src="js/rhpp.js"></script>
 <script src="js/rhpp-pdf.js"></script>
 <script src="js/share.js"></script>
 <script src="js/ai.js"></script>
+
+<!-- Core -->
+<script src="js/app.js"></script>
+
+
+<!-- ================================================
+     FMC DEVELOPMENT BOOT
+     HANYA UNTUK LOCALHOST
+================================================ -->
+
+<script>
+
+if (
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1"
+) {
+
+    const devLoginPage =
+        document.getElementById("loginPage");
+
+    const devApp =
+        document.getElementById("app");
+
+
+    if (devLoginPage) {
+
+        devLoginPage.style.display = "none";
+
+    }
+
+
+    if (devApp) {
+
+        devApp.style.display = "block";
+
+    }
+
+
+    console.log(
+        "FMC DEVELOPMENT BOOT AKTIF"
+    );
+
+}
+
+</script>
+
 
 </body>
 </html>

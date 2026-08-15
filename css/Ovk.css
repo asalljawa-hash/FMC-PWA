@@ -1,0 +1,660 @@
+/* ==========================================================
+   FMC BROILER MOBILE
+   OVK.CSS
+   ----------------------------------------------------------
+   Tampilan halaman OVK / Obat & Vitamin
+========================================================== */
+
+.ovkPage{
+    width:100%;
+    max-width:900px;
+    margin:0 auto;
+    padding:14px 14px 110px;
+    box-sizing:border-box;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.ovkHeader{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+}
+
+.ovkHeaderIcon{
+    width:48px;
+    height:48px;
+    min-width:48px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#E8F5EE;
+    color:#0B8F43;
+}
+
+.ovkHeaderIcon .material-symbols-rounded{
+    font-size:27px;
+}
+
+.ovkHeaderText h2{
+    margin:0;
+    font-size:22px;
+    font-weight:800;
+}
+
+.ovkHeaderText p{
+    margin:3px 0 0;
+    font-size:13px;
+    color:#6B7280;
+}
+
+/* ==========================================================
+   INFO
+========================================================== */
+
+.ovkInfo{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    padding:14px;
+    margin-bottom:14px;
+    border-radius:16px;
+    background:#F0F7FF;
+    border:1px solid #D9EAFB;
+}
+
+.ovkInfo > .material-symbols-rounded{
+    color:#2563EB;
+    font-size:23px;
+    margin-top:1px;
+}
+
+.ovkInfo strong{
+    display:block;
+    font-size:14px;
+    margin-bottom:4px;
+}
+
+.ovkInfo p{
+    margin:0;
+    font-size:12px;
+    line-height:1.55;
+    color:#5B6472;
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.ovkCard{
+    background:#FFFFFF;
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:14px;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
+    border:1px solid #EEF1F4;
+}
+
+.ovkSectionTitle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.ovkSectionTitle .material-symbols-rounded{
+    font-size:22px;
+    color:#0B8F43;
+}
+
+.ovkSectionTitle h3{
+    margin:0;
+    font-size:15px;
+    font-weight:800;
+}
+
+/* ==========================================================
+   FORM
+========================================================== */
+
+.ovkForm{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.ovkFormRow{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.ovkField{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.ovkField label{
+    font-size:12px;
+    font-weight:700;
+    color:#374151;
+}
+
+.ovkField input{
+    width:100%;
+    min-height:44px;
+    box-sizing:border-box;
+    border:1px solid #D9DEE5;
+    border-radius:12px;
+    padding:10px 12px;
+    background:#FFFFFF;
+    color:#1F2937;
+    font-size:14px;
+    outline:none;
+    transition:.18s ease;
+}
+
+.ovkField input:focus{
+    border-color:#0B8F43;
+    box-shadow:0 0 0 3px rgba(11,143,67,.10);
+}
+
+.ovkField input[readonly]{
+    background:#F5F7F9;
+    color:#7A8390;
+}
+
+/* ==========================================================
+   BUTTON
+========================================================== */
+
+.ovkAddBtn,
+.ovkSaveBtn{
+    width:100%;
+    min-height:46px;
+    border:0;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.18s ease;
+}
+
+.ovkAddBtn{
+    background:#E8F5EE;
+    color:#0B8F43;
+}
+
+.ovkAddBtn:active,
+.ovkSaveBtn:active{
+    transform:scale(.98);
+}
+
+.ovkSaveBtn{
+    background:#0B8F43;
+    color:#FFFFFF;
+    box-shadow:0 5px 14px rgba(11,143,67,.20);
+}
+
+.ovkAddBtn .material-symbols-rounded,
+.ovkSaveBtn .material-symbols-rounded{
+    font-size:20px;
+}
+
+/* ==========================================================
+   MESSAGE
+========================================================== */
+
+.ovkMessage{
+    padding:10px 12px;
+    border-radius:11px;
+    font-size:12px;
+    line-height:1.45;
+}
+
+.ovkMessage.warning{
+    background:#FFF7E6;
+    color:#9A6700;
+    border:1px solid #F3D99A;
+}
+
+.ovkMessage.success{
+    background:#EAF7EF;
+    color:#16723B;
+    border:1px solid #BFE4CB;
+}
+
+.ovkMessage.info{
+    background:#EFF6FF;
+    color:#1D4ED8;
+    border:1px solid #CFE0FF;
+}
+
+/* ==========================================================
+   TABLE
+========================================================== */
+
+.ovkTableWrap{
+    width:100%;
+}
+
+.ovkTableScroll{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    border:1px solid #E7EBEF;
+    border-radius:14px;
+}
+
+.ovkTable{
+    width:100%;
+    min-width:700px;
+    border-collapse:collapse;
+    background:#FFFFFF;
+}
+
+.ovkTable th{
+    padding:11px 9px;
+    background:#F5F7F9;
+    color:#374151;
+    font-size:11px;
+    font-weight:800;
+    text-align:center;
+    border-bottom:1px solid #E5E7EB;
+    white-space:nowrap;
+}
+
+.ovkTable td{
+    padding:10px 9px;
+    color:#374151;
+    font-size:12px;
+    text-align:center;
+    border-bottom:1px solid #EEF1F4;
+    white-space:nowrap;
+}
+
+.ovkTable tbody tr:last-child td{
+    border-bottom:0;
+}
+
+.ovkTable tbody tr:nth-child(even){
+    background:#FAFBFC;
+}
+
+.ovkNameCell{
+    text-align:left !important;
+    font-weight:700;
+}
+
+.ovkDeleteBtn{
+    width:32px;
+    height:32px;
+    border:0;
+    border-radius:9px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:#FFF0F0;
+    color:#C62828;
+    cursor:pointer;
+}
+
+.ovkDeleteBtn .material-symbols-rounded{
+    font-size:18px;
+}
+
+/* ==========================================================
+   TOTAL KESELURUHAN / KALKULATOR
+   ========================================================== */
+
+.ovkGrandTotal{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+
+    margin-top:14px;
+    padding:14px 16px;
+
+    border:1px solid #CFE8D9;
+    border-radius:16px;
+
+    background:#EFF9F3;
+
+    box-sizing:border-box;
+}
+
+.ovkGrandTotal > div{
+    min-width:0;
+}
+
+.ovkGrandTotal small{
+    display:block;
+
+    margin-bottom:3px;
+
+    color:#667085;
+
+    font-size:11px;
+    font-weight:800;
+
+    letter-spacing:.4px;
+}
+
+.ovkGrandTotal strong{
+    display:block;
+
+    color:#0B8F43;
+
+    font-size:21px;
+    font-weight:800;
+
+    line-height:1.25;
+}
+
+.ovkGrandTotal > .material-symbols-rounded{
+    width:44px;
+    height:44px;
+
+    flex:none;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    background:#0B8F43;
+    color:#FFFFFF;
+
+    font-size:23px;
+}
+
+
+/* ==========================================================
+   EMPTY
+
+========================================================== */
+
+.ovkEmpty{
+    min-height:150px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:5px;
+    color:#7A8390;
+}
+
+.ovkEmpty > .material-symbols-rounded{
+    font-size:34px;
+    color:#B8C0C9;
+    margin-bottom:4px;
+}
+
+.ovkEmpty strong{
+    font-size:13px;
+    color:#596270;
+}
+
+.ovkEmpty small{
+    max-width:260px;
+    font-size:11px;
+    line-height:1.5;
+}
+
+/* ==========================================================
+   SAVE AREA
+========================================================== */
+
+.ovkSaveArea{
+    margin-top:4px;
+    text-align:center;
+}
+
+.ovkSaveArea small{
+    display:block;
+    margin-top:8px;
+    font-size:10px;
+    line-height:1.5;
+    color:#8A929D;
+}
+
+/* ==========================================================
+   PROTEKSI LIGHT MODE OVK
+   ----------------------------------------------------------
+   OVK tetap menggunakan identitas light mode FMC.
+   Jika dark mode global diaktifkan, halaman OVK
+   tidak ikut berubah/tertindih.
+   ========================================================== */
+
+body.dark .ovkPage{
+    color:#1F2937 !important;
+}
+
+body.dark .ovkHeaderText h2{
+    color:#1F2937 !important;
+}
+
+body.dark .ovkHeaderText p{
+    color:#6B7280 !important;
+}
+
+body.dark .ovkHeaderIcon{
+    background:#E8F5EE !important;
+    color:#0B8F43 !important;
+}
+
+body.dark .ovkInfo{
+    background:#F0F7FF !important;
+    border-color:#D9EAFB !important;
+}
+
+body.dark .ovkInfo > .material-symbols-rounded{
+    color:#2563EB !important;
+}
+
+body.dark .ovkInfo strong{
+    color:#1F2937 !important;
+}
+
+body.dark .ovkInfo p{
+    color:#5B6472 !important;
+}
+
+body.dark .ovkCard{
+    background:#FFFFFF !important;
+    border-color:#EEF1F4 !important;
+    box-shadow:0 3px 12px rgba(0,0,0,.07) !important;
+}
+
+body.dark .ovkSectionTitle h3{
+    color:#1F2937 !important;
+}
+
+body.dark .ovkSectionTitle .material-symbols-rounded{
+    color:#0B8F43 !important;
+}
+
+body.dark .ovkField label{
+    color:#374151 !important;
+}
+
+body.dark .ovkField input{
+    background:#FFFFFF !important;
+    color:#1F2937 !important;
+    border-color:#D9DEE5 !important;
+}
+
+body.dark .ovkField input::placeholder{
+    color:#9CA3AF !important;
+}
+
+body.dark .ovkField input[readonly]{
+    background:#F5F7F9 !important;
+    color:#7A8390 !important;
+}
+
+body.dark .ovkAddBtn{
+    background:#E8F5EE !important;
+    color:#0B8F43 !important;
+}
+
+body.dark .ovkSaveBtn{
+    background:#0B8F43 !important;
+    color:#FFFFFF !important;
+}
+
+body.dark .ovkMessage.warning{
+    background:#FFF7E6 !important;
+    color:#9A6700 !important;
+    border-color:#F3D99A !important;
+}
+
+body.dark .ovkMessage.success{
+    background:#EAF7EF !important;
+    color:#16723B !important;
+    border-color:#BFE4CB !important;
+}
+
+body.dark .ovkMessage.info{
+    background:#EFF6FF !important;
+    color:#1D4ED8 !important;
+    border-color:#CFE0FF !important;
+}
+
+body.dark .ovkTableScroll{
+    border-color:#E7EBEF !important;
+}
+
+body.dark .ovkTable{
+    background:#FFFFFF !important;
+}
+
+body.dark .ovkTable th{
+    background:#F5F7F9 !important;
+    color:#374151 !important;
+    border-color:#E5E7EB !important;
+}
+
+body.dark .ovkTable td{
+    background:#FFFFFF !important;
+    color:#374151 !important;
+    border-color:#EEF1F4 !important;
+}
+
+body.dark .ovkTable tbody tr:nth-child(even){
+    background:#FAFBFC !important;
+}
+
+body.dark .ovkTable tbody tr:nth-child(even) td{
+    background:#FAFBFC !important;
+}
+
+body.dark .ovkDeleteBtn{
+    background:#FFF0F0 !important;
+    color:#C62828 !important;
+}
+
+body.dark .ovkEmpty{
+    color:#7A8390 !important;
+}
+
+body.dark .ovkEmpty > .material-symbols-rounded{
+    color:#B8C0C9 !important;
+}
+
+body.dark .ovkEmpty strong{
+    color:#596270 !important;
+}
+
+body.dark .ovkSaveArea small{
+    color:#8A929D !important;
+}
+
+body.dark .ovkGrandTotal{
+    background:#EFF9F3 !important;
+    border-color:#CFE8D9 !important;
+}
+
+body.dark .ovkGrandTotal small{
+    color:#667085 !important;
+}
+
+body.dark .ovkGrandTotal strong{
+    color:#0B8F43 !important;
+}
+
+body.dark .ovkGrandTotal > .material-symbols-rounded{
+    background:#0B8F43 !important;
+    color:#FFFFFF !important;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (min-width:700px){
+
+    .ovkPage{
+        padding-left:20px;
+        padding-right:20px;
+    }
+
+    .ovkCard{
+        padding:20px;
+    }
+
+    .ovkFormRow{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media (max-width:420px){
+
+    .ovkPage{
+        padding-left:10px;
+        padding-right:10px;
+    }
+
+    .ovkCard{
+        padding:13px;
+        border-radius:16px;
+    }
+
+    .ovkFormRow{
+        grid-template-columns:1fr;
+        gap:12px;
+    }
+
+    .ovkHeaderText h2{
+        font-size:20px;
+    }
+
+    .ovkGrandTotal{
+        padding:13px;
+        border-radius:15px;
+    }
+
+    .ovkGrandTotal strong{
+        font-size:19px;
+    }
+
+    .ovkGrandTotal > .material-symbols-rounded{
+        width:42px;
+        height:42px;
+        border-radius:12px;
+        font-size:22px;
+    }
+}

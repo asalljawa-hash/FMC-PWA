@@ -1,0 +1,961 @@
+/* ==========================================================
+   FMC BROILER MOBILE V11
+   REALISASI PANEN.CSS
+   ==========================================================
+
+   LIGHT MODE ONLY
+   Tidak menggunakan Dark Mode.
+   ========================================================== */
+
+
+/* ==========================================================
+   HALAMAN UTAMA
+   ========================================================== */
+
+#realisasiPanenPage{
+    width:100%;
+    box-sizing:border-box;
+
+    background:#F4F6F8;
+    color:#182027;
+}
+
+
+/* ==========================================================
+   CARD INPUT
+   ========================================================== */
+
+#realisasiPanenPage .realisasiPanenInputCard{
+
+    width:100%;
+    box-sizing:border-box;
+
+    padding:20px;
+    margin-bottom:18px;
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+    border-radius:22px;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.05);
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+#realisasiPanenPage .realisasiPanenHeader{
+
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+
+    gap:16px;
+
+    margin-bottom:20px;
+}
+
+
+#realisasiPanenPage .realisasiPanenHeaderSmall{
+
+    margin-bottom:6px;
+
+    color:#6F7479;
+
+    font-size:13px;
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+
+#realisasiPanenPage .realisasiPanenHeader h2{
+
+    display:flex;
+    align-items:center;
+
+    gap:9px;
+
+    margin:0;
+
+    color:#182027;
+
+    font-size:27px;
+    font-weight:800;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenHeader h2
+.material-symbols-rounded{
+
+    color:#0B8F43;
+    font-size:30px;
+}
+
+
+#realisasiPanenPage .realisasiPanenHeader p{
+
+    margin:7px 0 0;
+
+    color:#747B80;
+
+    font-size:15px;
+}
+
+
+/* ==========================================================
+   STATUS BADGE
+   ========================================================== */
+
+#realisasiPanenPage .realisasiPanenStatusBadge{
+
+    display:flex;
+    align-items:center;
+
+    gap:7px;
+
+    padding:9px 13px;
+
+    border-radius:999px;
+
+    background:#E8F8EF;
+
+    color:#0B8F43;
+
+    font-size:12px;
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenStatusBadge
+.material-symbols-rounded{
+
+    font-size:19px;
+}
+
+
+/* ==========================================================
+   PILIH FLOK
+   ========================================================== */
+
+#realisasiPanenPage .realisasiPanenSelector{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
+
+    gap:8px;
+
+    margin-bottom:20px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenSelectorBtn{
+
+    width:100%;
+    min-height:48px;
+
+    border:1px solid #DCE1E4;
+    border-radius:14px;
+
+    background:#F7F8F9;
+    color:#5C646A;
+
+    font-family:inherit;
+
+    font-size:13px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .15s ease;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenSelectorBtn.active{
+
+    border-color:#0B8F43;
+
+    background:#0B8F43;
+
+    color:#FFFFFF;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenSelectorBtn:active{
+
+    transform:scale(.98);
+}
+
+
+/* ==========================================================
+   SECTION INPUT
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenInputSection{
+
+    display:flex;
+    flex-direction:column;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenInputSection h3{
+
+    display:flex;
+    align-items:center;
+
+    gap:9px;
+
+    margin:
+        0 0 18px;
+
+    color:#182027;
+
+    font-size:20px;
+    font-weight:800;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenInputSection h3
+.material-symbols-rounded{
+
+    color:#0B8F43;
+
+    font-size:26px;
+}
+
+
+/* ==========================================================
+   LABEL
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenInputSection label{
+
+    display:block;
+
+    margin:
+        0 0 7px;
+
+    color:#252B30;
+
+    font-size:14px;
+    font-weight:700;
+}
+
+
+/* ==========================================================
+   INPUT & SELECT
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenInputSection input,
+
+#realisasiPanenPage
+.realisasiPanenInputSection select{
+
+    width:100%;
+    height:57px;
+
+    box-sizing:border-box;
+
+    padding:
+        0 16px;
+
+    margin:
+        0 0 15px;
+
+    border:
+        1px solid #E0E4E7;
+
+    border-radius:17px;
+
+    background:#FFFFFF;
+
+    color:#20262B;
+
+    font-family:inherit;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenInputSection input:focus,
+
+#realisasiPanenPage
+.realisasiPanenInputSection select:focus{
+
+    border-color:#0B8F43;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(11,143,67,.10);
+}
+
+
+#realisasiPanenPage
+.realisasiPanenInputSection
+input::placeholder{
+
+    color:#A5ABB0;
+
+    opacity:1;
+}
+
+
+/* ==========================================================
+   TANGGAL
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenTanggalWrap{
+
+    position:relative;
+
+    width:100%;
+
+    margin-bottom:0;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenTanggalWrap
+.material-symbols-rounded{
+
+    position:absolute;
+
+    left:16px;
+    top:50%;
+
+    transform:
+        translateY(-50%);
+
+    z-index:2;
+
+    color:#727A80;
+
+    font-size:21px;
+
+    pointer-events:none;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenTanggalWrap input{
+
+    padding-left:48px;
+}
+
+
+/* ==========================================================
+   PESAN
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenMessage{
+
+    padding:
+        12px 14px;
+
+    margin:
+        0 0 15px;
+
+    border-radius:13px;
+
+    font-size:13px;
+
+    line-height:1.45;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenMessage.warning{
+
+    background:#FFF4E5;
+
+    border:
+        1px solid #F1D3A1;
+
+    color:#9A5B00;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenMessage.success{
+
+    background:#EAF8EF;
+
+    border:
+        1px solid #CCE8D6;
+
+    color:#087B39;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenMessage.info{
+
+    background:#EEF5FB;
+
+    border:
+        1px solid #D5E4EF;
+
+    color:#35617D;
+}
+
+
+/* ==========================================================
+   TOMBOL SIMPAN
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenSaveBtn{
+
+    width:100%;
+    min-height:62px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:9px;
+
+    margin-top:4px;
+
+    border:0;
+    border-radius:18px;
+
+    background:#0B8F43;
+    color:#FFFFFF;
+
+    font-family:inherit;
+
+    font-size:15px;
+    font-weight:800;
+
+    box-shadow:
+        0 8px 20px
+        rgba(11,143,67,.18);
+
+    cursor:pointer;
+
+    transition:
+        background .2s ease,
+        transform .15s ease;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenSaveBtn
+.material-symbols-rounded{
+
+    font-size:24px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenSaveBtn:hover{
+
+    background:#087A39;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenSaveBtn:active{
+
+    transform:scale(.985);
+}
+
+
+/* ==========================================================
+   CARD REKAP
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenRekapCard{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:18px;
+
+    margin-top:18px;
+
+    background:#FFFFFF;
+
+    border:
+        1px solid #E5E7EB;
+
+    border-radius:20px;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0,0,0,.05);
+}
+
+
+/* ==========================================================
+   HEADER REKAP
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenRekapHeader{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+
+    margin-bottom:14px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapHeader > div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapHeader
+.material-symbols-rounded{
+
+    color:#0B8F43;
+
+    font-size:25px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapHeader strong{
+
+    color:#182027;
+
+    font-size:17px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapCount{
+
+    padding:
+        7px 11px;
+
+    border-radius:999px;
+
+    background:#E8F8EF;
+
+    color:#0B8F43;
+
+    font-size:12px;
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+
+/* ==========================================================
+   REKAP KOSONG
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenRekapEmpty{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    min-height:160px;
+
+    padding:20px;
+
+    box-sizing:border-box;
+
+    text-align:center;
+
+    border:
+        1px dashed #D6DADD;
+
+    border-radius:17px;
+
+    background:#FAFBFC;
+
+    color:#7C8388;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapEmpty
+.material-symbols-rounded{
+
+    margin-bottom:8px;
+
+    color:#AAB1B6;
+
+    font-size:39px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapEmpty strong{
+
+    color:#4D555B;
+
+    font-size:15px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapEmpty small{
+
+    max-width:310px;
+
+    margin-top:6px;
+
+    color:#7C8388;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+
+/* ==========================================================
+   TABEL REKAP
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenRekapTableWrap{
+
+    width:100%;
+
+    overflow-x:auto;
+
+    border:
+        1px solid #E4E7E9;
+
+    border-radius:15px;
+
+    background:#FFFFFF;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapTable{
+
+    width:max-content;
+
+    min-width:100%;
+
+    border-collapse:collapse;
+
+    color:#30373C;
+
+    font-size:12px;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapTable th{
+
+    padding:
+        12px 13px;
+
+    background:#F4F6F8;
+
+    color:#454D53;
+
+    font-weight:800;
+
+    text-align:left;
+
+    white-space:nowrap;
+
+    border-bottom:
+        1px solid #E1E5E7;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapTable td{
+
+    padding:
+        13px;
+
+    background:#FFFFFF;
+
+    color:#4F575D;
+
+    white-space:nowrap;
+
+    border-bottom:
+        1px solid #EEF0F2;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapTable
+tbody tr:last-child td{
+
+    border-bottom:0;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenRekapTable
+tbody tr:nth-child(even) td{
+
+    background:#FAFBFC;
+}
+
+
+/* ==========================================================
+   TOMBOL HAPUS REKAP
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenDeleteBtn{
+
+    width:34px;
+    height:34px;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:0;
+
+    border:1px solid #F2C6C6;
+    border-radius:10px;
+
+    background:#FFF1F1;
+    color:#D32F2F;
+
+    font-family:inherit;
+
+    cursor:pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .15s ease;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenDeleteBtn
+.material-symbols-rounded{
+
+    color:#D32F2F;
+
+    font-size:20px;
+
+    line-height:1;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenDeleteBtn:hover{
+
+    background:#FFE3E3;
+    border-color:#E9A9A9;
+    color:#B71C1C;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenDeleteBtn:hover
+.material-symbols-rounded{
+
+    color:#B71C1C;
+}
+
+
+#realisasiPanenPage
+.realisasiPanenDeleteBtn:active{
+
+    transform:scale(.94);
+}
+
+
+#realisasiPanenPage
+.realisasiPanenDeleteBtn:focus-visible{
+
+    outline:3px solid rgba(211,47,47,.14);
+    outline-offset:2px;
+}
+
+
+/* ==========================================================
+   INFO REKAP
+   ========================================================== */
+
+#realisasiPanenPage
+.realisasiPanenRekapInfo{
+
+    margin-top:12px;
+
+    padding:
+        11px 13px;
+
+    border:
+        1px solid #D7EBDF;
+
+    border-radius:12px;
+
+    background:#EFF9F3;
+
+    color:#687178;
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media(max-width:600px){
+
+    #realisasiPanenPage
+    .realisasiPanenInputCard{
+
+        padding:16px;
+
+        border-radius:19px;
+    }
+
+
+    #realisasiPanenPage
+    .realisasiPanenHeader{
+
+        flex-direction:column;
+
+        gap:9px;
+    }
+
+
+    #realisasiPanenPage
+    .realisasiPanenStatusBadge{
+
+        align-self:flex-start;
+    }
+
+
+    #realisasiPanenPage
+    .realisasiPanenSelector{
+
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+
+        gap:8px;
+    }
+
+
+    #realisasiPanenPage
+    .realisasiPanenHeader h2{
+
+        font-size:23px;
+    }
+
+
+    #realisasiPanenPage
+    .realisasiPanenInputSection
+    input,
+
+    #realisasiPanenPage
+    .realisasiPanenInputSection
+    select{
+
+        height:56px;
+
+        font-size:16px;
+    }
+
+
+    #realisasiPanenPage
+    .realisasiPanenRekapCard{
+
+        padding:15px;
+
+        border-radius:18px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+   ========================================================== */
+
+@media(max-width:380px){
+
+    #realisasiPanenPage
+    .realisasiPanenHeader h2{
+
+        font-size:21px;
+    }
+
+
+    #realisasiPanenPage
+    .realisasiPanenSelectorBtn{
+
+        min-height:45px;
+
+        font-size:12px;
+    }
+
+
+    #realisasiPanenPage
+    .realisasiPanenInputSection
+    input,
+
+    #realisasiPanenPage
+    .realisasiPanenInputSection
+    select{
+
+        height:54px;
+
+        font-size:15px;
+    }
+
+}

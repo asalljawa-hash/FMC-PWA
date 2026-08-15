@@ -1,88 +1,385 @@
 // ==========================================
-// FMC BROILER MOBILE V8
-// APP.JS
+// MENAMPILKAN HALAMAN
 // ==========================================
 
 let currentPage = "dashboard";
 
-// ==========================================
-// MENAMPILKAN HALAMAN
-// ==========================================
 
 async function showPage(page){
 
     currentPage = page;
 
-    const pages = [
-        "dashboard",
-        "flok",
-        "keuangan",
-        "harian",
-        "rhpp",
-        "ai"
-    ];
 
-    pages.forEach(p => {
+// ==========================================
+// DAFTAR HALAMAN
+// ==========================================
 
-        const el = document.getElementById(p + "Page");
+const pages = [
+    "dashboard",
+    "flok",
+    "keuangan",
+    "harian",
+    "rhpp",
+    "ai",
+    "docin",
+    "pakan",
+    "operasional",
+    "masterKontrak",
+    "ovk",
+    "planpanen",
+    "inputflok",
+    "realisasipanen"
+];
 
-        if(el){
-            el.style.display = "none";
-        }
 
-    });
+// ==========================================
+// SEMBUNYIKAN SEMUA HALAMAN
+// ==========================================
 
-    const activePage = document.getElementById(page + "Page");
+pages.forEach(p => {
 
-    if(activePage){
-        activePage.style.display = "block";
+    /*
+     * Semua halaman menggunakan:
+     *
+     * namaPage
+     *
+     * KECUALI:
+     *
+     * inputflok
+     *      ↓
+     * inputFlokPage
+     *
+     * realisasipanen
+     *      ↓
+     * realisasiPanenPage
+     */
+
+    const pageId =
+        p === "inputflok"
+            ? "inputFlokPage"
+            : p === "realisasipanen"
+                ? "realisasiPanenPage"
+                : p + "Page";
+
+
+    const el =
+        document.getElementById(
+            pageId
+        );
+
+
+    if(el){
+
+        el.style.display =
+            "none";
+
     }
+
+});
+
+
+// ==========================================
+// TENTUKAN HALAMAN AKTIF
+// ==========================================
+
+const pageId =
+    page === "inputflok"
+        ? "inputFlokPage"
+        : page === "realisasipanen"
+            ? "realisasiPanenPage"
+            : page + "Page";
+
+
+const activePage =
+    document.getElementById(
+        pageId
+    );
+
+
+if(activePage){
+
+    activePage.style.display =
+        "block";
+
+}else{
+
+    console.warn(
+        "FMC: Halaman tidak ditemukan:",
+        pageId
+    );
+
+}
+
+
+    // ==========================================
+    // LOAD HALAMAN
+    // ==========================================
 
     switch(page){
 
+
+        // ==========================================
+        // DASHBOARD
+        // ==========================================
+
         case "dashboard":
-            if(typeof tampilDashboard === "function"){
+
+            if(
+                typeof tampilDashboard ===
+                "function"
+            ){
+
                 await tampilDashboard();
+
             }
+
         break;
+
+
+        // ==========================================
+        // FLOK
+        // ==========================================
 
         case "flok":
-            if(typeof tampilFlok === "function"){
+
+            if(
+                typeof tampilFlok ===
+                "function"
+            ){
+
                 await tampilFlok();
+
             }
+
         break;
+
+
+        // ==========================================
+        // KEUANGAN
+        // ==========================================
 
         case "keuangan":
-            if(typeof tampilKeuangan === "function"){
+
+            if(
+                typeof tampilKeuangan ===
+                "function"
+            ){
+
                 await tampilKeuangan();
+
             }
+
         break;
+
+
+        // ==========================================
+        // HARIAN
+        // ==========================================
 
         case "harian":
-            if(typeof tampilHarian === "function"){
+
+            if(
+                typeof tampilHarian ===
+                "function"
+            ){
+
                 await tampilHarian();
+
             }
+
         break;
+
+
+        // ==========================================
+        // RHPP
+        // ==========================================
 
         case "rhpp":
-    if(typeof renderRHPP === "function"){
-        await renderRHPP();
-    }
-break;
+
+            if(
+                typeof renderRHPP ===
+                "function"
+            ){
+
+                await renderRHPP();
+
+            }
+
+        break;
+
+
+        // ==========================================
+        // AI
+        // ==========================================
 
         case "ai":
-            if(typeof tampilAI === "function"){
+
+            if(
+                typeof tampilAI ===
+                "function"
+            ){
+
                 await tampilAI();
+
             }
+
+        break;
+
+
+        // ==========================================
+        // DOC IN
+        // ==========================================
+
+        case "docin":
+
+            if(
+                typeof tampilDocIn ===
+                "function"
+            ){
+
+                await tampilDocIn();
+
+            }
+
+        break;
+
+
+        // ==========================================
+        // PAKAN
+        // ==========================================
+
+        case "pakan":
+
+            if(
+                typeof tampilPakan ===
+                "function"
+            ){
+
+                await tampilPakan();
+
+            }
+
+        break;
+
+
+        // ==========================================
+        // OPERASIONAL
+        // ==========================================
+
+        case "operasional":
+
+            if(
+                typeof tampilOperasional ===
+                "function"
+            ){
+
+                await tampilOperasional();
+
+            }
+
+        break;
+
+
+        // ==========================================
+        // MASTER KONTRAK
+        // ==========================================
+
+        case "masterKontrak":
+
+            if(
+                typeof tampilMasterKontrak ===
+                "function"
+            ){
+
+                await tampilMasterKontrak();
+
+            }
+
+        break;
+
+
+        // ==========================================
+        // OVK
+        // ==========================================
+
+        case "ovk":
+
+            if(
+                typeof tampilOVK ===
+                "function"
+            ){
+
+                await tampilOVK();
+
+            }
+
+        break;
+
+
+        // ==========================================
+        // PLAN PANEN
+        // ==========================================
+
+        case "planpanen":
+
+            if(
+                typeof tampilPlanPanen ===
+                "function"
+            ){
+
+                await tampilPlanPanen();
+
+            }
+
+        break;
+        
+// ==========================================
+// REALISASI PANEN
+// ==========================================
+
+case "realisasipanen":
+
+    if(typeof tampilRealisasiPanen === "function"){
+        await tampilRealisasiPanen();
+    }
+
+break;
+
+        // ==========================================
+        // INPUT FLOK
+        // ==========================================
+
+        case "inputflok":
+
+            if(
+                typeof tampilInputFlok ===
+                "function"
+            ){
+
+                await tampilInputFlok();
+
+            }
+
         break;
 
     }
 
+
+    // ==========================================
+    // MENU ACTIVE
+    // ==========================================
+
     aktifkanMenu(page);
+
+
+    // ==========================================
+    // UPDATE JAM
+    // ==========================================
 
     updateJam();
 
 }
+
 
 // ==========================================
 // MENU ACTIVE
@@ -91,24 +388,63 @@ break;
 function aktifkanMenu(page){
 
     document
-    .querySelectorAll(".bottomNav button")
-    .forEach(btn=>btn.classList.remove("active"));
+        .querySelectorAll(".bottomNav button")
+        .forEach(btn => {
 
-    const tombol={
+            btn.classList.remove(
+                "active"
+            );
 
-        dashboard:"btnDashboard",
-        flok:"btnFlok",
-        keuangan:"btnKeuangan",
-        harian:"btnHarian",
-        ai:"btnAI"
+        });
+
+
+    const tombol = {
+
+        dashboard:
+            "btnDashboard",
+
+        flok:
+            "btnFlok",
+
+        keuangan:
+            "btnKeuangan",
+
+        harian:
+            "btnHarian",
+
+        ai:
+            "btnAI"
 
     };
 
-    document
-    .getElementById(tombol[page])
-    .classList.add("active");
+
+    const idTombol =
+        tombol[page];
+
+
+    if(!idTombol){
+
+        return;
+
+    }
+
+
+    const tombolAktif =
+        document.getElementById(
+            idTombol
+        );
+
+
+    if(tombolAktif){
+
+        tombolAktif.classList.add(
+            "active"
+        );
+
+    }
 
 }
+
 
 // ==========================================
 // STATUS SERVER
@@ -116,17 +452,23 @@ function aktifkanMenu(page){
 
 function statusServer(online){
 
-    const el=document.getElementById("statusServer");
+    const el =
+        document.getElementById(
+            "statusServer"
+        );
 
     if(!el) return;
 
+
     if(online){
 
-        el.innerHTML="🟢 Online";
+        el.innerHTML =
+            "🟢 Online";
 
     }else{
 
-        el.innerHTML="🔴 Offline";
+        el.innerHTML =
+            "🔴 Offline";
 
     }
 
@@ -220,22 +562,49 @@ window.onload = async function () {
     }
 
 }
-
 // ==========================================
 // AUTO REFRESH
 // ==========================================
 
 setInterval(async()=>{
 
-    if(currentPage === "rhpp"){
+    /*
+     * Jangan refresh otomatis saat user
+     * sedang berada di halaman input.
+     *
+     * Tujuannya agar form dan data sesi
+     * tidak kembali ke kondisi awal.
+     */
+
+    const halamanInput = [
+
+        "docin",
+        "pakan",
+        "operasional",
+        "masterKontrak",
+        "ovk",
+        "planpanen",
+        "inputflok",
+        "realisasipanen"
+
+    ];
+
+
+    if(
+        currentPage === "rhpp" ||
+        halamanInput.includes(currentPage)
+    ){
+
         return;
+
     }
+
 
     serverData = null;
 
-await ambilDataServer(true);
+    await ambilDataServer(true);
 
-await showPage(currentPage);
+    await showPage(currentPage);
 
 },30000);
 

@@ -216,3 +216,4 @@ async function tampilFlok(){
     document.getElementById("flokPage").innerHTML = html;
 
 }
+

@@ -1,0 +1,972 @@
+/* ==========================================================
+   FMC BROILER MOBILE
+   PAKAN CSS
+   MODE TERANG
+   ========================================================== */
+
+
+/* ==========================================================
+   PAGE
+   ========================================================== */
+
+#pakanPage{
+    width:100%;
+    padding-bottom:100px;
+    box-sizing:border-box;
+}
+
+
+/* ==========================================================
+   CARD
+   ========================================================== */
+
+.pakanCard{
+    width:100%;
+    max-width:720px;
+    margin:0 auto;
+    padding:0;
+    overflow:hidden;
+    box-sizing:border-box;
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+.pakanHeader{
+    padding:20px 18px 18px;
+
+    background:linear-gradient(
+        135deg,
+        #0b8f43,
+        #087438
+    );
+
+    color:#fff;
+}
+
+.pakanHeader h2{
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    margin:0;
+
+    font-size:21px;
+    font-weight:800;
+
+    color:#fff;
+}
+
+.pakanHeader h2 .material-symbols-rounded{
+    font-size:27px;
+    color:#fff;
+}
+
+.pakanHeader p{
+    margin:7px 0 0;
+
+    font-size:13px;
+
+    color:#fff;
+    opacity:.9;
+}
+
+
+/* ==========================================================
+   SECTION
+   ========================================================== */
+
+.pakanSection{
+    margin:14px;
+    padding:16px;
+
+    border:1px solid #e7eaec;
+    border-radius:18px;
+
+    background:#fff;
+
+    box-sizing:border-box;
+}
+
+.pakanSection h3{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    margin:0 0 16px;
+
+    font-size:15px;
+    font-weight:800;
+
+    color:#182027;
+}
+
+.pakanSection h3 .material-symbols-rounded{
+    font-size:21px;
+    color:#0b8f43;
+}
+
+
+/* ==========================================================
+   FORM
+   ========================================================== */
+
+.pakanSection label{
+    display:block;
+
+    margin:13px 0 6px;
+
+    font-size:12px;
+    font-weight:700;
+
+    color:#667085;
+}
+
+.pakanSection input,
+.pakanSection select{
+    width:100%;
+    min-height:46px;
+
+    padding:11px 13px;
+
+    box-sizing:border-box;
+
+    border:1px solid #dfe3e6;
+    border-radius:12px;
+
+    background:#fff;
+    color:#1d2939;
+
+    font-family:inherit;
+    font-size:14px;
+
+    outline:none;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.pakanSection input::placeholder{
+    color:#98a2b3;
+}
+
+.pakanSection input:focus,
+.pakanSection select:focus{
+    border-color:#0b8f43;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(11,143,67,.10);
+}
+
+
+/* ==========================================================
+   JENIS PAKAN
+   ========================================================== */
+
+.pakanJenisPreview{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-top:14px;
+    padding:13px;
+
+    border:1px solid #d9eee2;
+    border-radius:14px;
+
+    background:#f3faf6;
+
+    box-sizing:border-box;
+}
+
+.pakanJenisPreview .material-symbols-rounded{
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex:none;
+
+    border-radius:11px;
+
+    background:#0b8f43;
+    color:#fff;
+
+    font-size:21px;
+}
+
+.pakanJenisPreview small{
+    display:block;
+
+    margin-bottom:2px;
+
+    font-size:9px;
+    font-weight:800;
+
+    letter-spacing:.7px;
+
+    color:#667085;
+}
+
+.pakanJenisPreview strong{
+    display:block;
+
+    font-size:14px;
+    font-weight:800;
+
+    color:#1d2939;
+}
+
+
+/* ==========================================================
+   INFO BERAT
+   ========================================================== */
+
+.pakanInfo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin:14px;
+    padding:13px 15px;
+
+    border:1px solid #dbe8fa;
+    border-radius:15px;
+
+    background:#f5f9ff;
+
+    box-sizing:border-box;
+}
+
+.pakanInfo > .material-symbols-rounded{
+    font-size:25px;
+    color:#2563eb;
+}
+
+.pakanInfo strong{
+    display:block;
+
+    font-size:13px;
+    font-weight:800;
+
+    color:#182027;
+}
+
+.pakanInfo span{
+    display:block;
+
+    margin-top:2px;
+
+    font-size:11px;
+
+    color:#667085;
+}
+
+
+/* ==========================================================
+   TAMBAH DATA
+   ========================================================== */
+
+.pakanAddBtn{
+    width:calc(100% - 28px);
+    min-height:52px;
+
+    margin:
+        0
+        14px
+        16px;
+
+    padding:10px 16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:9px;
+
+    border:1px solid #bfe6cf;
+    border-radius:14px;
+
+    background:#eaf8f0;
+    color:#087b39;
+
+    font-family:inherit;
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-sizing:border-box;
+
+    transition:
+        transform .15s ease,
+        background .15s ease,
+        border-color .15s ease;
+}
+
+.pakanAddBtn .material-symbols-rounded{
+    font-size:22px;
+    color:#0b8f43;
+}
+
+.pakanAddBtn:hover{
+    background:#e2f5ea;
+    border-color:#9ed7b5;
+}
+
+.pakanAddBtn:active{
+    transform:scale(.985);
+}
+
+
+/* ==========================================================
+   DATA YANG DISIAPKAN
+   ========================================================== */
+
+.pakanTableWrap{
+    width:100%;
+    box-sizing:border-box;
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+   ========================================================== */
+
+.pakanEmpty{
+    min-height:150px;
+
+    padding:20px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    border:1px dashed #d6dadd;
+    border-radius:16px;
+
+    background:#fafbfc;
+
+    color:#7c8388;
+
+    box-sizing:border-box;
+}
+
+.pakanEmpty .material-symbols-rounded{
+    margin-bottom:8px;
+
+    font-size:38px;
+
+    color:#aab0b4;
+}
+
+.pakanEmpty strong{
+    font-size:15px;
+    color:#4d555b;
+}
+
+.pakanEmpty small{
+    max-width:280px;
+
+    margin-top:5px;
+
+    font-size:12px;
+    line-height:1.5;
+
+    color:#7c8388;
+}
+
+
+/* ==========================================================
+   REKAP LIST
+   ========================================================== */
+
+.pakanRekapList{
+    width:100%;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:12px;
+
+    box-sizing:border-box;
+}
+
+
+/* ==========================================================
+   REKAP ITEM
+   ========================================================== */
+
+.pakanRekapItem{
+    width:100%;
+
+    padding:15px;
+
+    border:1px solid #e5e7e9;
+    border-radius:16px;
+
+    background:#fff;
+
+    box-sizing:border-box;
+
+    box-shadow:
+        0 3px 12px
+        rgba(16,24,40,.04);
+}
+
+
+/* ==========================================================
+   REKAP HEADER
+   ========================================================== */
+
+.pakanRekapHeader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:12px;
+
+    padding-bottom:12px;
+
+    border-bottom:1px solid #eeeeee;
+}
+
+.pakanRekapHeader > div{
+    min-width:0;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:4px;
+}
+
+.pakanRekapHeader strong{
+    color:#182027;
+
+    font-size:17px;
+    font-weight:800;
+
+    word-break:break-word;
+}
+
+.pakanRekapHeader small{
+    color:#7d8489;
+
+    font-size:12px;
+}
+
+
+/* ==========================================================
+   DELETE BUTTON
+   ========================================================== */
+
+.pakanDeleteBtn{
+    width:42px;
+    height:42px;
+
+    flex:none;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:0;
+
+    border:1px solid #f1d0d0;
+    border-radius:12px;
+
+    background:#fff2f2;
+    color:#d92e2e;
+
+    cursor:pointer;
+
+    transition:
+        transform .15s ease,
+        background .15s ease;
+}
+
+.pakanDeleteBtn .material-symbols-rounded{
+    font-size:21px;
+    color:#d92e2e;
+}
+
+.pakanDeleteBtn:hover{
+    background:#ffe7e7;
+}
+
+.pakanDeleteBtn:active{
+    transform:scale(.94);
+}
+
+
+/* ==========================================================
+   REKAP GRID
+   ========================================================== */
+
+.pakanRekapGrid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:9px;
+
+    margin-top:13px;
+}
+
+.pakanRekapGrid > div{
+    min-width:0;
+
+    padding:11px;
+
+    border-radius:12px;
+
+    background:#f7f8f9;
+
+    box-sizing:border-box;
+}
+
+.pakanRekapGrid small{
+    display:block;
+
+    margin-bottom:4px;
+
+    color:#7d8489;
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:.4px;
+}
+
+.pakanRekapGrid strong{
+    display:block;
+
+    color:#20272c;
+
+    font-size:14px;
+    font-weight:700;
+
+    word-break:break-word;
+}
+
+
+/* ==========================================================
+   STOCK GRID
+   ========================================================== */
+
+.pakanStockGrid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:10px;
+}
+
+.pakanStockCard{
+    min-width:0;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:13px;
+
+    border:1px solid #dfeee5;
+    border-radius:15px;
+
+    background:#f8fcf9;
+
+    box-sizing:border-box;
+}
+
+.pakanStockIcon{
+    width:38px;
+    height:38px;
+
+    flex:none;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:11px;
+
+    background:#e8f6ed;
+
+    font-size:18px;
+}
+
+.pakanStockCard > div:last-child{
+    min-width:0;
+}
+
+.pakanStockCard strong{
+    display:block;
+
+    font-size:14px;
+    font-weight:800;
+
+    color:#182027;
+}
+
+.pakanStockCard small{
+    display:block;
+
+    margin-top:1px;
+
+    font-size:10px;
+
+    color:#667085;
+}
+
+.pakanStockCard b{
+    display:inline-block;
+
+    margin-top:7px;
+
+    font-size:17px;
+    font-weight:800;
+
+    color:#0b8f43;
+}
+
+.pakanStockCard span{
+    margin-left:3px;
+
+    font-size:10px;
+
+    color:#667085;
+}
+
+
+/* ==========================================================
+   TOTAL STOCK
+   ========================================================== */
+
+.pakanTotal{
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    margin:14px;
+    padding:16px;
+
+    border:1px solid #d5ebdd;
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef9f2,
+            #f8fcf9
+        );
+
+    box-sizing:border-box;
+}
+
+.pakanTotalIcon{
+    width:45px;
+    height:45px;
+
+    flex:none;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    background:#0b8f43;
+    color:#fff;
+}
+
+.pakanTotalIcon .material-symbols-rounded{
+    font-size:24px;
+    color:#fff;
+}
+
+.pakanTotal small{
+    display:block;
+
+    margin-bottom:3px;
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:.7px;
+
+    color:#667085;
+}
+
+.pakanTotal strong{
+    display:block;
+
+    font-size:22px;
+    font-weight:800;
+
+    color:#0b8f43;
+}
+
+.pakanTotal span{
+    display:block;
+
+    margin-top:2px;
+
+    font-size:11px;
+
+    color:#667085;
+}
+
+
+/* ==========================================================
+   MESSAGE
+   ========================================================== */
+
+.pakanMessage{
+    margin:14px;
+
+    padding:11px 13px;
+
+    border-radius:12px;
+
+    font-size:13px;
+    font-weight:600;
+
+    box-sizing:border-box;
+}
+
+.pakanMessage.success{
+    background:#eaf8ef;
+    color:#087438;
+
+    border:1px solid #cce8d6;
+}
+
+.pakanMessage.error{
+    background:#fff0f0;
+    color:#b42318;
+
+    border:1px solid #f2cccc;
+}
+
+.pakanMessage.info{
+    background:#eef5fb;
+    color:#175cd3;
+
+    border:1px solid #d5e4ef;
+}
+
+
+/* ==========================================================
+   SAVE BUTTON
+   ========================================================== */
+
+.pakanSaveBtn{
+    width:calc(100% - 28px);
+    min-height:50px;
+
+    margin:
+        0
+        14px
+        18px;
+
+    padding:10px 16px;
+
+    border:0;
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b8f43,
+            #087438
+        );
+
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:9px;
+
+    font-family:inherit;
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 8px 18px
+        rgba(11,143,67,.18);
+
+    box-sizing:border-box;
+
+    transition:
+        transform .15s ease,
+        opacity .15s ease;
+}
+
+.pakanSaveBtn:active{
+    transform:scale(.98);
+}
+
+.pakanSaveBtn:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+
+.pakanSaveBtn .material-symbols-rounded{
+    font-size:21px;
+    color:#fff;
+}
+
+
+/* ==========================================================
+   HEADER CARD
+   ========================================================== */
+
+#pakanPage .card:first-child h2,
+#pakanPage .card:first-child p{
+    color:#fff !important;
+}
+
+#pakanPage .card:first-child h2 .material-symbols-rounded{
+    color:#fff !important;
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media(max-width:480px){
+
+    #pakanPage{
+        padding-bottom:88px;
+    }
+
+
+    .pakanHeader{
+        padding:
+            17px
+            15px
+            16px;
+    }
+
+
+    .pakanHeader h2{
+        font-size:19px;
+    }
+
+
+    .pakanHeader p{
+        font-size:12px;
+    }
+
+
+    .pakanSection{
+        margin:11px;
+        padding:14px;
+
+        border-radius:16px;
+    }
+
+
+    .pakanInfo{
+        margin:11px;
+    }
+
+
+    .pakanAddBtn{
+        width:calc(100% - 22px);
+
+        margin-left:11px;
+        margin-right:11px;
+    }
+
+
+    .pakanTotal{
+        margin:11px;
+    }
+
+
+    .pakanMessage{
+        margin:11px;
+    }
+
+
+    .pakanSaveBtn{
+        width:calc(100% - 22px);
+
+        margin-left:11px;
+        margin-right:11px;
+    }
+
+
+    .pakanRekapItem{
+        padding:13px;
+    }
+
+
+    .pakanRekapGrid{
+        gap:8px;
+    }
+
+
+    .pakanRekapGrid > div{
+        padding:9px;
+    }
+
+
+    .pakanStockGrid{
+        gap:8px;
+    }
+
+
+    .pakanStockCard{
+        padding:11px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+   ========================================================== */
+
+@media(max-width:360px){
+
+    .pakanRekapGrid{
+        grid-template-columns:1fr;
+    }
+
+
+    .pakanStockGrid{
+        grid-template-columns:1fr;
+    }
+
+
+    .pakanRekapHeader strong{
+        font-size:15px;
+    }
+
+
+    .pakanRekapGrid strong{
+        font-size:13px;
+    }
+
+}

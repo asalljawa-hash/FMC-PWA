@@ -14,6 +14,24 @@ const LOGIN_CONFIG = {
     MAX_PIN_LENGTH: 6
 
 };
+/* ======================================
+   FMC DEVELOPMENT MODE
+====================================== */
+
+const FMC_DEV_MODE = true;
+
+
+function isDevelopmentMode(){
+
+    return (
+        FMC_DEV_MODE === true &&
+        (
+            location.hostname === "localhost" ||
+            location.hostname === "127.0.0.1"
+        )
+    );
+
+}
 
 
 /* ======================================
@@ -532,22 +550,76 @@ btnLogin.addEventListener(
 });
 
 
-/* ======================================
-   INITIALIZATION
-====================================== */
-
 function initLogin() {
 
     clearLoginMessage();
+
+    /* ==================================
+       DEVELOPMENT MODE
+    ================================== */
+
+    if(isDevelopmentMode()){
+
+        console.log(
+            "FMC DEVELOPMENT MODE"
+        );
+
+        loginState.loggedIn = true;
+
+        const loginPage =
+            document.getElementById(
+                "loginPage"
+            );
+
+        const app =
+            document.getElementById(
+                "app"
+            );
+
+        if(loginPage){
+
+            loginPage.style.display =
+                "none";
+
+        }
+
+        if(app){
+
+            app.style.display =
+                "block";
+
+        }
+
+        if(typeof showPage === "function"){
+
+            showPage("dashboard");
+
+        }
+
+        return;
+
+    }
+
+
+    /* ==================================
+       NORMAL LOGIN
+    ================================== */
 
     autoLogin();
 
 }
 
+/* ======================================
+   INIT LOGIN
+====================================== */
+
 document.addEventListener(
-
     "DOMContentLoaded",
+    function () {
 
-    initLogin
+        console.log("FMC LOGIN INIT");
 
+        initLogin();
+
+    }
 );

@@ -1,0 +1,593 @@
+/* =====================================================
+   FMC SIDEBAR V1
+   Navigation Drawer
+===================================================== */
+
+#fmcSidebarOverlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.42);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:
+        opacity .28s ease,
+        visibility .28s ease;
+
+    z-index:10000;
+
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+#fmcSidebar{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:min(86vw,360px);
+
+    height:100dvh;
+
+    background:
+        linear-gradient(
+            160deg,
+            #064D2D 0%,
+            #006B3D 48%,
+            #004C2B 100%
+        );
+
+    color:#fff;
+
+    transform:translateX(-105%);
+
+    transition:
+        transform .32s cubic-bezier(.4,0,.2,1);
+
+    z-index:10001;
+
+    display:flex;
+
+    flex-direction:column;
+
+    box-shadow:
+        12px 0 35px rgba(0,0,0,.25);
+
+    overflow:hidden;
+
+}
+
+
+/* =====================================================
+   SIDEBAR ACTIVE
+===================================================== */
+
+body.sidebar-open #fmcSidebar{
+
+    transform:translateX(0);
+
+}
+
+body.sidebar-open #fmcSidebarOverlay{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+
+/* =====================================================
+   HEADER SIDEBAR
+===================================================== */
+
+.sidebarHeader{
+
+    padding:
+        26px
+        20px
+        20px;
+
+    flex-shrink:0;
+
+}
+
+
+.sidebarHeaderTop{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+}
+
+
+.sidebarBrand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+.sidebarLogo{
+
+    width:58px;
+
+    height:58px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    background:#fff;
+
+    padding:5px;
+
+}
+
+
+.sidebarBrandText{
+
+    min-width:0;
+
+}
+
+
+.sidebarTitle{
+
+    font-size:22px;
+
+    font-weight:800;
+
+    line-height:1.1;
+
+    color:#fff;
+
+}
+
+
+.sidebarFarm{
+
+    margin-top:5px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#FFE66D;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+
+/* =====================================================
+   CLOSE
+===================================================== */
+
+.sidebarClose{
+
+    width:42px;
+
+    height:42px;
+
+    border:0;
+
+    background:transparent;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+}
+
+
+.sidebarClose .material-symbols-rounded{
+
+    font-size:30px;
+
+}
+
+
+.sidebarClose:active{
+
+    background:rgba(255,255,255,.10);
+
+}
+
+
+/* =====================================================
+   MENU AREA
+===================================================== */
+
+.sidebarMenu{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    padding:
+        0 14px
+        24px;
+
+    scrollbar-width:none;
+
+}
+
+
+.sidebarMenu::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.sidebarSectionTitle{
+
+    margin:
+        22px
+        10px
+        8px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    color:rgba(255,255,255,.55);
+
+}
+
+
+/* =====================================================
+   MENU ITEM
+===================================================== */
+
+.sidebarItem{
+
+    width:100%;
+
+    min-height:52px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:
+        0 14px;
+
+    margin-bottom:4px;
+
+    border:0;
+
+    border-radius:14px;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-family:'Inter',sans-serif;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+
+}
+
+
+.sidebarItem .material-symbols-rounded{
+
+    width:28px;
+
+    font-size:25px;
+
+    text-align:center;
+
+    flex-shrink:0;
+
+}
+
+
+.sidebarItem:hover{
+
+    background:rgba(255,255,255,.08);
+
+}
+
+
+.sidebarItem:active{
+
+    background:rgba(255,255,255,.14);
+
+}
+
+
+/* Dashboard aktif */
+
+.sidebarItem.active{
+
+    background:rgba(255,230,109,.12);
+
+    color:#FFE66D;
+
+}
+
+
+/* =====================================================
+   CHEVRON
+===================================================== */
+
+.sidebarChevron{
+
+    margin-left:auto;
+
+    transition:
+        transform .25s ease;
+
+}
+
+
+.sidebarFlok.open .sidebarChevron{
+
+    transform:rotate(180deg);
+
+}
+
+
+/* =====================================================
+   FLOK SUBMENU
+===================================================== */
+
+.sidebarFlokList{
+
+    max-height:0;
+
+    overflow:hidden;
+
+    transition:
+        max-height .3s ease;
+
+}
+
+
+.sidebarFlok.open .sidebarFlokList{
+
+    max-height:260px;
+
+}
+
+
+.sidebarFlokItem{
+
+    width:100%;
+
+    min-height:46px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:
+        0 14px 0 58px;
+
+    border:0;
+
+    background:transparent;
+
+    color:rgba(255,255,255,.92);
+
+    font-family:'Inter',sans-serif;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    border-radius:12px;
+
+}
+
+
+.sidebarFlokItem .material-symbols-rounded{
+
+    font-size:21px;
+
+}
+
+
+.sidebarFlokItem:hover{
+
+    background:rgba(255,255,255,.07);
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.sidebarFooter{
+
+    flex-shrink:0;
+
+    padding:
+        12px 14px
+        20px;
+
+}
+
+
+.sidebarDivider{
+
+    height:1px;
+
+    background:rgba(255,255,255,.12);
+
+    margin-bottom:10px;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:480px){
+
+    #fmcSidebar{
+
+        width:82vw;
+
+        max-width:340px;
+
+    }
+
+    .sidebarHeader{
+
+        padding-top:22px;
+
+    }
+
+    .sidebarTitle{
+
+        font-size:20px;
+
+    }
+
+}
+
+
+/* =====================================================
+   DESKTOP
+===================================================== */
+
+@media(min-width:769px){
+
+    #fmcSidebar{
+
+        width:340px;
+
+    }
+
+}
+/* =====================================================
+   HEADER MENU BUTTON
+===================================================== */
+
+.fmcMenuButton{
+
+    width:44px;
+
+    height:44px;
+
+    flex-shrink:0;
+
+    border:2px solid #FFE66D;
+
+    border-radius:12px;
+
+    background:rgba(0,0,0,.08);
+
+    color:#FFE66D;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    padding:0;
+
+    transition:
+        transform .2s ease,
+        background .2s ease;
+
+}
+
+
+.fmcMenuButton .material-symbols-rounded{
+
+    font-size:29px;
+
+}
+
+
+.fmcMenuButton:active{
+
+    transform:scale(.94);
+
+    background:rgba(255,230,109,.12);
+
+}
+
+
+@media(max-width:480px){
+
+    .fmcMenuButton{
+
+        width:40px;
+
+        height:40px;
+
+    }
+
+    .fmcMenuButton
+    .material-symbols-rounded{
+
+        font-size:27px;
+
+    }
+
+}

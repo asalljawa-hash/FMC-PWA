@@ -1,0 +1,687 @@
+/* ==========================================================
+   FMC BROILER MOBILE V11
+   MASTER KONTRAK.CSS
+   UI ONLY
+   ========================================================== */
+
+
+/* ==========================================================
+   CARD UTAMA
+   ========================================================== */
+
+.masterKontrakCard{
+    width:100%;
+    box-sizing:border-box;
+
+    padding:20px;
+
+    overflow:hidden;
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+.masterKontrakHeader{
+    width:100%;
+
+    margin-bottom:20px;
+}
+
+.masterKontrakSmall{
+    margin-bottom:6px;
+
+    color:var(--text-soft);
+
+    font-size:11px;
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+.masterKontrakHeader h2{
+    display:flex;
+    align-items:center;
+
+    gap:9px;
+
+    margin:0;
+
+    color:var(--text);
+
+    font-size:24px;
+    font-weight:800;
+
+    line-height:1.2;
+}
+
+.masterKontrakHeader h2
+.material-symbols-rounded{
+    color:var(--primary);
+
+    font-size:27px;
+}
+
+.masterKontrakHeader p{
+    margin:7px 0 0;
+
+    color:var(--text-soft);
+
+    font-size:14px;
+
+    line-height:1.5;
+}
+
+
+/* ==========================================================
+   PETUNJUK
+   ========================================================== */
+
+.masterKontrakInfo{
+    display:flex;
+    align-items:flex-start;
+
+    gap:12px;
+
+    width:100%;
+    box-sizing:border-box;
+
+    margin-bottom:22px;
+
+    padding:15px;
+
+    border:
+        1px solid
+        rgba(11,143,67,.15);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        rgba(11,143,67,.06);
+}
+
+.masterKontrakInfo >
+.material-symbols-rounded{
+    flex-shrink:0;
+
+    margin-top:1px;
+
+    color:var(--primary);
+
+    font-size:23px;
+}
+
+.masterKontrakInfo strong{
+    display:block;
+
+    margin-bottom:4px;
+
+    color:var(--text);
+
+    font-size:14px;
+    font-weight:800;
+}
+
+.masterKontrakInfo p{
+    margin:0;
+
+    color:var(--text-soft);
+
+    font-size:12px;
+
+    line-height:1.55;
+}
+
+
+/* ==========================================================
+   SECTION DATA KONTRAK
+   ========================================================== */
+
+.masterKontrakSection{
+    width:100%;
+}
+
+.masterKontrakSectionTitle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:12px;
+
+    margin-bottom:14px;
+}
+
+.masterKontrakSectionTitle h3{
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    margin:0;
+
+    color:var(--text);
+
+    font-size:17px;
+    font-weight:800;
+
+    line-height:1.3;
+}
+
+.masterKontrakSectionTitle h3
+.material-symbols-rounded{
+    color:var(--primary);
+
+    font-size:22px;
+}
+
+
+/* ==========================================================
+   BUTTON TAMBAH
+   ========================================================== */
+
+.masterKontrakAddBtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:5px;
+
+    min-height:40px;
+
+    padding:
+        8px 13px;
+
+    border:
+        1px solid
+        var(--primary);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        transparent;
+
+    color:
+        var(--primary);
+
+    font-family:inherit;
+
+    font-size:12px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:
+        .18s ease;
+}
+
+.masterKontrakAddBtn
+.material-symbols-rounded{
+    font-size:19px;
+}
+
+.masterKontrakAddBtn:hover{
+    background:
+        rgba(11,143,67,.07);
+}
+
+.masterKontrakAddBtn:active{
+    transform:scale(.97);
+}
+
+
+/* ==========================================================
+   HEADER TABEL
+   ========================================================== */
+
+.masterKontrakTableHeader{
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr)
+        44px;
+
+    gap:10px;
+
+    margin-bottom:7px;
+
+    padding:
+        0 4px;
+
+    color:var(--text-soft);
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:.6px;
+}
+
+
+/* ==========================================================
+   CONTAINER BARIS
+   ========================================================== */
+
+.masterKontrakRows{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    width:100%;
+}
+
+
+/* ==========================================================
+   BARIS KONTRAK
+   ========================================================== */
+
+.masterKontrakRow{
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr)
+        44px;
+
+    align-items:end;
+
+    gap:10px;
+
+    width:100%;
+    box-sizing:border-box;
+
+    padding:12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        var(--card);
+
+    box-shadow:
+        var(--shadow-xs);
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.masterKontrakRow:focus-within{
+    border-color:
+        rgba(11,143,67,.35);
+
+    box-shadow:
+        0 4px 15px
+        rgba(11,143,67,.08);
+}
+
+
+/* ==========================================================
+   INPUT GROUP
+   ========================================================== */
+
+.masterKontrakInputGroup{
+    min-width:0;
+}
+
+.masterKontrakInputGroup label{
+    display:block;
+
+    margin:
+        0 0 6px;
+
+    color:var(--text-soft);
+
+    font-size:10px;
+    font-weight:700;
+}
+
+.masterKontrakInputGroup input{
+    display:block;
+
+    width:100%;
+    min-width:0;
+
+    min-height:46px;
+
+    box-sizing:border-box;
+
+    padding:
+        11px 12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        var(--card);
+
+    color:
+        var(--text);
+
+    font-family:inherit;
+
+    font-size:14px;
+
+    outline:none;
+
+    appearance:none;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.masterKontrakInputGroup input::placeholder{
+    color:
+        var(--text-soft);
+
+    opacity:.65;
+}
+
+.masterKontrakInputGroup input:focus{
+    border-color:
+        var(--primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(11,143,67,.10);
+}
+
+
+/* ==========================================================
+   TOMBOL HAPUS
+   ========================================================== */
+
+.masterKontrakDeleteBtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    width:44px;
+    height:46px;
+
+    padding:0;
+
+    border:
+        1px solid
+        rgba(220,38,38,.18);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        rgba(220,38,38,.06);
+
+    color:
+        #DC2626;
+
+    cursor:pointer;
+
+    transition:
+        .18s ease;
+}
+
+.masterKontrakDeleteBtn
+.material-symbols-rounded{
+    font-size:20px;
+}
+
+.masterKontrakDeleteBtn:hover{
+    background:
+        rgba(220,38,38,.12);
+}
+
+.masterKontrakDeleteBtn:active{
+    transform:scale(.95);
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+   ========================================================== */
+
+.masterKontrakEmpty{
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:7px;
+
+    min-height:150px;
+
+    box-sizing:border-box;
+
+    padding:20px;
+
+    border:
+        1px dashed
+        var(--border);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        rgba(0,0,0,.015);
+
+    text-align:center;
+
+    color:
+        var(--text-soft);
+}
+
+.masterKontrakEmpty
+.material-symbols-rounded{
+    color:
+        var(--primary);
+
+    font-size:31px;
+}
+
+.masterKontrakEmpty strong{
+    color:
+        var(--text);
+
+    font-size:14px;
+    font-weight:800;
+}
+
+.masterKontrakEmpty small{
+    max-width:290px;
+
+    color:
+        var(--text-soft);
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+
+/* ==========================================================
+   MESSAGE
+   ========================================================== */
+
+.masterKontrakMessage{
+    width:100%;
+    box-sizing:border-box;
+
+    margin-top:16px;
+
+    padding:
+        11px 13px;
+
+    border-radius:
+        var(--radius-sm);
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+.masterKontrakMessage.warning{
+    border:
+        1px solid
+        rgba(245,158,11,.20);
+
+    background:
+        rgba(245,158,11,.10);
+
+    color:
+        #B45309;
+}
+
+.masterKontrakMessage.info{
+    border:
+        1px solid
+        rgba(11,143,67,.15);
+
+    background:
+        rgba(11,143,67,.08);
+
+    color:
+        var(--primary-dark);
+}
+
+
+/* ==========================================================
+   BUTTON SIMPAN
+   ========================================================== */
+
+.masterKontrakSaveBtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    width:100%;
+
+    min-height:51px;
+
+    margin-top:20px;
+
+    padding:
+        12px 16px;
+
+    border:0;
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        var(--primary);
+
+    color:#fff;
+
+    font-family:inherit;
+
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 8px 20px
+        rgba(11,143,67,.20);
+
+    transition:
+        .18s ease;
+}
+
+.masterKontrakSaveBtn
+.material-symbols-rounded{
+    font-size:21px;
+}
+
+.masterKontrakSaveBtn:hover{
+    background:
+        var(--primary-dark);
+}
+
+.masterKontrakSaveBtn:active{
+    transform:scale(.98);
+}
+
+
+/* ==========================================================
+   DARK MODE
+   ========================================================== */
+
+body.dark .masterKontrakInfo{
+    background:
+        rgba(11,143,67,.10);
+}
+
+body.dark .masterKontrakEmpty{
+    background:
+        rgba(255,255,255,.02);
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media(max-width:600px){
+
+    .masterKontrakCard{
+        padding:18px;
+    }
+
+    .masterKontrakHeader h2{
+        font-size:22px;
+    }
+
+    .masterKontrakHeader h2
+    .material-symbols-rounded{
+        font-size:25px;
+    }
+
+    .masterKontrakSectionTitle h3{
+        font-size:16px;
+    }
+
+}
+
+
+/* ==========================================================
+   LAYAR SANGAT KECIL
+   ========================================================== */
+
+@media(max-width:380px){
+
+    .masterKontrakCard{
+        padding:15px;
+    }
+
+    .masterKontrakTableHeader{
+        display:none;
+    }
+
+    .masterKontrakRow{
+        grid-template-columns:
+            1fr;
+
+        gap:10px;
+    }
+
+    .masterKontrakDeleteBtn{
+        width:100%;
+    }
+
+}

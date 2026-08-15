@@ -1,0 +1,984 @@
+/* ==========================================================
+   FMC BROILER MOBILE V11
+   PLAN PANEN.CSS
+   ==========================================================
+
+   LIGHT MODE ONLY
+
+   Struktur:
+   #planpanenPage
+       └── .planPanenPage
+*/
+
+
+/* ==========================================================
+   CONTAINER PLAN PANEN
+   ========================================================== */
+
+#planpanenPage{
+    width:100%;
+    box-sizing:border-box;
+
+    color:#182027;
+
+    background:#F4F6F8;
+}
+
+
+/* ==========================================================
+   HALAMAN PLAN PANEN
+   ========================================================== */
+
+#planpanenPage .planPanenPage{
+    width:100%;
+    box-sizing:border-box;
+
+    color:#182027;
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+#planpanenPage .planPanenHeader{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+
+    gap:16px;
+
+    margin-bottom:20px;
+}
+
+
+#planpanenPage .planPanenSmall{
+    margin-bottom:6px;
+
+    color:#6F7479;
+
+    font-size:13px;
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+
+#planpanenPage .planPanenHeader h2{
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    margin:0;
+
+    color:#182027;
+
+    font-size:27px;
+    font-weight:800;
+}
+
+
+#planpanenPage
+.planPanenHeader h2
+.material-symbols-rounded{
+
+    color:#0B8F43;
+
+    font-size:30px;
+}
+
+
+#planpanenPage .planPanenHeader p{
+    margin:7px 0 0;
+
+    color:#70777D;
+
+    font-size:15px;
+}
+
+
+/* ==========================================================
+   STATUS BADGE
+   ========================================================== */
+
+#planpanenPage .planPanenStatusBadge{
+    display:flex;
+    align-items:center;
+
+    gap:7px;
+
+    padding:9px 13px;
+
+    border-radius:999px;
+
+    background:#E8F8EF;
+
+    color:#0B8F43;
+
+    font-size:12px;
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+
+#planpanenPage
+.planPanenStatusBadge
+.material-symbols-rounded{
+
+    font-size:19px;
+}
+
+
+/* ==========================================================
+   PETUNJUK
+   ========================================================== */
+
+#planpanenPage .planPanenInfo{
+    display:flex;
+    align-items:flex-start;
+
+    gap:13px;
+
+    padding:17px;
+
+    margin-bottom:18px;
+
+    box-sizing:border-box;
+
+    border:
+        1px solid #D7EBDF;
+
+    border-radius:18px;
+
+    background:#EFF9F3;
+}
+
+
+#planpanenPage
+.planPanenInfo
+> .material-symbols-rounded{
+
+    flex:none;
+
+    color:#0B8F43;
+
+    font-size:27px;
+}
+
+
+#planpanenPage .planPanenInfo strong{
+    display:block;
+
+    margin-bottom:5px;
+
+    color:#182027;
+
+    font-size:16px;
+    font-weight:800;
+}
+
+
+#planpanenPage .planPanenInfo p{
+    margin:0;
+
+    color:#687178;
+
+    font-size:13px;
+
+    line-height:1.55;
+}
+
+
+/* ==========================================================
+   CARD
+   ========================================================== */
+
+#planpanenPage .planPanenCard{
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:20px;
+
+    margin-bottom:18px;
+
+    border:
+        1px solid #E5E7EB;
+
+    border-radius:20px;
+
+    background:#FFFFFF;
+
+    box-shadow:
+        0 7px 22px
+        rgba(15,23,42,.06);
+}
+
+
+/* ==========================================================
+   JUDUL SECTION
+   ========================================================== */
+
+#planpanenPage .planPanenSectionTitle{
+    display:flex;
+    align-items:center;
+
+    gap:9px;
+
+    margin-bottom:18px;
+}
+
+
+#planpanenPage
+.planPanenSectionTitle
+.material-symbols-rounded{
+
+    color:#0B8F43;
+
+    font-size:25px;
+}
+
+
+#planpanenPage .planPanenSectionTitle h3{
+    margin:0;
+
+    color:#182027;
+
+    font-size:19px;
+    font-weight:800;
+}
+
+
+/* ==========================================================
+   FORM
+   ========================================================== */
+
+#planpanenPage .planPanenForm{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:15px;
+}
+
+
+#planpanenPage .planPanenField{
+    min-width:0;
+}
+
+
+/* ==========================================================
+   LABEL
+   ========================================================== */
+
+#planpanenPage .planPanenField label{
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#252B30;
+
+    font-size:14px;
+    font-weight:700;
+}
+
+
+/* ==========================================================
+   INPUT & SELECT
+   ========================================================== */
+
+#planpanenPage
+.planPanenField input,
+
+#planpanenPage
+.planPanenField select{
+
+    width:100%;
+
+    height:56px;
+
+    box-sizing:border-box;
+
+    padding:
+        0 15px;
+
+    border:
+        1px solid #DCE1E5;
+
+    border-radius:15px;
+
+    background:#FFFFFF;
+
+    color:#20262B;
+
+    font-family:inherit;
+
+    font-size:15px;
+
+    outline:none;
+
+    appearance:auto;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+#planpanenPage
+.planPanenField input:focus,
+
+#planpanenPage
+.planPanenField select:focus{
+
+    border-color:#0B8F43;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(11,143,67,.10);
+}
+
+
+#planpanenPage
+.planPanenField input::placeholder{
+
+    color:#A5ABB0;
+
+    opacity:1;
+}
+
+
+/* ==========================================================
+   BB TARGET SMALL TEXT
+   ========================================================== */
+
+#planpanenPage
+.planPanenField small{
+
+    display:block;
+
+    margin-top:5px;
+
+    color:#8B9196;
+
+    font-size:11px;
+}
+
+
+/* ==========================================================
+   PESAN
+   ========================================================== */
+
+#planpanenPage .planPanenMessage{
+    display:block;
+
+    margin-top:15px;
+
+    padding:
+        12px 14px;
+
+    border-radius:12px;
+
+    font-size:13px;
+
+    line-height:1.45;
+}
+
+
+#planpanenPage
+.planPanenMessage.warning{
+
+    background:#FFF4E5;
+
+    border:
+        1px solid #F1D3A1;
+
+    color:#9A5B00;
+}
+
+
+#planpanenPage
+.planPanenMessage.success{
+
+    background:#EAF8EF;
+
+    border:
+        1px solid #CDE8D7;
+
+    color:#087B39;
+}
+
+
+#planpanenPage
+.planPanenMessage.info{
+
+    background:#EEF5FB;
+
+    border:
+        1px solid #D5E4EF;
+
+    color:#35617D;
+}
+
+
+/* ==========================================================
+   TOMBOL TAMBAH
+   ========================================================== */
+
+#planpanenPage .planPanenAddBtn{
+    width:100%;
+
+    min-height:56px;
+
+    margin-top:17px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    box-sizing:border-box;
+
+    border:
+        1px solid #0B8F43;
+
+    border-radius:15px;
+
+    background:#EAF8F0;
+
+    color:#0B8F43;
+
+    font-family:inherit;
+
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:
+        background .2s ease,
+        transform .15s ease;
+}
+
+
+#planpanenPage
+.planPanenAddBtn
+.material-symbols-rounded{
+
+    font-size:23px;
+}
+
+
+#planpanenPage
+.planPanenAddBtn:hover{
+
+    background:#DDF4E7;
+}
+
+
+#planpanenPage
+.planPanenAddBtn:active{
+
+    transform:
+        scale(.985);
+}
+
+
+/* ==========================================================
+   REKAPAN
+   ========================================================== */
+
+#planpanenPage .planPanenRekap{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:13px;
+}
+
+
+/* ==========================================================
+   DATA KOSONG
+   ========================================================== */
+
+#planpanenPage .planPanenEmpty{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    min-height:165px;
+
+    padding:20px;
+
+    box-sizing:border-box;
+
+    border:
+        1px dashed #D5DADD;
+
+    border-radius:17px;
+
+    background:#FFFFFF;
+
+    color:#7B8389;
+}
+
+
+#planpanenPage
+.planPanenEmpty
+.material-symbols-rounded{
+
+    margin-bottom:8px;
+
+    color:#AAB1B6;
+
+    font-size:39px;
+}
+
+
+#planpanenPage
+.planPanenEmpty strong{
+
+    color:#4D555B;
+
+    font-size:15px;
+}
+
+
+#planpanenPage
+.planPanenEmpty small{
+
+    max-width:300px;
+
+    margin-top:6px;
+
+    color:#7C8388;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+
+/* ==========================================================
+   ITEM REKAP
+   ========================================================== */
+
+#planpanenPage .planPanenRekapItem{
+
+    padding:16px;
+
+    box-sizing:border-box;
+
+    border:
+        1px solid #E3E6E8;
+
+    border-radius:17px;
+
+    background:#FFFFFF;
+}
+
+
+/* ==========================================================
+   TOP REKAP
+   ========================================================== */
+
+#planpanenPage .planPanenRekapTop{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    padding-bottom:12px;
+
+    border-bottom:
+        1px solid #ECEEEF;
+}
+
+
+#planpanenPage
+.planPanenRekapTop > div{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:3px;
+}
+
+
+#planpanenPage
+.planPanenRekapTop strong{
+
+    color:#182027;
+
+    font-size:17px;
+}
+
+
+#planpanenPage
+.planPanenRekapTop small{
+
+    color:#7D8489;
+
+    font-size:12px;
+}
+
+
+/* ==========================================================
+   HAPUS
+   ========================================================== */
+
+#planpanenPage .planPanenDeleteBtn{
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex:none;
+
+    border:
+        1px solid #F2D5D5;
+
+    border-radius:13px;
+
+    background:#FFF2F2;
+
+    color:#D92E2E;
+
+    cursor:pointer;
+}
+
+
+#planpanenPage
+.planPanenDeleteBtn
+.material-symbols-rounded{
+
+    font-size:20px;
+}
+
+
+#planpanenPage
+.planPanenDeleteBtn:active{
+
+    transform:
+        scale(.95);
+}
+
+
+/* ==========================================================
+   DATA REKAP
+   ========================================================== */
+
+#planpanenPage .planPanenRekapGrid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:9px;
+
+    margin-top:13px;
+}
+
+
+#planpanenPage
+.planPanenRekapGrid > div{
+
+    padding:11px;
+
+    border-radius:13px;
+
+    background:#F7F8F9;
+
+    border:
+        1px solid #EEF0F2;
+}
+
+
+#planpanenPage
+.planPanenRekapGrid small,
+
+#planpanenPage
+.planPanenAutoBox small{
+
+    display:block;
+
+    margin-bottom:4px;
+
+    color:#7D8489;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    letter-spacing:.4px;
+}
+
+
+#planpanenPage
+.planPanenRekapGrid strong{
+
+    color:#20272C;
+
+    font-size:15px;
+}
+
+
+/* ==========================================================
+   HASIL OTOMATIS
+   ========================================================== */
+
+#planpanenPage .planPanenAutoBox{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:9px;
+
+    margin-top:11px;
+
+    padding-top:11px;
+
+    border-top:
+        1px dashed #DFE3E5;
+}
+
+
+#planpanenPage
+.planPanenAutoBox > div{
+
+    padding:10px;
+
+    border-radius:12px;
+
+    background:#EEF8F2;
+
+    border:
+        1px solid #DCEFE3;
+}
+
+
+#planpanenPage
+.planPanenAutoBox strong{
+
+    color:#0B8F43;
+
+    font-size:13px;
+}
+
+
+/* ==========================================================
+   TOMBOL SIMPAN
+   ========================================================== */
+
+#planpanenPage .planPanenSaveBtn{
+
+    width:100%;
+
+    min-height:59px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:9px;
+
+    margin-bottom:0;
+
+    border:0;
+
+    border-radius:16px;
+
+    background:#0B8F43;
+
+    color:#FFFFFF;
+
+    font-family:inherit;
+
+    font-size:15px;
+
+    font-weight:800;
+
+    box-shadow:
+        0 8px 18px
+        rgba(11,143,67,.18);
+
+    cursor:pointer;
+
+    transition:
+        background .2s ease,
+        transform .15s ease;
+}
+
+
+#planpanenPage
+.planPanenSaveBtn
+.material-symbols-rounded{
+
+    font-size:23px;
+}
+
+
+#planpanenPage
+.planPanenSaveBtn:hover{
+
+    background:#087A39;
+}
+
+
+#planpanenPage
+.planPanenSaveBtn:active{
+
+    transform:
+        scale(.985);
+}
+
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+
+#planpanenPage .planPanenFooterInfo{
+
+    padding:
+        12px 18px 20px;
+
+    text-align:center;
+
+    color:#8B9195;
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+
+#planpanenPage
+.planPanenFooterInfo strong{
+
+    color:#0B8F43;
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media(max-width:600px){
+
+    #planpanenPage
+    .planPanenHeader{
+
+        flex-direction:column;
+
+        gap:8px;
+    }
+
+
+    #planpanenPage
+    .planPanenStatusBadge{
+
+        align-self:flex-start;
+    }
+
+
+    #planpanenPage
+    .planPanenForm{
+
+        grid-template-columns:1fr;
+
+        gap:13px;
+    }
+
+
+    #planpanenPage
+    .planPanenCard{
+
+        padding:16px;
+
+        border-radius:18px;
+    }
+
+
+    #planpanenPage
+    .planPanenHeader h2{
+
+        font-size:24px;
+    }
+
+
+    #planpanenPage
+    .planPanenInfo{
+
+        padding:15px;
+    }
+
+
+    #planpanenPage
+    .planPanenField input,
+
+    #planpanenPage
+    .planPanenField select{
+
+        height:55px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+   ========================================================== */
+
+@media(max-width:380px){
+
+    #planpanenPage
+    .planPanenRekapGrid,
+
+    #planpanenPage
+    .planPanenAutoBox{
+
+        grid-template-columns:1fr;
+    }
+
+
+    #planpanenPage
+    .planPanenHeader h2{
+
+        font-size:22px;
+    }
+
+
+    #planpanenPage
+    .planPanenSectionTitle h3{
+
+        font-size:17px;
+    }
+
+}

@@ -1,0 +1,886 @@
+/* ==========================================================
+   FMC BROILER MOBILE
+   OPERASIONAL CSS
+   MODE TERANG
+   ========================================================== */
+
+
+/* ==========================================================
+   PAGE
+   ========================================================== */
+
+#operasionalPage{
+    width:100%;
+    padding-bottom:100px;
+    box-sizing:border-box;
+}
+
+
+/* ==========================================================
+   CARD
+   ========================================================== */
+
+.operasionalCard{
+    width:100%;
+    max-width:720px;
+
+    margin:0 auto;
+    padding:0;
+
+    overflow:hidden;
+
+    box-sizing:border-box;
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+.operasionalHeader{
+    padding:20px 18px 18px;
+
+    background:linear-gradient(
+        135deg,
+        #0b8f43,
+        #087438
+    );
+
+    color:#fff;
+}
+
+.operasionalHeader h2{
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    margin:0;
+
+    font-size:21px;
+    font-weight:800;
+
+    color:#fff;
+}
+
+.operasionalHeader h2
+.material-symbols-rounded{
+    font-size:27px;
+    color:#fff;
+}
+
+.operasionalHeader p{
+    margin:7px 0 0;
+
+    font-size:13px;
+
+    color:#fff;
+    opacity:.9;
+}
+
+
+/* ==========================================================
+   SECTION
+   ========================================================== */
+
+.operasionalSection{
+    margin:14px;
+    padding:16px;
+
+    border:1px solid #e7eaec;
+    border-radius:18px;
+
+    background:#fff;
+
+    box-sizing:border-box;
+}
+
+.operasionalSection h3{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    margin:0 0 16px;
+
+    font-size:15px;
+    font-weight:800;
+
+    color:#182027;
+}
+
+.operasionalSection h3
+.material-symbols-rounded{
+    font-size:21px;
+    color:#0b8f43;
+}
+
+
+/* ==========================================================
+   FORM LABEL
+   ========================================================== */
+
+.operasionalSection label{
+    display:block;
+
+    margin:
+        13px 0
+        6px;
+
+    font-size:12px;
+    font-weight:700;
+
+    color:#667085;
+}
+
+
+/* ==========================================================
+   INPUT + TEXTAREA
+   ========================================================== */
+
+.operasionalSection input,
+.operasionalSection textarea{
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:
+        11px
+        13px;
+
+    border:
+        1px solid
+        #dfe3e6;
+
+    border-radius:12px;
+
+    background:#fff;
+    color:#1d2939;
+
+    font-family:inherit;
+    font-size:14px;
+
+    outline:none;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.operasionalSection input{
+    min-height:46px;
+}
+
+.operasionalSection textarea{
+    min-height:88px;
+
+    resize:vertical;
+
+    line-height:1.5;
+}
+
+.operasionalSection input::placeholder,
+.operasionalSection textarea::placeholder{
+    color:#98a2b3;
+}
+
+.operasionalSection input:focus,
+.operasionalSection textarea:focus{
+    border-color:#0b8f43;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(11,143,67,.10);
+}
+
+
+/* ==========================================================
+   TAMBAH DATA
+   ========================================================== */
+
+.operasionalAddBtn{
+    width:calc(100% - 28px);
+    min-height:52px;
+
+    margin:
+        0
+        14px
+        16px;
+
+    padding:
+        10px
+        16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:9px;
+
+    border:
+        1px solid
+        #bfe6cf;
+
+    border-radius:14px;
+
+    background:#eaf8f0;
+    color:#087b39;
+
+    font-family:inherit;
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-sizing:border-box;
+
+    transition:
+        transform .15s ease,
+        background .15s ease,
+        border-color .15s ease;
+}
+
+.operasionalAddBtn
+.material-symbols-rounded{
+    font-size:22px;
+    color:#0b8f43;
+}
+
+.operasionalAddBtn:hover{
+    background:#e2f5ea;
+
+    border-color:#9ed7b5;
+}
+
+.operasionalAddBtn:active{
+    transform:scale(.985);
+}
+
+
+/* ==========================================================
+   DATA YANG DISIAPKAN
+   ========================================================== */
+
+.operasionalTableWrap{
+    width:100%;
+
+    box-sizing:border-box;
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+   ========================================================== */
+
+.operasionalEmpty{
+    min-height:150px;
+
+    padding:20px;
+
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    border:
+        1px dashed
+        #d6dadd;
+
+    border-radius:16px;
+
+    background:#fafbfc;
+
+    color:#7c8388;
+
+    box-sizing:border-box;
+}
+
+.operasionalEmpty
+.material-symbols-rounded{
+    margin-bottom:8px;
+
+    font-size:38px;
+
+    color:#aab0b4;
+}
+
+.operasionalEmpty strong{
+    font-size:15px;
+
+    color:#4d555b;
+}
+
+.operasionalEmpty small{
+    max-width:280px;
+
+    margin-top:5px;
+
+    font-size:12px;
+    line-height:1.5;
+
+    color:#7c8388;
+}
+
+
+/* ==========================================================
+   REKAP LIST
+   ========================================================== */
+
+.operasionalRekapList{
+    width:100%;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:12px;
+
+    box-sizing:border-box;
+}
+
+
+/* ==========================================================
+   REKAP ITEM
+   ========================================================== */
+
+.operasionalRekapItem{
+    width:100%;
+
+    padding:15px;
+
+    border:
+        1px solid
+        #e5e7e9;
+
+    border-radius:16px;
+
+    background:#fff;
+
+    box-sizing:border-box;
+
+    box-shadow:
+        0 3px 12px
+        rgba(16,24,40,.04);
+}
+
+
+/* ==========================================================
+   REKAP HEADER
+   ========================================================== */
+
+.operasionalRekapHeader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:12px;
+
+    padding-bottom:12px;
+
+    border-bottom:
+        1px solid
+        #eeeeee;
+}
+
+.operasionalRekapHeader > div{
+    min-width:0;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:4px;
+}
+
+.operasionalRekapHeader strong{
+    color:#182027;
+
+    font-size:17px;
+    font-weight:800;
+
+    word-break:break-word;
+}
+
+.operasionalRekapHeader small{
+    color:#7d8489;
+
+    font-size:12px;
+}
+
+
+/* ==========================================================
+   DELETE BUTTON
+   ========================================================== */
+
+.operasionalDeleteBtn{
+    width:42px;
+    height:42px;
+
+    flex:none;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:0;
+
+    border:
+        1px solid
+        #f1d0d0;
+
+    border-radius:12px;
+
+    background:#fff2f2;
+    color:#d92e2e;
+
+    cursor:pointer;
+
+    transition:
+        transform .15s ease,
+        background .15s ease;
+}
+
+.operasionalDeleteBtn
+.material-symbols-rounded{
+    font-size:21px;
+
+    color:#d92e2e;
+}
+
+.operasionalDeleteBtn:hover{
+    background:#ffe7e7;
+}
+
+.operasionalDeleteBtn:active{
+    transform:scale(.94);
+}
+
+
+/* ==========================================================
+   REKAP GRID
+   ========================================================== */
+
+.operasionalRekapGrid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:9px;
+
+    margin-top:13px;
+}
+
+.operasionalRekapGrid > div{
+    min-width:0;
+
+    padding:11px;
+
+    border-radius:12px;
+
+    background:#f7f8f9;
+
+    box-sizing:border-box;
+}
+
+.operasionalRekapGrid small{
+    display:block;
+
+    margin-bottom:4px;
+
+    color:#7d8489;
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:.4px;
+}
+
+.operasionalRekapGrid strong{
+    display:block;
+
+    color:#20272c;
+
+    font-size:14px;
+    font-weight:700;
+
+    word-break:break-word;
+}
+
+
+/* ==========================================================
+   TOTAL ITEM
+   ========================================================== */
+
+.operasionalRekapTotal{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:12px;
+
+    margin-top:10px;
+    padding-top:11px;
+
+    border-top:
+        1px dashed
+        #dfe3e5;
+}
+
+.operasionalRekapTotal small{
+    color:#7d8489;
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:.5px;
+}
+
+.operasionalRekapTotal strong{
+    color:#0b8f43;
+
+    font-size:16px;
+    font-weight:800;
+
+    text-align:right;
+}
+
+
+/* ==========================================================
+   TOTAL
+   ========================================================== */
+
+.operasionalTotal{
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    margin:14px;
+    padding:16px;
+
+    border:
+        1px solid
+        rgba(11,143,67,.15);
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(11,143,67,.10),
+            rgba(11,143,67,.035)
+        );
+
+    box-sizing:border-box;
+}
+
+.operasionalTotalIcon{
+    width:45px;
+    height:45px;
+
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    background:#0b8f43;
+
+    color:#fff;
+}
+
+.operasionalTotalIcon
+.material-symbols-rounded{
+    font-size:24px;
+
+    color:#fff;
+}
+
+.operasionalTotal small{
+    display:block;
+
+    margin-bottom:3px;
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:.7px;
+
+    color:#667085;
+}
+
+.operasionalTotal strong{
+    display:block;
+
+    font-size:22px;
+    font-weight:800;
+
+    color:#0b8f43;
+}
+
+.operasionalTotal span{
+    display:block;
+
+    margin-top:2px;
+
+    font-size:11px;
+
+    color:#667085;
+}
+
+
+/* ==========================================================
+   MESSAGE
+   ========================================================== */
+
+.operasionalMessage{
+    margin:14px;
+
+    padding:
+        11px
+        13px;
+
+    border-radius:12px;
+
+    font-size:13px;
+    font-weight:600;
+
+    box-sizing:border-box;
+}
+
+.operasionalMessage.success{
+    background:#eaf8ef;
+
+    color:#087438;
+
+    border:
+        1px solid
+        #cce8d6;
+}
+
+.operasionalMessage.error{
+    background:#fff0f0;
+
+    color:#b42318;
+
+    border:
+        1px solid
+        #f2cccc;
+}
+
+.operasionalMessage.info{
+    background:#eef5fb;
+
+    color:#175cd3;
+
+    border:
+        1px solid
+        #d5e4ef;
+}
+
+
+/* ==========================================================
+   SAVE BUTTON
+   ========================================================== */
+
+.operasionalSaveBtn{
+    width:calc(100% - 28px);
+    min-height:50px;
+
+    margin:
+        0
+        14px
+        18px;
+
+    padding:
+        10px
+        16px;
+
+    border:0;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b8f43,
+            #087438
+        );
+
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:9px;
+
+    font-family:inherit;
+
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 8px 18px
+        rgba(11,143,67,.18);
+
+    box-sizing:border-box;
+
+    transition:
+        transform .15s ease,
+        opacity .15s ease;
+}
+
+.operasionalSaveBtn:active{
+    transform:scale(.98);
+}
+
+.operasionalSaveBtn:disabled{
+    opacity:.65;
+
+    cursor:not-allowed;
+}
+
+.operasionalSaveBtn
+.material-symbols-rounded{
+    font-size:21px;
+
+    color:#fff;
+}
+
+
+/* ==========================================================
+   HEADER CARD
+   ========================================================== */
+
+#operasionalPage .card:first-child h2,
+#operasionalPage .card:first-child p{
+    color:#fff !important;
+}
+
+#operasionalPage
+.card:first-child
+h2
+.material-symbols-rounded{
+    color:#fff !important;
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media(max-width:480px){
+
+    #operasionalPage{
+        padding-bottom:88px;
+    }
+
+
+    .operasionalHeader{
+        padding:
+            17px
+            15px
+            16px;
+    }
+
+
+    .operasionalHeader h2{
+        font-size:19px;
+    }
+
+
+    .operasionalHeader p{
+        font-size:12px;
+    }
+
+
+    .operasionalSection{
+        margin:11px;
+
+        padding:14px;
+
+        border-radius:16px;
+    }
+
+
+    .operasionalAddBtn{
+        width:
+            calc(100% - 22px);
+
+        margin-left:11px;
+        margin-right:11px;
+    }
+
+
+    .operasionalTotal{
+        margin:11px;
+    }
+
+
+    .operasionalMessage{
+        margin:11px;
+    }
+
+
+    .operasionalSaveBtn{
+        width:
+            calc(100% - 22px);
+
+        margin-left:11px;
+        margin-right:11px;
+    }
+
+
+    .operasionalRekapItem{
+        padding:13px;
+    }
+
+
+    .operasionalRekapGrid{
+        gap:8px;
+    }
+
+
+    .operasionalRekapGrid > div{
+        padding:9px;
+    }
+
+
+    .operasionalRekapTotal{
+        margin-top:9px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+   ========================================================== */
+
+@media(max-width:360px){
+
+    .operasionalRekapGrid{
+        grid-template-columns:1fr;
+    }
+
+
+    .operasionalRekapHeader strong{
+        font-size:15px;
+    }
+
+
+    .operasionalRekapGrid strong{
+        font-size:13px;
+    }
+
+
+    .operasionalRekapTotal strong{
+        font-size:15px;
+    }
+
+}

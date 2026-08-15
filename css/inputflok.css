@@ -1,0 +1,1171 @@
+/* ==========================================================
+   FMC BROILER MOBILE V11
+   INPUT FLOK.CSS
+   ==========================================================
+
+   MODE:
+   LIGHT ONLY
+
+   CATATAN:
+   - Tidak menggunakan body.dark
+   - Tidak mengikuti warna Dark Mode FMC
+   - Input FLOK selalu tampil LIGHT
+   - Aman digunakan walaupun aplikasi utama Dark Mode
+   ========================================================== */
+
+
+/* ==========================================================
+   ROOT KHUSUS INPUT FLOK
+   ========================================================== */
+
+#inputFlokPage{
+    width:100%;
+    box-sizing:border-box;
+
+    color:#1F2937;
+}
+
+
+/* ==========================================================
+   CARD UTAMA
+   ========================================================== */
+
+#inputFlokPage .flokInputCard{
+    width:100%;
+    box-sizing:border-box;
+
+    padding:20px;
+
+    background:#FFFFFF;
+
+    color:#1F2937;
+
+    border:
+        1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    box-shadow:
+        0 6px 20px rgba(15,23,42,.08);
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+#inputFlokPage .flokInputHeader{
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:16px;
+
+    margin-bottom:20px;
+}
+
+
+/* Judul kecil */
+
+#inputFlokPage .flokHeaderSmall{
+    margin-bottom:5px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    color:#6B7280;
+}
+
+
+/* Judul FLOK */
+
+#inputFlokPage .flokInputHeader h2{
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin:0;
+
+    font-size:24px;
+
+    font-weight:800;
+
+    color:#111827;
+}
+
+
+/* Icon judul */
+
+#inputFlokPage .flokInputHeader h2
+.material-symbols-rounded{
+    font-size:25px;
+
+    color:#0B8F43;
+}
+
+
+/* Subjudul */
+
+#inputFlokPage .flokInputHeader p{
+    margin:6px 0 0;
+
+    font-size:14px;
+
+    color:#6B7280;
+}
+
+
+/* ==========================================================
+   STATUS FLOK
+   ========================================================== */
+
+#inputFlokPage .flokStatusBadge{
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:8px 12px;
+
+    border-radius:999px;
+
+    background:#EAF8EF;
+
+    color:#15803D;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+}
+
+
+#inputFlokPage .flokStatusBadge
+.material-symbols-rounded{
+    font-size:17px;
+}
+
+
+/* ==========================================================
+   SELECTOR FLOK A B C D
+   ========================================================== */
+
+#inputFlokPage .flokSelector{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:8px;
+
+    margin-bottom:24px;
+}
+
+
+/* Tombol FLOK */
+
+#inputFlokPage .flokSelectorBtn{
+    width:100%;
+
+    min-height:48px;
+
+    padding:10px 6px;
+
+    border:
+        1px solid #D1D5DB;
+
+    border-radius:10px;
+
+    background:#FFFFFF;
+
+    color:#374151;
+
+    font-family:inherit;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 2px 6px rgba(15,23,42,.05);
+
+    transition:
+        .2s ease;
+}
+
+
+/* Hover */
+
+#inputFlokPage .flokSelectorBtn:hover{
+    border-color:#0B8F43;
+
+    color:#0B8F43;
+
+    background:#F0FDF4;
+}
+
+
+/* Tekan */
+
+#inputFlokPage .flokSelectorBtn:active{
+    transform:
+        scale(.97);
+}
+
+
+/* FLOK aktif */
+
+#inputFlokPage .flokSelectorBtn.active{
+    background:#0B8F43;
+
+    border-color:#0B8F43;
+
+    color:#FFFFFF;
+
+    box-shadow:
+        0 6px 16px
+        rgba(11,143,67,.20);
+}
+
+
+/* ==========================================================
+   DATA PRODUKSI
+   ========================================================== */
+
+#inputFlokPage .flokInputSection{
+    padding-top:2px;
+}
+
+
+/* Judul section */
+
+#inputFlokPage .flokInputSection h3{
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin:
+        0 0 18px;
+
+    font-size:17px;
+
+    font-weight:800;
+
+    color:#111827;
+}
+
+
+#inputFlokPage .flokInputSection h3
+.material-symbols-rounded{
+    font-size:22px;
+
+    color:#0B8F43;
+}
+
+
+/* ==========================================================
+   LABEL
+   ========================================================== */
+
+#inputFlokPage .flokInputSection label{
+    display:block;
+
+    margin:
+        15px 0 7px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#374151;
+}
+
+
+/* ==========================================================
+   INPUT & SELECT
+   ========================================================== */
+
+#inputFlokPage .flokInputSection input,
+#inputFlokPage .flokInputSection select{
+
+    width:100%;
+
+    min-height:48px;
+
+    box-sizing:border-box;
+
+    padding:
+        13px 14px;
+
+    border:
+        1px solid #D1D5DB;
+
+    border-radius:10px;
+
+    background:#FFFFFF;
+
+    color:#111827;
+
+    font-family:inherit;
+
+    font-size:14px;
+
+    outline:none;
+
+    box-shadow:
+        0 2px 6px
+        rgba(15,23,42,.04);
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+/* Placeholder */
+
+#inputFlokPage
+.flokInputSection input::placeholder{
+    color:#9CA3AF;
+
+    opacity:1;
+}
+
+
+/* Focus */
+
+#inputFlokPage
+.flokInputSection input:focus,
+
+#inputFlokPage
+.flokInputSection select:focus{
+
+    border-color:#0B8F43;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(11,143,67,.10);
+}
+
+
+/* ==========================================================
+   SELECT
+   ========================================================== */
+
+#inputFlokPage
+.flokInputSection select{
+
+    appearance:auto;
+
+    cursor:pointer;
+}
+
+
+/* ==========================================================
+   TANGGAL OTOMATIS / READONLY
+   ========================================================== */
+
+#inputFlokPage .flokTanggalWrap{
+
+    display:flex;
+
+    align-items:center;
+
+    width:100%;
+
+    min-height:48px;
+
+    box-sizing:border-box;
+
+    gap:10px;
+
+    padding:
+        0 14px;
+
+    border:
+        1px solid #D1D5DB;
+
+    border-radius:10px;
+
+    background:#F9FAFB;
+
+    box-shadow:
+        0 2px 6px
+        rgba(15,23,42,.04);
+}
+
+
+/* Icon kalender */
+
+#inputFlokPage
+.flokTanggalWrap
+> .material-symbols-rounded{
+
+    flex-shrink:0;
+
+    font-size:21px;
+
+    color:#6B7280;
+}
+
+
+/* Input tanggal */
+
+#inputFlokPage
+.flokTanggalWrap input{
+
+    flex:1;
+
+    width:100%;
+
+    min-height:46px;
+
+    padding:0;
+
+    border:0 !important;
+
+    outline:none !important;
+
+    background:
+        transparent !important;
+
+    box-shadow:none !important;
+
+    color:#6B7280;
+
+    font-size:14px;
+
+    cursor:default;
+
+    opacity:1;
+}
+
+
+/* Icon lock */
+
+#inputFlokPage .flokReadonlyIcon{
+
+    flex-shrink:0;
+
+    font-family:
+        "Material Symbols Rounded";
+
+    font-size:19px;
+
+    color:#9CA3AF;
+}
+
+
+/* Keterangan otomatis */
+
+#inputFlokPage .flokAutoInfo{
+
+    display:block;
+
+    margin-top:5px;
+
+    color:#9CA3AF;
+
+    font-size:10px;
+}
+
+
+/* ==========================================================
+   HARGA PAKAN READONLY
+   ========================================================== */
+
+#inputFlokPage
+#inputFlokHarga{
+
+    background:#F9FAFB;
+
+    color:#6B7280;
+
+    cursor:default;
+}
+
+
+/* ==========================================================
+   PESAN URUTAN
+   ========================================================== */
+
+#inputFlokPage .flokUrutanMessage{
+
+    display:none;
+
+    margin-top:10px;
+
+    padding:
+        11px 13px;
+
+    border-radius:10px;
+
+    background:#FFF7ED;
+
+    border:
+        1px solid #FED7AA;
+
+    color:#B45309;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+
+/* Warning */
+
+#inputFlokPage
+.flokUrutanMessage.warning{
+
+    font-weight:600;
+}
+
+
+/* ==========================================================
+   REKAP CARD
+   ========================================================== */
+
+#inputFlokPage .flokRekapCard{
+
+    margin-top:26px;
+
+    padding-top:22px;
+
+    border-top:
+        1px solid #E5E7EB;
+}
+
+
+/* ==========================================================
+   HEADER REKAP
+   ========================================================== */
+
+#inputFlokPage .flokRekapHeader{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    margin-bottom:14px;
+}
+
+
+#inputFlokPage .flokRekapHeader > div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+}
+
+
+#inputFlokPage
+.flokRekapHeader
+.material-symbols-rounded{
+
+    font-size:22px;
+
+    color:#0B8F43;
+}
+
+
+#inputFlokPage .flokRekapHeader strong{
+
+    font-size:16px;
+
+    font-weight:800;
+
+    color:#111827;
+}
+
+
+/* Jumlah data */
+
+#inputFlokPage .flokRekapCount{
+
+    padding:
+        7px 11px;
+
+    border-radius:999px;
+
+    background:#EAF8EF;
+
+    color:#15803D;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+
+/* ==========================================================
+   DATA KOSONG
+   ========================================================== */
+
+#inputFlokPage .flokRekapEmpty{
+
+    padding:
+        18px;
+
+    border-radius:12px;
+
+    background:#F3F4F6;
+
+    border:
+        1px solid #E5E7EB;
+
+    color:#6B7280;
+
+    font-size:13px;
+
+    line-height:1.5;
+
+    text-align:center;
+}
+
+
+/* ==========================================================
+   HEADER HASIL PERHITUNGAN
+   ========================================================== */
+
+#inputFlokPage .flokHasilHeader{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:22px;
+
+    margin-bottom:14px;
+}
+
+
+#inputFlokPage .flokHasilHeader
+.material-symbols-rounded{
+
+    font-size:22px;
+
+    color:#0B8F43;
+}
+
+
+#inputFlokPage .flokHasilHeader strong{
+
+    font-size:16px;
+
+    font-weight:800;
+
+    color:#111827;
+}
+
+
+/* ==========================================================
+   TABEL REKAP
+   ========================================================== */
+
+#inputFlokPage .flokRekapTableWrap{
+
+    width:100%;
+
+    overflow-x:auto;
+
+    -webkit-overflow-scrolling:touch;
+
+    border:
+        1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    background:#FFFFFF;
+}
+
+
+#inputFlokPage .flokRekapTable{
+
+    width:100%;
+
+    min-width:680px;
+
+    border-collapse:collapse;
+
+    background:#FFFFFF;
+
+    color:#374151;
+
+    font-size:12px;
+}
+
+
+/* Header tabel */
+
+#inputFlokPage .flokRekapTable th{
+
+    padding:
+        11px 10px;
+
+    background:#F9FAFB;
+
+    color:#6B7280;
+
+    border-bottom:
+        1px solid #E5E7EB;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    text-align:left;
+
+    white-space:nowrap;
+}
+
+
+/* Isi tabel */
+
+#inputFlokPage .flokRekapTable td{
+
+    padding:
+        11px 10px;
+
+    background:#FFFFFF;
+
+    color:#374151;
+
+    border-bottom:
+        1px solid #F1F5F9;
+
+    font-size:12px;
+
+    white-space:nowrap;
+}
+
+
+/* Baris terakhir */
+
+#inputFlokPage .flokRekapTable tbody tr:last-child td{
+
+    border-bottom:0;
+}
+
+
+/* Hover baris */
+
+#inputFlokPage .flokRekapTable tbody tr:hover td{
+
+    background:#F8FAFC;
+}
+
+
+/* ==========================================================
+   TOMBOL HAPUS REKAP
+   ========================================================== */
+
+#inputFlokPage .flokDeleteBtn{
+
+    width:34px;
+    height:34px;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:0;
+
+    border:1px solid #FECACA;
+    border-radius:8px;
+
+    background:#FEF2F2;
+    color:#DC2626;
+
+    cursor:pointer;
+
+    transition:
+        background .15s ease,
+        transform .15s ease,
+        border-color .15s ease;
+}
+
+#inputFlokPage .flokDeleteBtn .material-symbols-rounded{
+    font-size:19px;
+    color:#DC2626;
+}
+
+#inputFlokPage .flokDeleteBtn:hover{
+    background:#FEE2E2;
+    border-color:#FCA5A5;
+}
+
+#inputFlokPage .flokDeleteBtn:active{
+    transform:scale(.92);
+}
+
+#inputFlokPage .flokDeleteBtn:focus-visible{
+    outline:3px solid rgba(220,38,38,.14);
+    outline-offset:2px;
+}
+
+
+/* ==========================================================
+   KPI
+   ========================================================== */
+
+#inputFlokPage .flokKpiGrid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:10px;
+}
+
+
+/* Kotak KPI */
+
+#inputFlokPage .flokKpiItem{
+
+    min-height:82px;
+
+    box-sizing:border-box;
+
+    padding:14px;
+
+    border:
+        1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    background:#F8FAFC;
+
+    box-shadow:
+        0 2px 6px
+        rgba(15,23,42,.04);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+}
+
+
+/* Label KPI */
+
+#inputFlokPage .flokKpiLabel{
+
+    font-size:10px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    color:#6B7280;
+}
+
+
+/* Nilai KPI */
+
+#inputFlokPage .flokKpiValue{
+
+    margin-top:5px;
+
+    font-size:18px;
+
+    font-weight:800;
+
+    color:#111827;
+}
+
+
+/* Keterangan KPI */
+
+#inputFlokPage .flokRekapInfo{
+
+    display:block;
+
+    margin-top:12px;
+
+    color:#9CA3AF;
+
+    font-size:10px;
+
+    line-height:1.5;
+}
+
+
+/* ==========================================================
+   PESAN UMUM
+   ========================================================== */
+
+#inputFlokPage .flokMessage{
+
+    margin-top:16px;
+
+    padding:
+        11px 13px;
+
+    border-radius:10px;
+
+    font-size:13px;
+
+    line-height:1.5;
+}
+
+
+/* Warning */
+
+#inputFlokPage .flokMessage.warning{
+
+    background:#FFF7ED;
+
+    border:
+        1px solid #FED7AA;
+
+    color:#B45309;
+}
+
+
+/* Success */
+
+#inputFlokPage .flokMessage.success{
+
+    background:#ECFDF3;
+
+    border:
+        1px solid #BBF7D0;
+
+    color:#15803D;
+}
+
+
+/* Info */
+
+#inputFlokPage .flokMessage.info{
+
+    background:#EFF6FF;
+
+    border:
+        1px solid #BFDBFE;
+
+    color:#1D4ED8;
+}
+
+
+/* ==========================================================
+   TOMBOL SIMPAN
+   ========================================================== */
+
+#inputFlokPage .flokSaveBtn{
+
+    width:100%;
+
+    min-height:50px;
+
+    margin-top:20px;
+
+    border:0;
+
+    border-radius:10px;
+
+    background:#0B8F43;
+
+    color:#FFFFFF;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:9px;
+
+    font-family:inherit;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 8px 20px
+        rgba(11,143,67,.20);
+
+    transition:
+        transform .15s ease,
+        background .2s ease,
+        opacity .2s ease;
+}
+
+
+#inputFlokPage
+.flokSaveBtn
+.material-symbols-rounded{
+
+    font-size:20px;
+}
+
+
+/* Hover */
+
+#inputFlokPage .flokSaveBtn:hover{
+
+    background:#087A39;
+}
+
+
+/* Active */
+
+#inputFlokPage .flokSaveBtn:active{
+
+    transform:
+        scale(.98);
+}
+
+
+/* Disabled */
+
+#inputFlokPage .flokSaveBtn:disabled{
+
+    opacity:.45;
+
+    cursor:not-allowed;
+
+    box-shadow:none;
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width:600px){
+
+    #inputFlokPage
+    .flokInputCard{
+
+        padding:16px;
+
+        border-radius:16px;
+    }
+
+
+    #inputFlokPage
+    .flokInputHeader{
+
+        gap:10px;
+    }
+
+
+    #inputFlokPage
+    .flokInputHeader h2{
+
+        font-size:22px;
+    }
+
+
+    #inputFlokPage
+    .flokStatusBadge{
+
+        padding:
+            7px 9px;
+
+        font-size:10px;
+    }
+
+
+    #inputFlokPage
+    .flokSelector{
+
+        gap:6px;
+    }
+
+
+    #inputFlokPage
+    .flokSelectorBtn{
+
+        min-height:46px;
+
+        padding:
+            9px 4px;
+
+        font-size:12px;
+    }
+
+
+    #inputFlokPage
+    .flokKpiGrid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+
+/* ==========================================================
+   HP KECIL
+   ========================================================== */
+
+@media (max-width:380px){
+
+    #inputFlokPage
+    .flokInputHeader{
+
+        flex-direction:column;
+    }
+
+
+    #inputFlokPage
+    .flokStatusBadge{
+
+        align-self:flex-start;
+    }
+
+
+    #inputFlokPage
+    .flokSelectorBtn{
+
+        font-size:11px;
+    }
+
+
+    #inputFlokPage
+    .flokKpiItem{
+
+        min-height:76px;
+
+        padding:12px;
+    }
+
+
+    #inputFlokPage
+    .flokKpiValue{
+
+        font-size:16px;
+    }
+
+}
