@@ -3,8 +3,8 @@
 // OVK.JS
 // ==========================================================
 // MODUL : OVK / OBAT & VITAMIN
-// STATUS: UI + PERHITUNGAN LOKAL
-// GAS   : BELUM DIHUBUNGKAN
+// STATUS: UI + TENANT GAS V1
+// GAS   : TERHUBUNG — saveOVK
 //
 // STRUKTUR SHEET 💊 Obat
 //
@@ -1130,14 +1130,30 @@ function resetFormOVK(){
 // ==========================================================
 // SIMPAN DATA
 // ==========================================================
-// GAS BELUM DIHUBUNGKAN.
+// GAS TENANT V1
+// Action : saveOVK
+// Payload:
+// {
+//     items: JSON.stringify(items)
+// }
+//
+// Catatan:
+// - Email tenant TIDAK dikirim manual dari modul ini.
+// - api.js Tenant Identity otomatis menambahkan email user
+//   untuk action non-auth.
+// - Total dari PWA hanya untuk tampilan.
+// - GAS menghitung ulang kolom F melalui Spreadsheet.
 // ==========================================================
 
-function simpanDataOVK(){
+async function simpanDataOVK(){
 
     const data =
         window.fmcOVKDataSesi || [];
 
+
+    // ==========================================
+    // VALIDASI DATA
+    // ==========================================
 
     if(
         !data.length
@@ -1153,65 +1169,275 @@ function simpanDataOVK(){
 
 
     // ==========================================
-    // TOTAL AKHIR
+    // TOMBOL SIMPAN
     // ==========================================
 
-    const total =
-        data.reduce(
-            function(
-                hasil,
-                item
-            ){
-
-                return (
-                    hasil +
-                    (
-                        Number(
-                            item.total
-                        ) || 0
-                    )
-                );
-
-            },
-            0
+    const button =
+        document.getElementById(
+            "btnSimpanOVK"
         );
 
 
-    // ==========================================
-    // SEMENTARA
-    // ==========================================
+    if(button){
 
-    tampilPesanOVK(
-        "Data OVK siap dikirim ke Spreadsheet. Koneksi GAS belum diaktifkan.",
-        "success"
-    );
+        button.disabled = true;
+
+        button.innerHTML = `
+            <span class="material-symbols-rounded">
+                sync
+            </span>
+
+            MENYIMPAN...
+        `;
+
+    }
 
 
-    // ==========================================
-    // DEBUG
-    // ==========================================
+    try{
 
-    console.log(
-        "=========================================="
-    );
+        // ==========================================
+        // SALIN DATA
+        // ==========================================
+        //
+        // Total tetap ikut dikirim untuk kompatibilitas
+        // payload, tetapi GAS tidak mempercayainya.
+        // Kolom F dihitung oleh Spreadsheet.
+        //
+        // ==========================================
 
-    console.log(
-        "FMC OVK - DATA SIAP DIKIRIM"
-    );
+        const items =
+            data.map(
+                function(item){
 
-    console.log(
-        "=========================================="
-    );
+                    return {
 
-    console.log(
-        "Data:",
-        data
-    );
+                        tanggal:
+                            item.tanggal,
 
-    console.log(
-        "Total OVK:",
-        total
-    );
+                        namaObat:
+                            item.namaObat,
+
+                        harga:
+                            Number(
+                                item.harga
+                            ),
+
+                        qty:
+                            Number(
+                                item.qty
+                            ),
+
+                        total:
+                            Number(
+                                item.total
+                            ) || 0
+
+                    };
+
+                }
+            );
+
+
+        // ==========================================
+        // KIRIM KE GAS
+        // ==========================================
+
+        const result =
+            await apiPost(
+                "saveOVK",
+                {
+                    items:
+                        JSON.stringify(
+                            items
+                        )
+                }
+            );
+
+
+        // ==========================================
+        // CEK RESPONSE
+        // ==========================================
+
+        if(
+            !result ||
+            result.success !== true
+        ){
+
+            throw new Error(
+                result?.message ||
+                "Data OVK gagal disimpan."
+            );
+
+        }
+
+
+        // ==========================================
+        // RESPONSE GAS
+        // ==========================================
+        //
+        // GAS mengembalikan:
+        // data.jumlah
+        // data.totalBatch
+        // data.items
+        //
+        // Total item berasal dari formula Spreadsheet.
+        //
+        // ==========================================
+
+        const responseData =
+            result.data || {};
+
+
+        const jumlah =
+            Number(
+                responseData.jumlah || 0
+            );
+
+
+        const totalBatch =
+            Number(
+                responseData.totalBatch || 0
+            );
+
+
+        // ==========================================
+        // SIMPAN HASIL FORMULA DARI GAS
+        // ==========================================
+        //
+        // Hanya digunakan untuk informasi/debug.
+        // Data sesi tetap dibersihkan setelah sukses.
+        //
+        // ==========================================
+
+        console.log(
+            "=========================================="
+        );
+
+        console.log(
+            "FMC OVK - BERHASIL DISIMPAN"
+        );
+
+        console.log(
+            "Jumlah:",
+            jumlah
+        );
+
+        console.log(
+            "Total Batch dari Spreadsheet:",
+            totalBatch
+        );
+
+        console.log(
+            "Response:",
+            responseData
+        );
+
+        console.log(
+            "=========================================="
+        );
+
+
+        // ==========================================
+        // BERSIHKAN DATA SESI
+        // ==========================================
+
+        window.fmcOVKDataSesi =
+            [];
+
+
+        renderOVKTableInPage();
+
+
+        // ==========================================
+        // RESET FORM
+        // ==========================================
+
+        resetFormOVK();
+
+
+        // ==========================================
+        // PESAN SUKSES
+        // ==========================================
+
+        tampilPesanOVK(
+            "Data OVK berhasil disimpan ke Spreadsheet.",
+            "success"
+        );
+
+
+        // ==========================================
+        // REFRESH DATA SERVER
+        // ==========================================
+        //
+        // Jika API memiliki cache serverData,
+        // kosongkan agar modul lain tidak memakai
+        // snapshot lama setelah penyimpanan.
+        //
+        // ==========================================
+
+        if(
+            typeof serverData !==
+            "undefined"
+        ){
+
+            serverData = null;
+
+        }
+
+
+        // ==========================================
+        // TOAST GLOBAL
+        // ==========================================
+
+        if(
+            typeof showUpdateToast ===
+            "function"
+        ){
+
+            showUpdateToast(
+                "Data OVK berhasil disimpan"
+            );
+
+        }
+
+
+    }
+    catch(error){
+
+        console.error(
+            "OVK SAVE ERROR:",
+            error
+        );
+
+
+        tampilPesanOVK(
+            error?.message ||
+            "Data OVK gagal disimpan.",
+            "error"
+        );
+
+    }
+    finally{
+
+        // ==========================================
+        // KEMBALIKAN TOMBOL
+        // ==========================================
+
+        if(button){
+
+            button.disabled = false;
+
+            button.innerHTML = `
+                <span class="material-symbols-rounded">
+                    save
+                </span>
+
+                SIMPAN DATA OVK
+            `;
+
+        }
+
+    }
 
 }
 
