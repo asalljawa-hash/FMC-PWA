@@ -30,12 +30,263 @@
 window.fmcOVKDataSesi =
     window.fmcOVKDataSesi || [];
 
+// ==========================================================
+// SESSION TENANT
+// ==========================================================
+// OVK mengikuti pola Master Kontrak: email tenant diambil
+// secara eksplisit dari session sebelum SAVE / GET.
+// ==========================================================
+
+function getOVKTenantEmail(){
+
+    try{
+
+        if(typeof getLoginUser === "function"){
+
+            const user =
+                getLoginUser();
+
+            const email =
+                String(
+                    user?.email || ""
+                )
+                .trim()
+                .toLowerCase();
+
+            if(email){
+                return email;
+            }
+        }
+
+        const raw =
+            localStorage.getItem(
+                "FMC_USER"
+            );
+
+        if(!raw){
+            return "";
+        }
+
+        const user =
+            JSON.parse(raw);
+
+        return String(
+            user?.email || ""
+        )
+        .trim()
+        .toLowerCase();
+
+    }
+    catch(error){
+
+        console.error(
+            "OVK SESSION TENANT ERROR:",
+            error
+        );
+
+        return "";
+    }
+}
+
+
+function getOVKSessionIdentity(){
+
+    try{
+
+        let user = null;
+
+        if(typeof getLoginUser === "function"){
+            user = getLoginUser();
+        }
+
+        if(!user){
+            const raw =
+                localStorage.getItem("FMC_USER");
+
+            if(raw){
+                user = JSON.parse(raw);
+            }
+        }
+
+        user = user || {};
+
+        return {
+            email:
+                String(user?.email || "")
+                    .trim()
+                    .toLowerCase(),
+            user_id:
+                String(
+                    user?.user_id ||
+                    user?.userId ||
+                    ""
+                ).trim(),
+            tenant_id:
+                String(
+                    user?.tenant_id ||
+                    user?.tenantId ||
+                    ""
+                ).trim()
+        };
+
+    }catch(error){
+
+        console.error(
+            "OVK SESSION IDENTITY ERROR:",
+            error
+        );
+
+        return {
+            email: "",
+            user_id: "",
+            tenant_id: ""
+        };
+    }
+}
+
+
+function pastikanTenantOVK(){
+
+    const identity =
+        getOVKSessionIdentity();
+
+    if(
+        !identity.email &&
+        !identity.user_id &&
+        !identity.tenant_id
+    ){
+
+        throw new Error(
+            "Session tenant tidak ditemukan. Silakan login kembali."
+        );
+    }
+
+    return identity.email;
+}
+
+
+window.fmcOVKDataServer =
+    window.fmcOVKDataServer || [];
+
+const OVK_LOCAL_CACHE_KEY =
+    "FMC_OVK_CACHE_V1";
+
+
+function simpanOVKCacheTenant(
+    items
+){
+
+    try{
+
+        const email =
+            pastikanTenantOVK();
+
+        const cache =
+            JSON.parse(
+                localStorage.getItem(
+                    OVK_LOCAL_CACHE_KEY
+                ) || "{}"
+            );
+
+        cache[email] =
+            (Array.isArray(items)
+                ? items
+                : []
+            ).map(
+                function(item){
+
+                    return {
+                        no:
+                            item?.no ?? "",
+
+                        row:
+                            item?.row ?? "",
+
+                        tanggal:
+                            String(
+                                item?.tanggal || ""
+                            ),
+
+                        namaObat:
+                            String(
+                                item?.namaObat || ""
+                            ),
+
+                        harga:
+                            Number(
+                                item?.harga || 0
+                            ),
+
+                        qty:
+                            Number(
+                                item?.qty || 0
+                            ),
+
+                        total:
+                            Number(
+                                item?.total || 0
+                            )
+                    };
+
+                }
+            );
+
+        localStorage.setItem(
+            OVK_LOCAL_CACHE_KEY,
+            JSON.stringify(cache)
+        );
+
+    }
+    catch(error){
+
+        console.warn(
+            "OVK CACHE SAVE ERROR:",
+            error
+        );
+
+    }
+}
+
+
+function ambilOVKCacheTenant(){
+
+    try{
+
+        const email =
+            pastikanTenantOVK();
+
+        const cache =
+            JSON.parse(
+                localStorage.getItem(
+                    OVK_LOCAL_CACHE_KEY
+                ) || "{}"
+            );
+
+        const items =
+            cache[email];
+
+        return Array.isArray(items)
+            ? items
+            : [];
+
+    }
+    catch(error){
+
+        console.warn(
+            "OVK CACHE READ ERROR:",
+            error
+        );
+
+        return [];
+    }
+}
+
 
 // ==========================================================
 // TAMPILKAN HALAMAN OVK
 // ==========================================================
 
-function tampilOVK(){
+async function tampilOVK(){
 
     const page =
         document.getElementById(
@@ -57,7 +308,7 @@ function tampilOVK(){
         renderOVKPage();
 
 
-    initOVK();
+    await initOVK();
 
 }
 
@@ -364,7 +615,7 @@ function renderOVKPage(){
 // INISIALISASI OVK
 // ==========================================================
 
-function initOVK(){
+async function initOVK(){
 
     const tanggal =
         document.getElementById(
@@ -384,6 +635,30 @@ function initOVK(){
 
 
     renderOVKTableInPage();
+
+    /*
+     * Server adalah sumber data utama.
+     * Data lama tenant dimuat kembali saat halaman OVK dibuka.
+     */
+    try{
+
+        /*
+         * GET awal bersifat silent.
+         * Jangan menampilkan "Tidak dapat terhubung ke server"
+         * hanya karena pembacaan awal gagal.
+         */
+        await muatDataOVKDariServerOVK({
+            silent: true
+        });
+
+    }catch(error){
+
+        console.warn(
+            "OVK: GET awal dari server gagal.",
+            error
+        );
+
+    }
 
 }
 
@@ -704,8 +979,14 @@ function tambahDataOVK(){
 
 function renderOVKTable(){
 
-    const data =
+    const serverData =
+        window.fmcOVKDataServer || [];
+
+    const sesiData =
         window.fmcOVKDataSesi || [];
+
+    const data =
+        serverData.concat(sesiData);
 
 
     // ==========================================
@@ -891,17 +1172,32 @@ function renderOVKTable(){
 
                                         <td>
 
-                                            <button
-                                                type="button"
-                                                class="ovkDeleteBtn"
-                                                onclick="hapusDataOVK(${index})"
-                                                aria-label="Hapus data">
+                                            ${index < serverData.length ? `
+                                                <button
+                                                    type="button"
+                                                    class="ovkDeleteBtn"
+                                                    onclick="hapusDataOVKServer(${index})"
+                                                    aria-label="Hapus data server"
+                                                    title="Hapus data server">
 
-                                                <span class="material-symbols-rounded">
-                                                    delete
-                                                </span>
+                                                    <span class="material-symbols-rounded">
+                                                        delete
+                                                    </span>
 
-                                            </button>
+                                                </button>
+                                            ` : `
+                                                <button
+                                                    type="button"
+                                                    class="ovkDeleteBtn"
+                                                    onclick="hapusDataOVK(${index - serverData.length})"
+                                                    aria-label="Hapus data">
+
+                                                    <span class="material-symbols-rounded">
+                                                        delete
+                                                    </span>
+
+                                                </button>
+                                            `}
 
                                         </td>
 
@@ -1045,6 +1341,158 @@ function hapusDataOVK(
 
 
 // ==========================================================
+// HAPUS SATU DATA OVK DARI SERVER GAS 2
+// ==========================================================
+
+async function hapusDataOVKServer(
+    serverIndex
+){
+
+    const serverData =
+        Array.isArray(window.fmcOVKDataServer)
+            ? window.fmcOVKDataServer
+            : [];
+
+    if(
+        !Number.isInteger(serverIndex) ||
+        serverIndex < 0 ||
+        serverIndex >= serverData.length
+    ){
+        return;
+    }
+
+    const item =
+        serverData[serverIndex];
+
+    const namaObat =
+        String(
+            item?.namaObat ||
+            "data OVK"
+        );
+
+    const yakin =
+        window.confirm(
+            `Hapus ${namaObat} dari server?`
+        );
+
+    if(!yakin){
+        return;
+    }
+
+    try{
+
+        const result =
+            await ovkPostDirect(
+                "deleteOVKItem",
+                {
+                    index:
+                        String(
+                            serverIndex
+                        )
+                }
+            );
+
+        if(
+            !result ||
+            result.success !== true
+        ){
+            throw new Error(
+                result?.message ||
+                "Data OVK gagal dihapus dari server."
+            );
+        }
+
+        const responseData =
+            result.data || {};
+
+        window.fmcOVKDataServer =
+            Array.isArray(
+                responseData.items
+            )
+                ? responseData.items.map(
+                    function(item, index){
+
+                        return {
+                            no:
+                                item.no ??
+                                index + 1,
+
+                            row:
+                                item.row ??
+                                index + 2,
+
+                            tanggal:
+                                String(
+                                    item.tanggal ||
+                                    ""
+                                ),
+
+                            namaObat:
+                                String(
+                                    item.namaObat ||
+                                    ""
+                                ),
+
+                            harga:
+                                Number(
+                                    item.harga ||
+                                    0
+                                ),
+
+                            qty:
+                                Number(
+                                    item.qty ||
+                                    0
+                                ),
+
+                            total:
+                                Number(
+                                    item.total ||
+                                    (
+                                        Number(item.harga || 0) *
+                                        Number(item.qty || 0)
+                                    )
+                                ),
+
+                            __server:
+                                true
+                        };
+
+                    }
+                )
+                : [];
+
+        renderOVKTableInPage();
+
+        // SATU notifikasi server.
+        // showUpdateToast/showToast sudah menyediakan ikon 📢.
+        tampilToastServerOVK(
+            "Data OVK berhasil dihapus dari server"
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "OVK DELETE SERVER ERROR:",
+            error
+        );
+
+        // SATU notifikasi error server.
+        tampilToastServerOVK(
+            "Data OVK gagal dihapus dari server: " +
+            (
+                error?.message ||
+                "error tidak diketahui"
+            )
+        );
+
+    }
+
+}
+
+
+// ==========================================================
 // RESET FORM
 // ==========================================================
 
@@ -1127,8 +1575,161 @@ function resetFormOVK(){
 }
 
 
+
+
+// ==========================================================
+// DIRECT POST OVK KE GAS
+// ----------------------------------------------------------
+// OVK memakai direct fetch untuk SAVE / GET.
+//
+// apiPost() FMC memang praktis untuk modul umum, tetapi ia
+// menyamarkan error fetch/response menjadi:
+// "Tidak dapat terhubung ke server."
+//
+// Untuk OVK, error asli harus sampai ke modul agar:
+// 1. SAVE tidak salah didiagnosis.
+// 2. GET server dapat dibaca kembali.
+// 3. Debugging tidak lagi buta.
+// ==========================================================
+
+async function ovkPostDirect(
+    action,
+    payload = {}
+){
+
+    const identity =
+        getOVKSessionIdentity();
+
+    if(
+        !identity.email &&
+        !identity.user_id &&
+        !identity.tenant_id
+    ){
+        throw new Error(
+            "Session tenant tidak ditemukan. Silakan login kembali."
+        );
+    }
+
+    // ==========================================================
+    // ENDPOINT KHUSUS OVK — GAS 2 DATABASE
+    // ----------------------------------------------------------
+    // OVK TIDAK BOLEH memakai API_BASE / GAS 1.
+    // GAS 1 tetap dipakai modul lain.
+    // ==========================================================
+    const apiUrl =
+        "https://script.google.com/macros/s/AKfycbwNuclFEmIi555Ld3ORqSkIWlDvYG4WJUW8UZX84-ho5FNbB6RN7YF80c-hDlkpkZ8s/exec";
+
+    const body = {
+        action:
+            action,
+
+        ...payload,
+
+        email:
+            identity.email,
+
+        user_id:
+            identity.user_id,
+
+        tenant_id:
+            identity.tenant_id
+    };
+
+    console.info(
+        "OVK DIRECT POST:",
+        {
+            action: action,
+            email: identity.email,
+            user_id: identity.user_id,
+            tenant_id: identity.tenant_id
+        }
+    );
+
+    const response =
+        await fetch(
+            apiUrl,
+            {
+                method:
+                    "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+                },
+
+                body:
+                    new URLSearchParams(body),
+
+                cache:
+                    "no-store"
+            }
+        );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "HTTP " +
+            response.status
+        );
+
+    }
+
+
+    const raw =
+        await response.text();
+
+    console.info(
+        "OVK DIRECT RESPONSE:",
+        raw
+    );
+
+
+    let result;
+
+    try{
+
+        result =
+            JSON.parse(raw);
+
+    }
+    catch(error){
+
+        console.error(
+            "OVK RESPONSE BUKAN JSON:",
+            raw
+        );
+
+        throw new Error(
+            "Response server OVK tidak valid."
+        );
+
+    }
+
+
+    if(
+        !result ||
+        typeof result !== "object"
+    ){
+
+        throw new Error(
+            "Response server OVK tidak valid."
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
 // ==========================================================
 // SIMPAN DATA
+// ----------------------------------------------------------
+// OVK menggunakan direct POST tenant ke GAS.
+// apiPost() menangani endpoint, tenant email, response JSON,
+// dan session secara konsisten dengan Master Kontrak.
 // ==========================================================
 // GAS TENANT V1
 // Action : saveOVK
@@ -1243,7 +1844,7 @@ async function simpanDataOVK(){
         // ==========================================
 
         const result =
-            await apiPost(
+            await ovkPostDirect(
                 "saveOVK",
                 {
                     items:
@@ -1338,14 +1939,77 @@ async function simpanDataOVK(){
 
 
         // ==========================================
-        // BERSIHKAN DATA SESI
+        // 📢 SAVE SUKSES
+        // ==========================================
+        //
+        // Jangan menghapus data sesi sebelum GET server
+        // berhasil. Jika GET gagal, data yang baru disimpan
+        // tetap terlihat di PWA.
         // ==========================================
 
-        window.fmcOVKDataSesi =
-            [];
+        // SATU notifikasi server.
+        // showUpdateToast/showToast sudah menyediakan ikon 📢.
+        tampilToastServerOVK(
+            "Data OVK berhasil tersimpan di server"
+        );
+
+        /*
+         * Response SAVE sudah membawa data hasil penulisan.
+         * Simpan sebagai cache tenant sementara.
+         */
+        if(
+            Array.isArray(
+                responseData?.items
+            )
+        ){
+
+            simpanOVKCacheTenant(
+                responseData.items
+            );
+
+        }
 
 
-        renderOVKTableInPage();
+        /*
+         * GET verifikasi setelah SAVE.
+         * Jika berhasil:
+         *   - server menjadi sumber utama
+         *   - data sesi dibersihkan
+         *   - tabel dirender dari server
+         *
+         * Jika gagal:
+         *   - SAVE tetap dianggap sukses
+         *   - data sesi dipertahankan
+         *   - tidak muncul notif error kedua
+         */
+        try{
+
+            const serverItems =
+                await muatDataOVKDariServerOVK({
+                    silent: true
+                });
+
+
+            if(
+                Array.isArray(serverItems)
+            ){
+
+                window.fmcOVKDataSesi =
+                    [];
+
+                renderOVKTableInPage();
+
+            }
+
+
+        }catch(verifyError){
+
+            console.warn(
+                "OVK: SAVE sukses, GET verifikasi gagal. Data sesi dipertahankan.",
+                verifyError
+            );
+
+        }
 
 
         // ==========================================
@@ -1354,51 +2018,6 @@ async function simpanDataOVK(){
 
         resetFormOVK();
 
-
-        // ==========================================
-        // PESAN SUKSES
-        // ==========================================
-
-        tampilPesanOVK(
-            "Data OVK berhasil disimpan ke Spreadsheet.",
-            "success"
-        );
-
-
-        // ==========================================
-        // REFRESH DATA SERVER
-        // ==========================================
-        //
-        // Jika API memiliki cache serverData,
-        // kosongkan agar modul lain tidak memakai
-        // snapshot lama setelah penyimpanan.
-        //
-        // ==========================================
-
-        if(
-            typeof serverData !==
-            "undefined"
-        ){
-
-            serverData = null;
-
-        }
-
-
-        // ==========================================
-        // TOAST GLOBAL
-        // ==========================================
-
-        if(
-            typeof showUpdateToast ===
-            "function"
-        ){
-
-            showUpdateToast(
-                "Data OVK berhasil disimpan"
-            );
-
-        }
 
 
     }
@@ -1410,10 +2029,14 @@ async function simpanDataOVK(){
         );
 
 
-        tampilPesanOVK(
+        const pesanError =
             error?.message ||
-            "Data OVK gagal disimpan.",
-            "error"
+            "Data OVK gagal disimpan.";
+
+        // SATU notifikasi error server.
+        tampilToastServerOVK(
+            "Data OVK gagal disimpan: " +
+            pesanError
         );
 
     }
@@ -1441,6 +2064,279 @@ async function simpanDataOVK(){
 
 }
 
+
+// ==========================================================
+// GET DATA OVK DARI SERVER
+// ==========================================================
+
+async function muatDataOVKDariServerOVK(
+    options = {}
+){
+
+    const silent =
+        options.silent === true;
+
+    try{
+
+        const email =
+            pastikanTenantOVK();
+
+        const result =
+            await ovkPostDirect(
+                "getOVK",
+                {}
+            );
+
+        if(
+            !result ||
+            result.success !== true
+        ){
+
+            throw new Error(
+                result?.message ||
+                "Data OVK belum dapat dibaca dari server."
+            );
+
+        }
+
+        /*
+         * apiPost() dipakai khusus GET karena jalur ini
+         * sudah terbukti dapat membaca response GAS di PWA.
+         *
+         * GAS OVK mengembalikan:
+         * {
+         *   success: true,
+         *   data: {
+         *      tenant_id,
+         *      items: [...]
+         *   }
+         * }
+         *
+         * Tetap dukung beberapa bentuk response
+         * agar tidak rapuh terhadap wrapper API.
+         */
+
+        const responseData =
+            result.data ||
+            result.result ||
+            result;
+
+
+        let items =
+            Array.isArray(
+                responseData?.items
+            )
+                ? responseData.items
+                : Array.isArray(
+                    responseData
+                )
+                    ? responseData
+                    : [];
+
+
+        window.fmcOVKDataServer =
+            items
+                .map(
+                    function(item){
+
+                        if(
+                            !item ||
+                            typeof item !== "object"
+                        ){
+                            return null;
+                        }
+
+                        return {
+
+                            no:
+                                item.no ??
+                                "",
+
+                            row:
+                                item.row ??
+                                "",
+
+                            tanggal:
+                                String(
+                                    item.tanggal ||
+                                    ""
+                                ),
+
+                            namaObat:
+                                String(
+                                    item.namaObat ||
+                                    ""
+                                ),
+
+                            harga:
+                                Number(
+                                    item.harga || 0
+                                ),
+
+                            qty:
+                                Number(
+                                    item.qty || 0
+                                ),
+
+                            total:
+                                Number(
+                                    item.total || 0
+                                ),
+
+                            __server:
+                                true
+
+                        };
+
+                    }
+                )
+                .filter(
+                    function(item){
+                        return item !== null;
+                    }
+                );
+
+
+        /*
+         * Server adalah sumber utama.
+         * Data server langsung ditampilkan di PWA.
+         */
+        renderOVKTableInPage();
+
+        /*
+         * Cache hanya sebagai fallback UI.
+         * Server tetap sumber data utama.
+         */
+        simpanOVKCacheTenant(
+            window.fmcOVKDataServer
+        );
+
+
+        console.info(
+            "OVK GET SERVER OK:",
+            {
+                jumlah:
+                    window.fmcOVKDataServer.length,
+
+                items:
+                    window.fmcOVKDataServer
+            }
+        );
+
+
+        /*
+         * Jangan tampilkan notif "berhasil dimuat dari server".
+         * User hanya perlu melihat datanya.
+         */
+        return window.fmcOVKDataServer;
+
+
+    }catch(error){
+
+        console.error(
+            "OVK GET SERVER ERROR:",
+            error
+        );
+
+        /*
+         * GET awal dibuat silent.
+         * Jangan lagi menampilkan pesan generik
+         * "Tidak dapat terhubung ke server."
+         */
+        const cached =
+            ambilOVKCacheTenant();
+
+        if(
+            cached.length
+        ){
+
+            window.fmcOVKDataServer =
+                cached.map(
+                    function(item){
+
+                        return {
+                            ...item,
+                            __server: false,
+                            __cache: true
+                        };
+
+                    }
+                );
+
+            renderOVKTableInPage();
+
+        }
+
+        if(
+            !silent
+        ){
+
+            tampilPesanOVK(
+                "Server gagal dibaca: " +
+                (
+                    error?.message ||
+                    "error tidak diketahui"
+                ),
+                "warning"
+            );
+
+        }
+
+        throw error;
+    }
+}
+
+// ==========================================================
+// TOAST SERVER
+// ==========================================================
+
+function tampilToastServerOVK(
+    pesan
+){
+
+    try{
+
+        if(
+            typeof showUpdateToast ===
+            "function"
+        ){
+
+            showUpdateToast(
+                pesan
+            );
+
+            return;
+        }
+
+
+        if(
+            typeof showToast ===
+            "function"
+        ){
+
+            showToast(
+                pesan
+            );
+
+            return;
+        }
+
+
+        console.info(
+            "OVK SERVER TOAST:",
+            pesan
+        );
+
+    }
+    catch(error){
+
+        console.warn(
+            "OVK SERVER TOAST ERROR:",
+            error
+        );
+
+    }
+}
 
 // ==========================================================
 // PESAN
