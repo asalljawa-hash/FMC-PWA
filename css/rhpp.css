@@ -307,3 +307,199 @@
     color:#FFFFFF;
 
 }
+
+
+/* ==========================================
+   RHPP ACTION BUTTONS
+   Dashboard + Generate PDF
+========================================== */
+
+.rhppActions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    margin:28px 0 32px;
+    padding:0 10px;
+}
+
+.rhppActionBtn{
+    min-height:58px;
+    padding:8px 20px;
+    border-radius:16px;
+    font-size:16px;
+    font-weight:700;
+    font-family:inherit;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:11px;
+
+    cursor:pointer;
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        background .18s ease,
+        border-color .18s ease;
+
+    -webkit-tap-highlight-color:transparent;
+    -webkit-appearance:none;
+    appearance:none;
+}
+
+.rhppActionBtn:focus-visible{
+    outline:3px solid rgba(11,143,67,.25);
+    outline-offset:3px;
+}
+
+/* DASHBOARD */
+
+.rhppDashboardBtn{
+    background:#ffffff;
+    color:#0B8F43;
+    border:2px solid #0B8F43;
+
+    box-shadow:
+        0 6px 16px rgba(15,23,42,.10);
+}
+
+.rhppDashboardBtn .rhppActionIcon{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#f0fff6;
+    border:1px solid #bce8cc;
+
+    font-size:25px;
+}
+
+/* GENERATE PDF */
+
+.rhppPdfBtn{
+    background:linear-gradient(
+        135deg,
+        #12b85a,
+        #07863d
+    );
+
+    color:#ffffff;
+    border:2px solid transparent;
+
+    box-shadow:
+        0 8px 18px rgba(11,143,67,.24);
+}
+
+.rhppPdfBtn .rhppActionIcon{
+    font-size:28px;
+}
+
+/* HOVER */
+
+@media (hover:hover){
+    .rhppDashboardBtn:hover{
+        background:#f4fff8;
+        box-shadow:
+            0 9px 22px rgba(15,23,42,.13);
+        transform:translateY(-1px);
+    }
+
+    .rhppPdfBtn:hover{
+        box-shadow:
+            0 11px 24px rgba(11,143,67,.30);
+        transform:translateY(-1px);
+    }
+}
+
+/* TAP / ACTIVE */
+
+.rhppActionBtn:active{
+    transform:scale(.97);
+    box-shadow:
+        0 3px 8px rgba(15,23,42,.12);
+}
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+    .rhppActions{
+        gap:10px;
+        padding:0 6px;
+        margin-top:24px;
+    }
+
+    .rhppActionBtn{
+        flex:1;
+        min-width:0;
+        min-height:56px;
+        padding:8px 10px;
+        font-size:14px;
+        gap:8px;
+    }
+
+    .rhppDashboardBtn .rhppActionIcon{
+        width:34px;
+        height:34px;
+        font-size:23px;
+        flex:0 0 34px;
+    }
+
+    .rhppPdfBtn .rhppActionIcon{
+        font-size:25px;
+        flex:0 0 auto;
+    }
+}
+
+/* VERY SMALL PHONES */
+
+@media(max-width:360px){
+
+    .rhppActions{
+        gap:8px;
+        padding:0 2px;
+    }
+
+    .rhppActionBtn{
+        font-size:13px;
+        padding:7px 8px;
+    }
+
+    .rhppDashboardBtn .rhppActionIcon{
+        width:31px;
+        height:31px;
+        flex-basis:31px;
+        font-size:21px;
+    }
+
+    .rhppPdfBtn .rhppActionIcon{
+        font-size:23px;
+    }
+}
+
+/* DARK MODE */
+
+.dark .rhppDashboardBtn{
+    background:#1F2937;
+    color:#6EEB83;
+    border-color:#28b463;
+}
+
+.dark .rhppDashboardBtn .rhppActionIcon{
+    background:#163b29;
+    border-color:#286447;
+    color:#6EEB83;
+}
+
+.dark .rhppPdfBtn{
+    color:#ffffff;
+}
+
+.dark .rhppActionBtn:focus-visible{
+    outline-color:rgba(110,235,131,.35);
+}

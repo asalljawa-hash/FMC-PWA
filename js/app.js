@@ -4,10 +4,49 @@
 
 let currentPage = "dashboard";
 
+// Status Panel Kontrol
+let settingPanelOpen = false;
+
 
 async function showPage(page){
 
     currentPage = page;
+
+
+    // ==========================================
+    // TUTUP PANEL KONTROL SAAT PINDAH HALAMAN
+    // ==========================================
+
+    const settingPanel =
+        document.getElementById("settingPanel");
+
+    if(settingPanel){
+
+        settingPanel.classList.remove("show");
+
+    }
+
+    document.body.classList.remove("setting-open");
+
+    settingPanelOpen = false;
+
+
+    // ==========================================
+    // FAB SETTING
+    // HANYA TAMPIL DI DASHBOARD
+    // ==========================================
+
+    const fabSetting =
+        document.getElementById("fabSetting");
+
+    if(fabSetting){
+
+        fabSetting.style.display =
+            page === "dashboard"
+                ? "flex"
+                : "none";
+
+    }
 
 
 // ==========================================
@@ -1054,8 +1093,6 @@ async function installApp(){
 // ==========================================
 // SETTING PANEL V12
 // ==========================================
-
-let settingPanelOpen = false;
 
 function toggleSettingPanel(){
 

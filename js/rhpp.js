@@ -397,34 +397,29 @@ html += `
 
 <div style="height:30px;"></div>
 
-<div style="
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    margin:25px 0;
-">
+<div class="rhppActions">
 
     <button
-        class="btnPrimary"
+        class="rhppActionBtn rhppDashboardBtn"
         onclick="showPage('dashboard')">
 
-        <span class="material-symbols-rounded">
+        <span class="rhppActionIcon material-symbols-rounded">
             arrow_back
         </span>
 
-        Dashboard
+        <span>Dashboard</span>
 
     </button>
 
     <button
-        class="btnPrimary"
+        class="rhppActionBtn rhppPdfBtn"
         onclick="exportRHPPPDF()">
 
-        <span class="material-symbols-rounded">
+        <span class="rhppActionIcon material-symbols-rounded">
             picture_as_pdf
         </span>
 
-        Generate PDF
+        <span>Generate PDF</span>
 
     </button>
 
