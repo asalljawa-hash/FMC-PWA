@@ -354,16 +354,16 @@ REGISTER FORM
 
     </select>
 
-    <label for="regCage">Jumlah Kandang</label>
+    <label for="regCage">Jumlah Flok</label>
     <input
       type="number"
       id="regCage"
       name="cage"
       inputmode="numeric"
       min="1"
-      max="4"
+      max="6"
       step="1"
-      placeholder="Jumlah kandang (1–4)"
+      placeholder="Jumlah Flok" (1–6)"
       required>
 
     <label for="regPin">PIN (6 Digit)</label>
@@ -806,7 +806,7 @@ download
     class="sidebarItem"
     onclick="sidebarGo('pakan')">
 
-    <span class="fmc-corn-emoji" aria-hidden="true">🌾</span>
+    <span class="fmc-corn-emoji" aria-hidden="true">🌽</span>
 
     <span>
         Pakan
@@ -832,14 +832,13 @@ download
 
 <!-- =====================================================
      MENU FLOK
-     A / B / C / D
      
-     Setiap pilihan FLOK menggunakan sidebarFlok().
-     sidebarFlok() menyimpan FLOK aktif lalu membuka
-     halaman INPUT FLOK melalui showPage("inputflok").
+     Tombol FLOK langsung membuka halaman INPUT FLOK.
      
-     PERFORMA FLOK tetap berada pada halaman "flok"
-     dan tidak diubah di bagian ini.
+     Daftar FLOK tidak lagi dibuat statis di sidebar.
+     Jumlah FLOK mengikuti konfigurasi tenant pada sistem.
+     
+     Tidak ada submenu A / B / C / D di sidebar.
 ===================================================== -->
 
 <div
@@ -848,14 +847,18 @@ download
 
 
     <!-- =================================================
-         TOMBOL UTAMA FLOK
-         Membuka / menutup submenu FLOK
+         TOMBOL FLOK
+         Langsung membuka halaman INPUT FLOK.
     ================================================== -->
+
+<div
+    id="sidebarFlok"
+    class="sidebarFlok">
 
     <button
         type="button"
         class="sidebarItem"
-        onclick="toggleSidebarFlok()">
+        onclick="sidebarGo('inputflok')">
 
         <span class="material-symbols-rounded">
             home
@@ -867,102 +870,8 @@ download
 
     </button>
 
-
-    <!-- =================================================
-         SUBMENU FLOK
-    ================================================== -->
-
-    <div
-        class="sidebarFlokList">
-
-
-        <!-- =============================================
-             FLOK A
-             → INPUT FLOK A
-        ============================================== -->
-
-        <button
-            type="button"
-            class="sidebarFlokItem"
-            onclick="sidebarFlok('A')">
-
-            <span class="material-symbols-rounded">
-                warehouse
-            </span>
-
-            <span>
-                A
-            </span>
-
-        </button>
-
-
-        <!-- =============================================
-             FLOK B
-             → INPUT FLOK B
-        ============================================== -->
-
-        <button
-            type="button"
-            class="sidebarFlokItem"
-            onclick="sidebarFlok('B')">
-
-            <span class="material-symbols-rounded">
-                warehouse
-            </span>
-
-            <span>
-                B
-            </span>
-
-        </button>
-
-
-        <!-- =============================================
-             FLOK C
-             → INPUT FLOK C
-        ============================================== -->
-
-        <button
-            type="button"
-            class="sidebarFlokItem"
-            onclick="sidebarFlok('C')">
-
-            <span class="material-symbols-rounded">
-                warehouse
-            </span>
-
-            <span>
-                C
-            </span>
-
-        </button>
-
-
-        <!-- =============================================
-             FLOK D
-             → INPUT FLOK D
-        ============================================== -->
-
-        <button
-            type="button"
-            class="sidebarFlokItem"
-            onclick="sidebarFlok('D')">
-
-            <span class="material-symbols-rounded">
-                warehouse
-            </span>
-
-            <span>
-                D
-            </span>
-
-        </button>
-
-
-    </div>
-
 </div>
+  
 <!-- MASTER DATA -->
 
 <div class="sidebarSectionTitle">
@@ -1007,21 +916,13 @@ download
 
 <!-- PLAN & REALISASI -->
 
-<div
-    class="sidebarSectionTitle">
-
-    PLAN & REALISASI
-
-</div>
-
-
 <button
     type="button"
     class="sidebarItem"
     onclick="sidebarGo('planpanen')">
 
     <span class="material-symbols-rounded">
-        calendar_month
+        event
     </span>
 
     <span>
@@ -1031,23 +932,22 @@ download
 </button>
 
 
-        <button
-            type="button"
-            class="sidebarItem"
-            onclick="sidebarComingSoon('Data Timbang')">
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarGo('timbang')">
 
-            <span class="material-symbols-rounded">
-                scale
-            </span>
+    <span class="material-symbols-rounded">
+        scale
+    </span>
 
-            <span>
-                Data Timbang
-            </span>
+    <span>
+        Data Timbang
+    </span>
 
-        </button>
-      
-<!-- realisasipanen -->
-      
+</button>
+
+
 <button
     type="button"
     class="sidebarItem"
@@ -1064,7 +964,40 @@ download
 </button>
 
 
-    </div>
+<!-- HISTORY -->
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarComingSoon('History')">
+
+    <span class="material-symbols-rounded">
+        history
+    </span>
+
+    <span>
+        History
+    </span>
+
+</button>
+
+
+<!-- HISTORY RISET APLIKASI -->
+
+<button
+    type="button"
+    class="sidebarItem"
+    onclick="sidebarComingSoon('Reset Aplikasi')">
+
+    <span class="material-symbols-rounded">
+        restart_alt
+    </span>
+
+    <span>
+        Reset Aplikasi
+    </span>
+
+</button>
 
 
 <!-- FOOTER -->

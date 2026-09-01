@@ -1,7 +1,6 @@
 // ==========================================================
 // FMC BROILER MOBILE
 // PAKAN.JS
-// FINAL - SAVE + RINGKASAN STOK
 // ==========================================================
 
 "use strict";
@@ -13,6 +12,14 @@
 
 window.fmcPakanDataSesi =
     window.fmcPakanDataSesi || [];
+
+/*
+ * DATA YANG SUDAH TERSIMPAN DI GAS/DB.
+ * Dipisahkan dari data sesi agar TIDAK PERNAH ikut
+ * terkirim ulang pada savePakan.
+ */
+window.fmcPakanDataServer =
+    window.fmcPakanDataServer || [];
 
 
 // ==========================================================
@@ -31,7 +38,10 @@ async function tampilPakan(){
 
         <div class="card pakanCard">
 
-            <!-- HEADER -->
+
+            <!-- ==========================================
+                 HEADER
+            ========================================== -->
 
             <div class="pakanHeader">
 
@@ -56,7 +66,9 @@ async function tampilPakan(){
             </div>
 
 
-            <!-- INPUT STOK MASUK -->
+            <!-- ==========================================
+                 INPUT STOK MASUK
+            ========================================== -->
 
             <div class="pakanSection">
 
@@ -85,7 +97,8 @@ async function tampilPakan(){
                     Kode Pakan
                 </label>
 
-                <select id="pakanKode">
+                <select
+                    id="pakanKode">
 
                     <option value="">
                         Pilih kode pakan
@@ -113,6 +126,9 @@ async function tampilPakan(){
 
                 </select>
 
+
+                <!-- JENIS DITAMPILKAN SEBAGAI INFO,
+                     BUKAN RUMUS PRODUKSI -->
 
                 <div
                     class="pakanJenisPreview"
@@ -167,7 +183,9 @@ async function tampilPakan(){
             </div>
 
 
-            <!-- TAMBAH DATA -->
+            <!-- ==========================================
+                 TAMBAH DATA
+            ========================================== -->
 
             <button
                 type="button"
@@ -184,7 +202,9 @@ async function tampilPakan(){
             </button>
 
 
-            <!-- DATA YANG DISIAPKAN -->
+            <!-- ==========================================
+                 DATA YANG DISIAPKAN
+            ========================================== -->
 
             <div class="pakanSection">
 
@@ -210,7 +230,9 @@ async function tampilPakan(){
             </div>
 
 
-            <!-- INFORMASI BERAT -->
+            <!-- ==========================================
+                 INFORMASI BERAT
+            ========================================== -->
 
             <div class="pakanInfo">
 
@@ -229,7 +251,9 @@ async function tampilPakan(){
             </div>
 
 
-            <!-- RINGKASAN STOK -->
+            <!-- ==========================================
+                 RINGKASAN STOK
+            ========================================== -->
 
             <div class="pakanSection">
 
@@ -252,7 +276,7 @@ async function tampilPakan(){
                     <div class="pakanStockCard">
 
                         <div class="pakanStockIcon">
-                            🌾
+                            🌽
                         </div>
 
                         <div>
@@ -283,7 +307,7 @@ async function tampilPakan(){
                     <div class="pakanStockCard">
 
                         <div class="pakanStockIcon">
-                            🌾
+                            🌽
                         </div>
 
                         <div>
@@ -314,7 +338,7 @@ async function tampilPakan(){
                     <div class="pakanStockCard">
 
                         <div class="pakanStockIcon">
-                            🌾
+                            🌽
                         </div>
 
                         <div>
@@ -345,7 +369,9 @@ async function tampilPakan(){
             </div>
 
 
-            <!-- TOTAL STOK -->
+            <!-- ==========================================
+                 TOTAL STOK
+            ========================================== -->
 
             <div class="pakanTotal">
 
@@ -372,7 +398,9 @@ async function tampilPakan(){
             </div>
 
 
-            <!-- MESSAGE -->
+            <!-- ==========================================
+                 MESSAGE
+            ========================================== -->
 
             <div
                 id="pakanMessage"
@@ -381,7 +409,9 @@ async function tampilPakan(){
             </div>
 
 
-            <!-- BUTTON SIMPAN -->
+            <!-- ==========================================
+                 BUTTON
+            ========================================== -->
 
             <button
                 type="button"
@@ -405,16 +435,81 @@ async function tampilPakan(){
 
     pasangEventPakan();
 
+    await resolveFmcPakanActivePeriod();
 
     /*
-     * Setelah halaman selesai dibuat,
-     * ambil stok aktual dari GAS.
+     * Ambil stok aktual dari GAS setelah halaman dibuat.
      */
-
     await muatRingkasanStokPakan();
 
 }
 
+
+// ==========================================================
+// SYNC DATA MASTER PAKAN DARI SERVER
+// ==========================================================
+
+function normalisasiPakanServerKePWA(row){
+    if(!row || typeof row !== "object"){
+        return null;
+    }
+
+    return {
+        id:
+            row.id ??
+            row.item_id ??
+            "",
+
+        tanggal:
+            row.tanggal ??
+            "",
+
+        kode:
+            row.code ??
+            row.kode ??
+            "",
+
+        jenis:
+            row.jenis ??
+            "",
+
+        harga:
+            row.hargaPerKg ??
+            row.harga ??
+            "",
+
+        qty:
+            row.qtyZak ??
+            row.qty ??
+            ""
+    };
+}
+
+function syncPakanItemsFromServer(result){
+    const rows =
+        Array.isArray(
+            result?.data?.items
+        )
+            ? result.data.items
+            : [];
+
+    /*
+     * PENTING:
+     * Data hasil GET adalah DATA SERVER/DB, bukan data sesi.
+     * Jangan pernah memasukkannya ke fmcPakanDataSesi karena
+     * fmcPakanDataSesi adalah SATU-SATUNYA sumber payload SAVE.
+     */
+    window.fmcPakanDataServer =
+        rows
+            .map(normalisasiPakanServerKePWA)
+            .filter(function(row){
+                return !!row;
+            });
+
+    renderPakanTableInPage();
+
+    return window.fmcPakanDataServer;
+}
 
 // ==========================================================
 // LOAD RINGKASAN STOK DARI GAS
@@ -422,332 +517,138 @@ async function tampilPakan(){
 
 async function muatRingkasanStokPakan(){
 
-    const stokBR1 =
-        document.getElementById("stokBR1");
+    const stokBR1 = document.getElementById("stokBR1");
+    const stokBR2 = document.getElementById("stokBR2");
+    const stokBR3 = document.getElementById("stokBR3");
+    const totalStok = document.getElementById("totalStokPakan");
 
-    const stokBR2 =
-        document.getElementById("stokBR2");
-
-    const stokBR3 =
-        document.getElementById("stokBR3");
-
-    const totalStok =
-        document.getElementById("totalStokPakan");
-
-
-    if(
-        !stokBR1 &&
-        !stokBR2 &&
-        !stokBR3 &&
-        !totalStok
-    ){
-
+    if(!stokBR1 && !stokBR2 && !stokBR3 && !totalStok){
         return;
-
     }
 
-
-    /*
-     * Tampilkan loading sebentar.
-     */
-
-    if(stokBR1){
-        stokBR1.textContent = "…";
-    }
-
-    if(stokBR2){
-        stokBR2.textContent = "…";
-    }
-
-    if(stokBR3){
-        stokBR3.textContent = "…";
-    }
-
-    if(totalStok){
-        totalStok.textContent = "…";
-    }
-
+    if(stokBR1) stokBR1.textContent = "…";
+    if(stokBR2) stokBR2.textContent = "…";
+    if(stokBR3) stokBR3.textContent = "…";
+    if(totalStok) totalStok.textContent = "…";
 
     try{
 
         /*
-         * GAS:
-         *
-         * getPakanTenantV1()
-         *
-         * mengembalikan:
-         *
-         * data.items
-         * data.stok
+         * getPakanTenantV1() mengembalikan result.data.stok.
+         * Setiap item memiliki kode dan sisaStok dari kolom N.
          */
+        const periodId =
+            await resolveFmcPakanActivePeriod();
 
         const result =
             await apiPost(
                 "getPakan",
-                {}
+                periodId
+                    ? { period_id: periodId }
+                    : {}
             );
 
-
-        if(
-            !result ||
-            result.success !== true
-        ){
-
+        if(!result || result.success !== true){
             throw new Error(
                 result?.message ||
                 "Data stok pakan gagal diambil."
             );
-
         }
 
-
-        const stok =
-            Array.isArray(
-                result?.data?.stok
-            )
-                ? result.data.stok
-                : [];
-
-
         /*
-         * Buat index berdasarkan kode.
+         * MASTER PAKAN:
+         * data.items adalah source of truth untuk
+         * rekapan transaksi yang tampil di PWA.
          */
-
-        const byKode = {};
-
-
-        stok.forEach(
-            function(item){
-
-                const kode =
-                    String(
-                        item?.kode || ""
-                    )
-                    .trim()
-                    .toUpperCase();
-
-
-                if(kode){
-
-                    byKode[kode] =
-                        item;
-
-                }
-
-            }
-        );
-
+        syncPakanItemsFromServer(result);
 
         /*
-         * Ambil sisa stok.
+         * CONTRACT ENGINE MASTER PAKAN:
          *
-         * Backend mengirim sisaStok
-         * berdasarkan kolom N Spreadsheet.
+         * result.data.stock adalah OBJECT:
+         *
+         * {
+         *   BR1: {
+         *     stokMasukZak,
+         *     stokMasukKg,
+         *     konsumsiZak,
+         *     konsumsiKg,
+         *     sisaZak,
+         *     sisaKg
+         *   }
+         * }
+         *
+         * Bukan result.data.stok dan bukan array
+         * dengan field sisaStok.
          */
+        const stock = result?.data?.stock || {};
 
-        function nilaiStok(kode){
+        const nilaiStok = function(kode){
+            const key = String(kode || "")
+                .trim()
+                .toUpperCase();
 
-            const item =
-                byKode[kode];
+            const item = stock[key];
 
-
-            if(!item){
-
+            if(!item || typeof item !== "object"){
                 return 0;
-
             }
-
-
-            const raw =
-                String(
-                    item.sisaStok ?? ""
-                )
-                .trim();
-
-
-            if(!raw){
-
-                return 0;
-
-            }
-
 
             /*
-             * Bersihkan format angka.
+             * UI Ringkasan Stok menampilkan satuan ZAK.
+             * Engine sudah menghitung sisaZak sesuai
+             * baseline: sisaKg / 50.
              */
+            const sisaZak = Number(item.sisaZak);
 
-            let text =
-                raw.replace(
-                    /[^0-9,.-]/g,
-                    ""
-                );
-
+            if(Number.isFinite(sisaZak)){
+                return sisaZak;
+            }
 
             /*
-             * Format Indonesia:
-             *
-             * 1.234,50
+             * Fallback jika backend hanya mengirim sisaKg.
              */
+            const sisaKg = Number(item.sisaKg);
 
-            if(
-                text.includes(".") &&
-                text.includes(",")
-            ){
-
-                text =
-                    text
-                    .replace(/\./g, "")
-                    .replace(",", ".");
-
+            if(Number.isFinite(sisaKg)){
+                return sisaKg / 50;
             }
 
-            else if(
-                text.includes(",")
-            ){
+            return 0;
+        };
 
-                text =
-                    text.replace(
-                        ",",
-                        "."
-                    );
+        const br1 = nilaiStok("BR1");
+        const br2 = nilaiStok("BR2");
+        const br3 = nilaiStok("BR3");
+        const total = br1 + br2 + br3;
 
-            }
+        if(stokBR1) stokBR1.textContent = formatAngkaPakan(br1);
+        if(stokBR2) stokBR2.textContent = formatAngkaPakan(br2);
+        if(stokBR3) stokBR3.textContent = formatAngkaPakan(br3);
+        if(totalStok) totalStok.textContent = formatAngkaPakan(total);
 
-            else if(
-                /^\d+\.\d{3}$/.test(text)
-            ){
+    }catch(error){
 
-                text =
-                    text.replace(
-                        ".",
-                        ""
-                    );
+        console.error("LOAD STOK PAKAN ERROR:", error);
 
-            }
-
-
-            const number =
-                Number(text);
-
-
-            return Number.isFinite(number)
-                ? number
-                : 0;
-
-        }
-
-
-        const br1 =
-            nilaiStok("BR1");
-
-        const br2 =
-            nilaiStok("BR2");
-
-        const br3 =
-            nilaiStok("BR3");
-
-
-        /*
-         * Total hanya BR1 + BR2 + BR3.
-         *
-         * Kode 511/512 tidak dimasukkan
-         * ke kartu Ringkasan Stok BR1-BR3.
-         */
-
-        const total =
-            br1 +
-            br2 +
-            br3;
-
-
-        if(stokBR1){
-
-            stokBR1.textContent =
-                formatAngkaPakan(br1);
-
-        }
-
-
-        if(stokBR2){
-
-            stokBR2.textContent =
-                formatAngkaPakan(br2);
-
-        }
-
-
-        if(stokBR3){
-
-            stokBR3.textContent =
-                formatAngkaPakan(br3);
-
-        }
-
-
-        if(totalStok){
-
-            totalStok.textContent =
-                formatAngkaPakan(total);
-
-        }
-
-
+        if(stokBR1) stokBR1.textContent = "—";
+        if(stokBR2) stokBR2.textContent = "—";
+        if(stokBR3) stokBR3.textContent = "—";
+        if(totalStok) totalStok.textContent = "—";
     }
-    catch(error){
-
-        console.error(
-            "LOAD STOK PAKAN ERROR:",
-            error
-        );
-
-
-        if(stokBR1){
-            stokBR1.textContent = "—";
-        }
-
-        if(stokBR2){
-            stokBR2.textContent = "—";
-        }
-
-        if(stokBR3){
-            stokBR3.textContent = "—";
-        }
-
-        if(totalStok){
-            totalStok.textContent = "—";
-        }
-
-    }
-
 }
 
 
-// ==========================================================
-// FORMAT ANGKA PAKAN
-// ==========================================================
-
 function formatAngkaPakan(value){
+    const number = Number(value);
 
-    const number =
-        Number(value);
-
-
-    if(
-        !Number.isFinite(number)
-    ){
-
+    if(!Number.isFinite(number)){
         return "0";
-
     }
 
-
-    return number.toLocaleString(
-        "id-ID",
-        {
-            maximumFractionDigits: 2
-        }
-    );
-
+    return number.toLocaleString("id-ID", {
+        maximumFractionDigits: 2
+    });
 }
 
 
@@ -758,9 +659,7 @@ function formatAngkaPakan(value){
 function pasangEventPakan(){
 
     const kode =
-        document.getElementById(
-            "pakanKode"
-        );
+        document.getElementById("pakanKode");
 
 
     if(kode){
@@ -782,40 +681,36 @@ function pasangEventPakan(){
 function updateJenisPakanUI(){
 
     const kode =
-        document.getElementById(
-            "pakanKode"
-        )?.value || "";
+        document.getElementById("pakanKode")?.value || "";
 
 
     const jenis =
-        document.getElementById(
-            "pakanJenis"
-        );
+        document.getElementById("pakanJenis");
 
 
-    if(!jenis){
+    if(!jenis) return;
 
-        return;
 
-    }
-
+    /*
+     * Ini hanya untuk UX tampilan.
+     *
+     * BUKAN rumus spreadsheet.
+     *
+     * Nilai final tetap akan mengikuti
+     * MASTER PAKAN ketika nanti tersambung GAS.
+     */
 
     const jenisMap = {
 
-        "BR1":
-            "Starter",
+        "BR1": "Starter",
 
-        "BR2":
-            "Grower",
+        "BR2": "Grower",
 
-        "BR3":
-            "Finisher",
+        "BR3": "Finisher",
 
-        "511":
-            "Starter",
+        "511": "Starter",
 
-        "512":
-            "Grower-Finisher"
+        "512": "Grower-Finisher"
 
     };
 
@@ -840,20 +735,15 @@ function ambilFormPakan(){
 
     const jenisMap = {
 
-        "BR1":
-            "Starter",
+        "BR1": "Starter",
 
-        "BR2":
-            "Grower",
+        "BR2": "Grower",
 
-        "BR3":
-            "Finisher",
+        "BR3": "Finisher",
 
-        "511":
-            "Starter",
+        "511": "Starter",
 
-        "512":
-            "Grower-Finisher"
+        "512": "Grower-Finisher"
 
     };
 
@@ -981,13 +871,25 @@ function tambahDataPakan(){
     }
 
 
+    /*
+     * Masukkan data ke sesi PWA.
+     */
+
     window.fmcPakanDataSesi.push(
         data
     );
 
 
+    /*
+     * Refresh rekapan.
+     */
+
     renderPakanTableInPage();
 
+
+    /*
+     * Bersihkan form.
+     */
 
     kosongkanFormPakan();
 
@@ -1006,8 +908,46 @@ function tambahDataPakan(){
 
 function renderPakanTable(){
 
-    const data =
-        window.fmcPakanDataSesi || [];
+    const serverRows =
+        Array.isArray(window.fmcPakanDataServer)
+            ? window.fmcPakanDataServer
+            : [];
+
+    const sessionRows =
+        Array.isArray(window.fmcPakanDataSesi)
+            ? window.fmcPakanDataSesi
+            : [];
+
+    const data = [];
+
+    /*
+     * DATA SERVER
+     * Hanya untuk tampilan.
+     * Tidak pernah masuk payload SAVE.
+     */
+    serverRows.forEach(function(item){
+
+        data.push({
+            ...item,
+            __source: "server"
+        });
+
+    });
+
+    /*
+     * DATA SESI / PENDING
+     * Index disimpan langsung supaya tombol HAPUS
+     * tidak tergantung posisi gabungan server + sesi.
+     */
+    sessionRows.forEach(function(item,index){
+
+        data.push({
+            ...item,
+            __source: "session",
+            __sessionIndex: index
+        });
+
+    });
 
 
     if(!data.length){
@@ -1041,117 +981,115 @@ function renderPakanTable(){
         <div class="pakanRekapList">
 
             ${
-                data.map(
-                    function(item,index){
+                data.map(function(item,index){
 
-                        return `
+                    const tombolHapus =
+                        item.__source === "session"
+                            ? `
+                                <button
+                                    type="button"
+                                    class="pakanDeleteBtn"
+                                    onclick="hapusDataPakan(${Number(item.__sessionIndex)})"
+                                    aria-label="Hapus data yang belum disimpan">
+
+                                    <span class="material-symbols-rounded">
+                                        delete
+                                    </span>
+
+                                </button>
+                              `
+                            : `
+                                <button
+                                    type="button"
+                                    class="pakanDeleteBtn"
+                                    onclick="hapusDataPakanServer(${JSON.stringify(String(item.id ?? ""))})"
+                                    aria-label="Hapus data pakan tersimpan">
+
+                                    <span class="material-symbols-rounded">
+                                        delete
+                                    </span>
+
+                                </button>
+                              `;
+
+                    return `
+
+                        <div
+                            class="pakanRekapItem">
 
                             <div
-                                class="pakanRekapItem">
+                                class="pakanRekapHeader">
 
-                                <div
-                                    class="pakanRekapHeader">
+                                <div>
 
-                                    <div>
+                                    <strong>
+                                        Pakan #${index + 1}
+                                    </strong>
 
-                                        <strong>
-                                            Pakan #${index + 1}
-                                        </strong>
-
-                                        <small>
-                                            ${escapePakan(
-                                                item.tanggal
-                                            )}
-                                        </small>
-
-                                    </div>
-
-
-                                    <button
-                                        type="button"
-                                        class="pakanDeleteBtn"
-                                        onclick="hapusDataPakan(${index})"
-                                        aria-label="Hapus data">
-
-                                        <span class="material-symbols-rounded">
-                                            delete
-                                        </span>
-
-                                    </button>
+                                    <small>
+                                        ${escapePakan(item.tanggal)}
+                                    </small>
 
                                 </div>
 
+                                ${tombolHapus}
 
-                                <div
-                                    class="pakanRekapGrid">
-
-                                    <div>
-
-                                        <small>
-                                            KODE PAKAN
-                                        </small>
-
-                                        <strong>
-                                            ${escapePakan(
-                                                item.kode
-                                            )}
-                                        </strong>
-
-                                    </div>
+                            </div>
 
 
-                                    <div>
+                            <div
+                                class="pakanRekapGrid">
 
-                                        <small>
-                                            JENIS
-                                        </small>
+                                <div>
+                                    <small>
+                                        KODE PAKAN
+                                    </small>
 
-                                        <strong>
-                                            ${escapePakan(
-                                                item.jenis
-                                            )}
-                                        </strong>
-
-                                    </div>
-
-
-                                    <div>
-
-                                        <small>
-                                            HARGA / KG
-                                        </small>
-
-                                        <strong>
-                                            ${escapePakan(
-                                                item.harga
-                                            )}
-                                        </strong>
-
-                                    </div>
+                                    <strong>
+                                        ${escapePakan(item.kode)}
+                                    </strong>
+                                </div>
 
 
-                                    <div>
+                                <div>
+                                    <small>
+                                        JENIS
+                                    </small>
 
-                                        <small>
-                                            JUMLAH ZAK
-                                        </small>
+                                    <strong>
+                                        ${escapePakan(item.jenis)}
+                                    </strong>
+                                </div>
 
-                                        <strong>
-                                            ${escapePakan(
-                                                item.qty
-                                            )}
-                                        </strong>
 
-                                    </div>
+                                <div>
+                                    <small>
+                                        HARGA / KG
+                                    </small>
 
+                                    <strong>
+                                        ${escapePakan(item.harga)}
+                                    </strong>
+                                </div>
+
+
+                                <div>
+                                    <small>
+                                        JUMLAH ZAK
+                                    </small>
+
+                                    <strong>
+                                        ${escapePakan(item.qty)}
+                                    </strong>
                                 </div>
 
                             </div>
 
-                        `;
+                        </div>
 
-                    }
-                ).join("")
+                    `;
+
+                }).join("")
             }
 
         </div>
@@ -1172,13 +1110,9 @@ function renderPakanTableInPage(){
             "pakanTableWrap"
         );
 
-
     if(!wrap){
-
         return;
-
     }
-
 
     wrap.innerHTML =
         renderPakanTable();
@@ -1187,44 +1121,135 @@ function renderPakanTableInPage(){
 
 
 // ==========================================================
-// HAPUS DATA PAKAN
+// HAPUS DATA PAKAN YANG SUDAH TERSIMPAN DI SERVER
+// ==========================================================
+
+async function hapusDataPakanServer(id){
+
+    const targetId =
+        String(id ?? "").trim();
+
+    if(!targetId){
+
+        tampilPesanPakan(
+            "ID data pakan tidak ditemukan.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!confirm("Hapus data pakan tersimpan ini?")){
+        return;
+    }
+
+
+    try{
+
+        const periodId =
+            await resolveFmcPakanActivePeriod();
+
+        if(!periodId){
+            throw new Error(
+                "Period aktif Pakan tidak ditemukan."
+            );
+        }
+
+
+        const result =
+            await apiPost(
+                "deletePakan",
+                {
+                    period_id: periodId,
+                    id: targetId
+                }
+            );
+
+
+        if(!result || result.success !== true){
+            throw new Error(
+                result?.message ||
+                "Data pakan gagal dihapus."
+            );
+        }
+
+
+        /*
+         * HANYA serverRows yang diperbarui.
+         * Pending/session tetap utuh.
+         */
+        const rows =
+            Array.isArray(result?.data?.items)
+                ? result.data.items
+                : [];
+
+        syncPakanItemsFromServer({
+            data: {
+                items: rows
+            }
+        });
+
+
+        await muatRingkasanStokPakan();
+
+
+        tampilPesanPakan(
+            "Data pakan berhasil dihapus.",
+            "success"
+        );
+
+    }catch(error){
+
+        console.error(
+            "HAPUS PAKAN SERVER ERROR:",
+            error
+        );
+
+        tampilPesanPakan(
+            error.message ||
+            "Data pakan gagal dihapus.",
+            "error"
+        );
+
+    }
+
+}
+
+
+// ==========================================================
+// HAPUS DATA PAKAN SESI / PENDING
 // ==========================================================
 
 function hapusDataPakan(index){
 
-    if(!Number.isInteger(index)){
+    const sessionRows =
+        Array.isArray(window.fmcPakanDataSesi)
+            ? window.fmcPakanDataSesi
+            : [];
 
+    const targetIndex =
+        Number(index);
+
+    if(!Number.isInteger(targetIndex)){
         return;
-
     }
-
 
     if(
-        index < 0 ||
-        index >=
-        window.fmcPakanDataSesi.length
+        targetIndex < 0 ||
+        targetIndex >= sessionRows.length
     ){
-
         return;
-
     }
 
 
-    const yakin =
-        confirm(
-            `Hapus data pakan #${index + 1}?`
-        );
-
-
-    if(!yakin){
-
+    if(!confirm("Hapus data pakan yang belum disimpan ini?")){
         return;
-
     }
 
 
-    window.fmcPakanDataSesi.splice(
-        index,
+    sessionRows.splice(
+        targetIndex,
         1
     );
 
@@ -1233,7 +1258,7 @@ function hapusDataPakan(index){
 
 
     tampilPesanPakan(
-        "Data pakan berhasil dihapus.",
+        "Data pakan berhasil dihapus dari data yang disiapkan.",
         "success"
     );
 
@@ -1303,6 +1328,187 @@ function kosongkanFormPakan(){
 }
 
 
+
+// ==========================================================
+// PERIOD ID MASTER PAKAN
+// ==========================================================
+
+function getFmcPakanActivePeriodId(){
+    return String(
+        window.fmcPakanActivePeriodId ||
+        localStorage.getItem("fmcPakanActivePeriodId") ||
+        ""
+    ).trim();
+}
+
+function setFmcPakanActivePeriodId(periodId){
+    const id = String(periodId || "").trim();
+    if(!id) return;
+
+    window.fmcPakanActivePeriodId = id;
+
+    try{
+        localStorage.setItem(
+            "fmcPakanActivePeriodId",
+            id
+        );
+    }catch(error){}
+}
+
+function resolveFmcPakanPeriods(result){
+    const periods =
+        result?.data?.periods ||
+        result?.periods ||
+        result?.data?.items ||
+        [];
+
+    return Array.isArray(periods)
+        ? periods
+        : [];
+}
+
+async function resolveFmcPakanActivePeriod(){
+    const existing =
+        getFmcPakanActivePeriodId();
+
+    try{
+        const result =
+            await apiPost(
+                "getPeriods",
+                {}
+            );
+
+        if(
+            !result ||
+            result.success !== true
+        ){
+            return existing;
+        }
+
+        /*
+         * D2 Period Bridge mengembalikan:
+         * result.data = ARRAY period
+         * dan juga result.periods = ARRAY period.
+         *
+         * Versi lama hanya membaca data.periods sehingga
+         * pada tenant baru daftar period menjadi [].
+         */
+        const periods =
+            Array.isArray(result?.data)
+                ? result.data
+                : (
+                    Array.isArray(result?.data?.periods)
+                        ? result.data.periods
+                        : (
+                            Array.isArray(result?.periods)
+                                ? result.periods
+                                : (
+                                    Array.isArray(result?.data?.items)
+                                        ? result.data.items
+                                        : []
+                                )
+                        )
+                );
+
+        const normalized =
+            periods
+                .map(function(period){
+                    const id = String(
+                        period?.period_id ||
+                        period?.id ||
+                        ""
+                    ).trim();
+
+                    if(!id) return null;
+
+                    return {
+                        id: id,
+                        status: String(
+                            period?.status || ""
+                        ).trim().toUpperCase(),
+                        updated_at: String(
+                            period?.updated_at ||
+                            period?.created_at ||
+                            ""
+                        ).trim()
+                    };
+                })
+                .filter(Boolean);
+
+        /*
+         * Jangan mempertahankan active period lama hanya karena
+         * ID-nya masih ada. Untuk halaman Pakan, pilih period
+         * yang benar-benar OPEN dan memiliki master_pakan.
+         */
+        const withPakan =
+            normalized.filter(function(period){
+                const source =
+                    periods.find(function(raw){
+                        return String(
+                            raw?.period_id ||
+                            raw?.id ||
+                            ""
+                        ).trim() === period.id;
+                    });
+
+                return (
+                    period.status === "OPEN" &&
+                    Array.isArray(source?.master_pakan) &&
+                    source.master_pakan.length > 0
+                );
+            });
+
+        let selected = "";
+
+        if(withPakan.length){
+            withPakan.sort(function(a,b){
+                return (Date.parse(b.updated_at) || 0) -
+                       (Date.parse(a.updated_at) || 0);
+            });
+            selected = withPakan[0].id;
+        }else{
+            const open =
+                normalized.filter(function(period){
+                    return period.status === "OPEN";
+                });
+
+            if(open.length){
+                open.sort(function(a,b){
+                    return (Date.parse(b.updated_at) || 0) -
+                           (Date.parse(a.updated_at) || 0);
+                });
+                selected = open[0].id;
+            }else if(normalized.length === 1){
+                selected = normalized[0].id;
+            }
+        }
+
+        if(selected){
+            setFmcPakanActivePeriodId(selected);
+            return selected;
+        }
+
+        /*
+         * Jika period tidak berhasil ditentukan, hapus cache
+         * yang sudah tidak valid agar tenant baru tidak mewarisi
+         * period tenant/akun sebelumnya.
+         */
+        try{
+            localStorage.removeItem("fmcPakanActivePeriodId");
+        }catch(error){}
+
+        window.fmcPakanActivePeriodId = "";
+        return "";
+    }catch(error){
+        console.warn(
+            "PAKAN resolve period:",
+            error
+        );
+
+        return existing;
+    }
+}
+
 // ==========================================================
 // SIMPAN PAKAN
 // ==========================================================
@@ -1310,8 +1516,9 @@ function kosongkanFormPakan(){
 async function simpanPakanUI(){
 
     /*
-     * Jika ada data di Data Yang Disiapkan,
-     * gunakan seluruh item tersebut.
+     * Jika belum ada data di rekapan,
+     * gunakan data yang sedang berada
+     * di form sebagai satu item.
      */
 
     let items = [];
@@ -1348,24 +1555,13 @@ async function simpanPakanUI(){
                 }
             );
 
-    }
-
-    else{
-
-        /*
-         * Jika belum ada data di rekapan,
-         * gunakan data form sebagai satu item.
-         */
+    }else{
 
         const formData =
             ambilFormPakan();
 
 
-        if(
-            !validasiPakan(
-                formData
-            )
-        ){
+        if(!validasiPakan(formData)){
 
             return;
 
@@ -1398,18 +1594,6 @@ async function simpanPakanUI(){
     }
 
 
-    if(!items.length){
-
-        tampilPesanPakan(
-            "Belum ada data pakan.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
     const button =
         document.getElementById(
             "btnSimpanPakan"
@@ -1437,22 +1621,23 @@ async function simpanPakanUI(){
     try{
 
         /*
-         * Field pertama dipertahankan
-         * untuk kompatibilitas backend.
+         * =====================================
+         * PAYLOAD UNTUK GAS
+         * =====================================
+         *
+         * items HANYA berisi data baru yang masih
+         * berada di fmcPakanDataSesi.
+         *
+         * Data yang sudah tersimpan di DB berada di
+         * fmcPakanDataServer dan TIDAK ikut dikirim ulang.
+         *
+         * GAS membaca:
+         * payload.items
          */
 
         const pertama =
             items[0];
 
-
-        /*
-         * PENTING:
-         *
-         * items harus dikirim sebagai
-         * JSON STRING karena apiPost()
-         * mengirim payload sebagai
-         * URLSearchParams.
-         */
 
         const result =
             await apiPost(
@@ -1460,6 +1645,14 @@ async function simpanPakanUI(){
                 "savePakan",
 
                 {
+
+                    period_id:
+                        await resolveFmcPakanActivePeriod(),
+
+                    /*
+                     * Field utama untuk
+                     * kompatibilitas backend.
+                     */
 
                     tanggal:
                         pertama.tanggal,
@@ -1476,10 +1669,13 @@ async function simpanPakanUI(){
                     qty:
                         pertama.qty,
 
+
+                    /*
+                     * Seluruh data rekapan.
+                     */
+
                     items:
-                        JSON.stringify(
-                            items
-                        )
+                        JSON.stringify(items)
 
                 }
 
@@ -1492,8 +1688,10 @@ async function simpanPakanUI(){
         ){
 
             throw new Error(
+
                 result?.message ||
                 "Data pakan gagal disimpan."
+
             );
 
         }
@@ -1510,13 +1708,22 @@ async function simpanPakanUI(){
 
 
         /*
-         * Kosongkan sesi.
+         * SAVE BERHASIL.
+         *
+         * Data yang baru dikirim sudah menjadi milik DB.
+         * Hapus HANYA antrean lokal/pending.
+         * Jangan pernah memasukkan data server kembali
+         * ke fmcPakanDataSesi.
          */
-
         window.fmcPakanDataSesi = [];
 
-
-        renderPakanTableInPage();
+        /*
+         * Server menjadi source of truth.
+         * Gunakan data.items dari response SAVE agar
+         * transaksi yang baru disimpan langsung tampil
+         * kembali di PWA tanpa menunggu refresh halaman.
+         */
+        syncPakanItemsFromServer(result);
 
 
         /*
@@ -1527,41 +1734,23 @@ async function simpanPakanUI(){
 
 
         /*
-         * Refresh data server utama.
+         * Refresh data server.
          */
 
-        if(
-            typeof serverData !==
-            "undefined"
-        ){
-
-            serverData = null;
-
-        }
+        serverData = null;
 
 
-        if(
-            typeof ambilDataServer ===
-            "function"
-        ){
-
-            await ambilDataServer(
-                true
-            );
-
-        }
+        await ambilDataServer(true);
 
 
         /*
-         * Refresh stok Pakan langsung
-         * dari GAS.
+         * Refresh ringkasan stok langsung dari GAS.
          */
-
         await muatRingkasanStokPakan();
 
 
         /*
-         * Toast bila tersedia.
+         * Tampilkan toast jika tersedia.
          */
 
         if(
@@ -1586,7 +1775,7 @@ async function simpanPakanUI(){
 
         tampilPesanPakan(
 
-            error?.message ||
+            error.message ||
             "Gagal menyimpan data pakan.",
 
             "error"
@@ -1633,11 +1822,7 @@ function tampilPesanPakan(
         );
 
 
-    if(!el){
-
-        return;
-
-    }
+    if(!el) return;
 
 
     el.style.display =
@@ -1645,8 +1830,7 @@ function tampilPesanPakan(
 
 
     el.className =
-        "pakanMessage " +
-        tipe;
+        "pakanMessage " + tipe;
 
 
     el.textContent =

@@ -9,9 +9,19 @@ async function tampilDashboard(){
 
     console.log("STEP DASHBOARD");
 
-    const data = await ambilDataServer();
+    const dashboardPage =
+        document.getElementById("dashboardPage");
 
-    if(!data){
+    if(!dashboardPage){
+        console.error("DASHBOARD: #dashboardPage tidak ditemukan.");
+        return;
+    }
+
+    try {
+
+        const data = await ambilDataServer();
+
+        if(!data){
 
         document.getElementById("dashboardPage").innerHTML = `
 
@@ -833,9 +843,41 @@ async function tampilDashboard(){
     `;
 
 
-    document.getElementById(
-        "dashboardPage"
-    ).innerHTML = html;
+    dashboardPage.innerHTML = html;
+
+    } catch(error) {
+
+        console.error(
+            "DASHBOARD RENDER ERROR:",
+            error
+        );
+
+        dashboardPage.innerHTML = `
+            <div class="card">
+                <h2>
+                    <span class="material-symbols-rounded">
+                        error
+                    </span>
+                    Dashboard Error
+                </h2>
+
+                <p>
+                    Dashboard gagal dirender.
+                </p>
+
+                <small>
+                    ${String(
+                        error && error.message
+                            ? error.message
+                            : error
+                    )
+                    .replace(/&/g,"&amp;")
+                    .replace(/</g,"&lt;")
+                    .replace(/>/g,"&gt;")}
+                </small>
+            </div>
+        `;
+    }
 
 }
 

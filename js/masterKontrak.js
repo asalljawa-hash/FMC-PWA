@@ -1,256 +1,39 @@
 // ==========================================================
-// FMC BROILER MOBILE V12
-// MASTER KONTRAK.JS
-// FINAL - TENANT AWARE + SERVER FIRST
+// FMC BROILER MOBILE V11
+// MASTER KONTRAK.JS — FINAL V2
+// UI + SAVE + GET SERVER
 // ==========================================================
 
 "use strict";
 
-/*
- * CATATAN PENTING
- * ----------------------------------------------------------
- * - apiPost() pada api.js otomatis menambahkan email tenant
- *   dari FMC_USER untuk semua action non-auth.
- * - File ini juga mengambil email session secara eksplisit
- *   sebagai validasi sebelum GET/SAVE.
- * - Server/GAS adalah sumber data utama.
- * - Sheet tenant yang dipakai ditentukan oleh GAS melalui
- *   getTenantByEmail(email).
- * - Tidak mengubah rumus spreadsheet.
- */
 
 // ==========================================================
-// STATE
+// IDENTITAS V2
 // ==========================================================
 
-let dataMasterKontrakUI = [];
-
-// Menandai apakah isi form saat ini sudah tersimpan di server.
-let masterKontrakDataTersimpan = false;
-
-const MASTER_KONTRAK_LOCAL_KEY =
-    "FMC_MASTER_KONTRAK_CACHE";
-
-const MASTER_KONTRAK_KEYBOARD_GUARD = {
-    installed: false,
-    timer: null
-};
-
-// ==========================================================
-// KEYBOARD MOBILE - JAGA INPUT TERAKHIR TETAP TERLIHAT
-// ==========================================================
-
-function pasangKeyboardMasterKontrak(){
-
-    if(MASTER_KONTRAK_KEYBOARD_GUARD.installed){
-        return;
-    }
-
-    MASTER_KONTRAK_KEYBOARD_GUARD.installed = true;
-
-    const scrollKeInputAktif = function(){
-
-        clearTimeout(
-            MASTER_KONTRAK_KEYBOARD_GUARD.timer
-        );
-
-        MASTER_KONTRAK_KEYBOARD_GUARD.timer =
-            setTimeout(
-                function(){
-
-                    const active =
-                        document.activeElement;
-
-                    if(
-                        !active ||
-                        !active.matches(
-                            "#masterKontrakPage .masterKontrakRow input"
-                        )
-                    ){
-                        return;
-                    }
-
-                    /*
-                     * scrollIntoView() dibuat ke tengah viewport,
-                     * bukan hanya ke bawah layar. Dengan begitu
-                     * keyboard Android tidak menutup input yang
-                     * sedang diedit.
-                     */
-                    try{
-
-                        active.style.scrollMarginBottom =
-                            "220px";
-
-                        active.scrollIntoView({
-                            behavior: "smooth",
-                            block: "center",
-                            inline: "nearest"
-                        });
-
-                    }
-                    catch(error){
-
-                        console.warn(
-                            "MASTER KONTRAK KEYBOARD SCROLL ERROR:",
-                            error
-                        );
-                    }
-
-                },
-                350
-            );
-    };
-
-    document.addEventListener(
-        "focusin",
-        function(event){
-
-            const target =
-                event.target;
-
-            if(
-                target &&
-                target.matches &&
-                target.matches(
-                    "#masterKontrakPage .masterKontrakRow input"
-                )
-            ){
-
-                scrollKeInputAktif();
-            }
-        }
-    );
-
-    /*
-     * Saat keyboard Android benar-benar membuka/menutup,
-     * visualViewport berubah. Kita scroll ulang agar posisi
-     * input tetap aman.
-     */
-    if(window.visualViewport){
-
-        window.visualViewport.addEventListener(
-            "resize",
-            scrollKeInputAktif
-        );
-
-        window.visualViewport.addEventListener(
-            "scroll",
-            scrollKeInputAktif
-        );
-    }
-}
+window.fmcMasterKontrakVersion = "V2";
+console.info("FMC MASTER KONTRAK V2 AKTIF");
 
 
 // ==========================================================
-// STATE TOMBOL SIMPAN
+// DATA UI
+// Gunakan window agar tidak bentrok apabila file lama
+// pernah termuat sebelumnya.
 // ==========================================================
 
-function setMasterKontrakSaveButtonState(tersimpan){
-
-    masterKontrakDataTersimpan =
-        tersimpan === true;
-
-    const button =
-        document.getElementById(
-            "btnSimpanMasterKontrak"
-        );
-
-    if(!button) return;
-
-    if(masterKontrakDataTersimpan){
-
-        button.disabled = true;
-
-        button.innerHTML = `
-            <span class="material-symbols-rounded">
-                check_circle
-            </span>
-            DATA TELAH TERSIMPAN
-        `;
-
-        return;
-    }
-
-    button.disabled = false;
-
-    button.innerHTML = `
-        <span class="material-symbols-rounded">
-            save
-        </span>
-        SIMPAN MASTER KONTRAK
-    `;
-}
+window.fmcMasterKontrakDataUI =
+    Array.isArray(window.fmcMasterKontrakDataUI)
+        ? window.fmcMasterKontrakDataUI
+        : [];
 
 
 // ==========================================================
-// SESSION TENANT
+// KONSTANTA LOCAL SESSION
 // ==========================================================
 
-function getMasterKontrakTenantEmail(){
+const FMC_MASTER_KONTRAK_STORAGE =
+    "FMC_MASTER_KONTRAK_UI_V2";
 
-    try{
-
-        if(typeof getLoginUser === "function"){
-
-            const user =
-                getLoginUser();
-
-            const email =
-                String(
-                    user?.email || ""
-                )
-                .trim()
-                .toLowerCase();
-
-            if(email){
-                return email;
-            }
-        }
-
-        const raw =
-            localStorage.getItem(
-                "FMC_USER"
-            );
-
-        if(!raw){
-            return "";
-        }
-
-        const user =
-            JSON.parse(raw);
-
-        return String(
-            user?.email || ""
-        )
-        .trim()
-        .toLowerCase();
-
-    }
-    catch(error){
-
-        console.error(
-            "MASTER KONTRAK SESSION ERROR:",
-            error
-        );
-
-        return "";
-    }
-}
-
-function pastikanTenantMasterKontrak(){
-
-    const email =
-        getMasterKontrakTenantEmail();
-
-    if(!email){
-
-        throw new Error(
-            "Session tenant tidak ditemukan. Silakan login kembali."
-        );
-    }
-
-    return email;
-}
 
 // ==========================================================
 // TAMPILKAN HALAMAN MASTER KONTRAK
@@ -259,21 +42,36 @@ function pastikanTenantMasterKontrak(){
 async function tampilMasterKontrak(){
 
     const page =
-        document.getElementById(
-            "masterKontrakPage"
+        document.getElementById("masterKontrakPage");
+
+    if(!page){
+        console.warn(
+            "MASTER KONTRAK: #masterKontrakPage tidak ditemukan."
         );
+        return;
+    }
 
-    if(!page) return;
 
-    pasangKeyboardMasterKontrak();
+    // ------------------------------------------------------
+    // RENDER UI
+    // ------------------------------------------------------
 
     page.innerHTML = `
-        <div class="card masterKontrakCard">
+
+        <div
+            class="card masterKontrakCard"
+            data-master-kontrak-version="V2">
+
+            <!-- ==========================================
+                 HEADER
+            ========================================== -->
 
             <div class="masterKontrakHeader">
+
                 <div>
+
                     <div class="masterKontrakSmall">
-                        FMC BROILER MOBILE V12
+                        FMC BROILER MOBILE V11
                     </div>
 
                     <h2>
@@ -286,15 +84,34 @@ async function tampilMasterKontrak(){
                     <p>
                         Pengaturan harga kontrak kemitraan
                     </p>
+
+                    <small
+                        style="
+                            display:inline-block;
+                            margin-top:6px;
+                            font-weight:800;
+                            opacity:.65;
+                        ">
+                        MASTER KONTRAK V2
+                    </small>
+
                 </div>
+
             </div>
 
+
+            <!-- ==========================================
+                 PETUNJUK
+            ========================================== -->
+
             <div class="masterKontrakInfo">
+
                 <span class="material-symbols-rounded">
                     info
                 </span>
 
                 <div>
+
                     <strong>
                         Data Kontrak
                     </strong>
@@ -305,37 +122,66 @@ async function tampilMasterKontrak(){
                         Anda. Data ini akan dibaca sistem FMC
                         sebagai dasar perhitungan laba dan profit.
                     </p>
+
                 </div>
+
             </div>
+
+
+            <!-- ==========================================
+                 DATA KONTRAK
+            ========================================== -->
 
             <div class="masterKontrakSection">
 
                 <div class="masterKontrakSectionTitle">
+
                     <div>
+
                         <h3>
                             <span class="material-symbols-rounded">
                                 receipt_long
                             </span>
                             Data Harga Kontrak
                         </h3>
+
                     </div>
+
 
                     <button
                         type="button"
                         class="masterKontrakAddBtn"
                         onclick="tambahBarisKontrakUI()">
+
                         <span class="material-symbols-rounded">
                             add
                         </span>
+
                         Tambah
+
                     </button>
+
                 </div>
 
+
+                <!-- HEADER -->
+
                 <div class="masterKontrakTableHeader">
-                    <div>BB AVG</div>
-                    <div>HARGA KONTRAK</div>
+
+                    <div>
+                        BB AVG
+                    </div>
+
+                    <div>
+                        HARGA KONTRAK
+                    </div>
+
                     <div></div>
+
                 </div>
+
+
+                <!-- DATA -->
 
                 <div
                     id="masterKontrakRows"
@@ -344,11 +190,21 @@ async function tampilMasterKontrak(){
 
             </div>
 
+
+            <!-- ==========================================
+                 MESSAGE
+            ========================================== -->
+
             <div
                 id="masterKontrakMessage"
                 class="masterKontrakMessage"
                 style="display:none;">
             </div>
+
+
+            <!-- ==========================================
+                 SAVE
+            ========================================== -->
 
             <button
                 type="button"
@@ -361,69 +217,196 @@ async function tampilMasterKontrak(){
                 </span>
 
                 SIMPAN MASTER KONTRAK
+
             </button>
 
         </div>
+
     `;
 
-    // Saat halaman baru dibangun, tombol kembali ke mode SIMPAN.
-    setMasterKontrakSaveButtonState(false);
 
-    /*
-     * Mulai dari kosong supaya tidak ada data tenant lama
-     * yang tertinggal ketika user berpindah tenant/session.
-     */
-    dataMasterKontrakUI = [];
+    // ------------------------------------------------------
+    // Muat cache lokal dulu agar UI tidak kosong sementara
+    // ------------------------------------------------------
+
+    muatMasterKontrakSessionLocal();
+
     renderBarisKontrakUI();
 
-    /*
-     * Server adalah sumber utama.
-     * Data dari spreadsheet langsung dimuat saat halaman dibuka.
-     */
-    try{
 
-        await muatMasterKontrakDariGAS({
-            silent: false
-        });
+    // ------------------------------------------------------
+    // Setelah UI siap, ambil sumber utama dari server.
+    // ------------------------------------------------------
 
-    }
-    catch(error){
+    await muatMasterKontrakDariGAS();
 
-        console.warn(
-            "MASTER KONTRAK: GET awal gagal.",
-            error
+}
+
+
+// ==========================================================
+// NORMALISASI ANGKA
+// ==========================================================
+
+function angkaMasterKontrak(value){
+
+    const n =
+        Number(
+            String(value ?? "")
+                .replace(/,/g, "")
+                .trim()
         );
 
-        /*
-         * Jika server gagal, tampilkan cache tenant yang sama
-         * sebagai fallback UI. Cache tidak pernah dianggap
-         * sebagai data server.
-         */
-        const cached =
-            ambilMasterKontrakSessionLocal();
-
-        if(cached.length){
-
-            dataMasterKontrakUI =
-                cached.map(
-                    function(item){
-                        return {
-                            bbAvg: item.bbAvg,
-                            harga: item.harga
-                        };
-                    }
-                );
-
-            renderBarisKontrakUI();
-            setMasterKontrakSaveButtonState(false);
-
-            tampilPesanMasterKontrak(
-                "Data server belum dapat dimuat. Data lokal tenant ini ditampilkan sementara.",
-                "warning"
-            );
-        }
-    }
+    return Number.isFinite(n)
+        ? n
+        : NaN;
 }
+
+
+// ==========================================================
+// NORMALISASI ITEM
+// Mendukung beberapa nama field agar response GAS
+// tidak terlalu sensitif terhadap bentuk object.
+// ==========================================================
+
+function normalisasiItemMasterKontrak(item){
+
+    if(!item || typeof item !== "object"){
+        return null;
+    }
+
+
+    const bbAvg =
+        item.bbAvg ??
+        item.BBAvg ??
+        item.BB_AVG ??
+        item["BB AVG"] ??
+        item.bb_avg;
+
+
+    const harga =
+        item.harga ??
+        item.Harga ??
+        item.hargaKontrak ??
+        item.HargaKontrak ??
+        item.HARGA_KONTRAK ??
+        item["HARGA KONTRAK"];
+
+
+    const bb =
+        angkaMasterKontrak(bbAvg);
+
+    const h =
+        angkaMasterKontrak(harga);
+
+
+    if(
+        !Number.isFinite(bb) ||
+        !Number.isFinite(h)
+    ){
+        return null;
+    }
+
+
+    return {
+        bbAvg: bb,
+        harga: h
+    };
+}
+
+
+// ==========================================================
+// NORMALISASI RESPONSE GET
+//
+// Menerima beberapa bentuk response umum:
+// - { items: [...] }
+// - { data: [...] }
+// - { rows: [...] }
+// - { masterKontrak: [...] }
+// - { kontrak: [...] }
+// - array langsung
+// ==========================================================
+
+function normalisasiResponseMasterKontrak(response){
+
+    if(!response){
+        return [];
+    }
+
+
+    let raw = null;
+
+
+    if(Array.isArray(response)){
+        raw = response;
+    }
+
+    else if(
+        Array.isArray(response.items)
+    ){
+        raw = response.items;
+    }
+
+    else if(
+        Array.isArray(response.data)
+    ){
+        raw = response.data;
+    }
+
+    else if(
+        Array.isArray(response.rows)
+    ){
+        raw = response.rows;
+    }
+
+    else if(
+        Array.isArray(response.masterKontrak)
+    ){
+        raw = response.masterKontrak;
+    }
+
+    else if(
+        Array.isArray(response.kontrak)
+    ){
+        raw = response.kontrak;
+    }
+
+    else if(
+        response.data &&
+        typeof response.data === "object"
+    ){
+
+        if(
+            Array.isArray(response.data.items)
+        ){
+            raw = response.data.items;
+        }
+
+        else if(
+            Array.isArray(response.data.rows)
+        ){
+            raw = response.data.rows;
+        }
+
+        else if(
+            Array.isArray(response.data.masterKontrak)
+        ){
+            raw = response.data.masterKontrak;
+        }
+
+    }
+
+
+    if(!Array.isArray(raw)){
+        return [];
+    }
+
+
+    return raw
+        .map(normalisasiItemMasterKontrak)
+        .filter(Boolean);
+
+}
+
 
 // ==========================================================
 // RENDER BARIS
@@ -436,15 +419,24 @@ function renderBarisKontrakUI(){
             "masterKontrakRows"
         );
 
-    if(!container) return;
+    if(!container){
+        return;
+    }
+
+
+    const data =
+        window.fmcMasterKontrakDataUI;
+
 
     if(
-        !Array.isArray(dataMasterKontrakUI) ||
-        dataMasterKontrakUI.length === 0
+        !Array.isArray(data) ||
+        data.length === 0
     ){
 
         container.innerHTML = `
+
             <div class="masterKontrakEmpty">
+
                 <span class="material-symbols-rounded">
                     edit_note
                 </span>
@@ -457,22 +449,28 @@ function renderBarisKontrakUI(){
                     Silakan isi BB Avg dan harga kontrak
                     sesuai perjanjian kemitraan Anda.
                 </small>
+
             </div>
+
         `;
 
         return;
     }
 
+
     container.innerHTML =
-        dataMasterKontrakUI.map(
+        data.map(
             function(item,index){
 
                 return `
+
                     <div
                         class="masterKontrakRow"
                         data-index="${index}">
 
-                        <div class="masterKontrakInputGroup">
+                        <div
+                            class="masterKontrakInputGroup">
+
                             <label>
                                 BB Avg
                             </label>
@@ -485,10 +483,20 @@ function renderBarisKontrakUI(){
                                 inputmode="decimal"
                                 placeholder="Contoh 0.80"
                                 value="${item.bbAvg ?? ""}"
-                                oninput="ubahDataKontrakUI(${index}, 'bbAvg', this.value)">
+                                oninput="
+                                    ubahDataKontrakUI(
+                                        ${index},
+                                        'bbAvg',
+                                        this.value
+                                    )
+                                ">
+
                         </div>
 
-                        <div class="masterKontrakInputGroup">
+
+                        <div
+                            class="masterKontrakInputGroup">
+
                             <label>
                                 Harga Kontrak
                             </label>
@@ -501,25 +509,40 @@ function renderBarisKontrakUI(){
                                 inputmode="numeric"
                                 placeholder="Contoh 24200"
                                 value="${item.harga ?? ""}"
-                                oninput="ubahDataKontrakUI(${index}, 'harga', this.value)">
+                                oninput="
+                                    ubahDataKontrakUI(
+                                        ${index},
+                                        'harga',
+                                        this.value
+                                    )
+                                ">
+
                         </div>
+
 
                         <button
                             type="button"
                             class="masterKontrakDeleteBtn"
                             title="Hapus baris"
-                            onclick="hapusBarisKontrakUI(${index})">
+                            onclick="
+                                hapusBarisKontrakUI(${index})
+                            ">
 
                             <span class="material-symbols-rounded">
                                 delete
                             </span>
 
                         </button>
+
                     </div>
+
                 `;
+
             }
         ).join("");
+
 }
+
 
 // ==========================================================
 // TAMBAH BARIS
@@ -527,23 +550,28 @@ function renderBarisKontrakUI(){
 
 function tambahBarisKontrakUI(){
 
-    // Ada perubahan baru -> data belum tersimpan.
-    setMasterKontrakSaveButtonState(false);
+    window.fmcMasterKontrakDataUI.push({
 
-    dataMasterKontrakUI.push({
         bbAvg: "",
         harga: ""
+
     });
 
+
+    simpanMasterKontrakSessionLocal();
+
     renderBarisKontrakUI();
+
 
     const rows =
         document.querySelectorAll(
             ".masterKontrakRow"
         );
 
+
     const last =
         rows[rows.length - 1];
+
 
     if(last){
 
@@ -552,34 +580,17 @@ function tambahBarisKontrakUI(){
                 ".kontrakBBAvg"
             );
 
+
         if(input){
+
             input.focus();
 
-            /*
-             * Beri waktu keyboard Android muncul, lalu pastikan
-             * input baris terakhir tidak tertutup keyboard.
-             */
-            setTimeout(
-                function(){
-                    try{
-                        input.scrollIntoView({
-                            behavior: "smooth",
-                            block: "center",
-                            inline: "nearest"
-                        });
-                    }
-                    catch(error){
-                        console.warn(
-                            "MASTER KONTRAK ADD ROW SCROLL ERROR:",
-                            error
-                        );
-                    }
-                },
-                350
-            );
         }
+
     }
+
 }
+
 
 // ==========================================================
 // UBAH DATA
@@ -591,19 +602,26 @@ function ubahDataKontrakUI(
     value
 ){
 
-    if(!dataMasterKontrakUI[index]) return;
+    const data =
+        window.fmcMasterKontrakDataUI;
+
 
     if(
-        String(dataMasterKontrakUI[index][field] ?? "") !==
-        String(value ?? "")
+        !Array.isArray(data) ||
+        !data[index]
     ){
-        dataMasterKontrakUI[index][field] =
-            value;
-
-        // Edit data -> wajib simpan kembali.
-        setMasterKontrakSaveButtonState(false);
+        return;
     }
+
+
+    data[index][field] =
+        value;
+
+
+    simpanMasterKontrakSessionLocal();
+
 }
+
 
 // ==========================================================
 // HAPUS BARIS
@@ -611,32 +629,42 @@ function ubahDataKontrakUI(
 
 function hapusBarisKontrakUI(index){
 
+    const data =
+        window.fmcMasterKontrakDataUI;
+
+
     if(
+        !Array.isArray(data) ||
         index < 0 ||
-        index >= dataMasterKontrakUI.length
+        index >= data.length
     ){
         return;
     }
+
 
     const yakin =
         confirm(
             `Hapus data kontrak pada baris ${index + 1}?`
         );
 
+
     if(!yakin){
         return;
     }
 
-    dataMasterKontrakUI.splice(
+
+    data.splice(
         index,
         1
     );
 
-    // Hapus data -> wajib simpan kembali.
-    setMasterKontrakSaveButtonState(false);
+
+    simpanMasterKontrakSessionLocal();
 
     renderBarisKontrakUI();
+
 }
+
 
 // ==========================================================
 // VALIDASI
@@ -644,203 +672,252 @@ function hapusBarisKontrakUI(index){
 
 function validasiMasterKontrakUI(){
 
-    if(!dataMasterKontrakUI.length){
+    const data =
+        window.fmcMasterKontrakDataUI;
+
+
+    if(
+        !Array.isArray(data) ||
+        data.length === 0
+    ){
 
         return {
+
             valid: false,
+
             message:
                 "Silakan tambahkan data kontrak terlebih dahulu."
+
         };
+
     }
+
 
     const bbAvgSet =
         new Set();
 
+
     for(
         let i = 0;
-        i < dataMasterKontrakUI.length;
+        i < data.length;
         i++
     ){
 
         const item =
-            dataMasterKontrakUI[i];
+            data[i];
+
 
         const bbAvg =
-            parseFloat(item.bbAvg);
+            angkaMasterKontrak(
+                item.bbAvg
+            );
+
 
         const harga =
-            parseFloat(item.harga);
+            angkaMasterKontrak(
+                item.harga
+            );
 
-        if(!Number.isFinite(bbAvg)){
+
+        if(
+            !Number.isFinite(bbAvg)
+        ){
 
             return {
+
                 valid: false,
+
                 message:
                     `BB Avg pada baris ${i + 1} belum diisi.`
+
             };
+
         }
 
-        if(bbAvg < 0){
+
+        if(
+            bbAvg < 0
+        ){
 
             return {
+
                 valid: false,
+
                 message:
                     `BB Avg pada baris ${i + 1} tidak valid.`
+
             };
+
         }
 
-        if(!Number.isFinite(harga)){
+
+        if(
+            !Number.isFinite(harga)
+        ){
 
             return {
+
                 valid: false,
+
                 message:
                     `Harga kontrak pada baris ${i + 1} belum diisi.`
+
             };
+
         }
 
-        if(harga <= 0){
+
+        if(
+            harga <= 0
+        ){
 
             return {
+
                 valid: false,
+
                 message:
                     `Harga kontrak pada baris ${i + 1} harus lebih dari 0.`
+
             };
+
         }
+
 
         const key =
             bbAvg.toFixed(2);
 
-        if(bbAvgSet.has(key)){
+
+        if(
+            bbAvgSet.has(key)
+        ){
 
             return {
+
                 valid: false,
+
                 message:
                     `BB Avg ${key} ditemukan lebih dari satu kali.`
+
             };
+
         }
+
 
         bbAvgSet.add(key);
+
     }
+
 
     return {
+
         valid: true,
+
         message:
             "Data kontrak siap disimpan."
+
     };
+
 }
 
+
+
 // ==========================================================
-// NORMALISASI RESPONSE GAS
+// D2 ACTIVE PERIOD — MASTER KONTRAK
+// UI TIDAK BERUBAH. Helper ini hanya menentukan period_id.
 // ==========================================================
 
-function normalisasiResponseMasterKontrak(result){
-
-    let items = [];
-
-    if(
-        result &&
-        result.data &&
-        Array.isArray(result.data.items)
-    ){
-        items = result.data.items;
-    }
-    else if(
-        result &&
-        Array.isArray(result.items)
-    ){
-        items = result.items;
-    }
-    else if(
-        result &&
-        Array.isArray(result.data)
-    ){
-        items = result.data;
-    }
-
-    return items
-        .map(
-            function(item){
-
-                return {
-                    bbAvg:
-                        Number(item?.bbAvg),
-                    harga:
-                        Number(item?.harga),
-                    __server: true
-                };
-            }
-        )
-        .filter(
-            function(item){
-
-                return Number.isFinite(item.bbAvg) &&
-                       Number.isFinite(item.harga);
-            }
-        );
+function getFmcMasterKontrakActivePeriodId_(){
+    return String(
+        window.fmcMasterKontrakActivePeriodId ||
+        localStorage.getItem("fmcD2ActivePeriodId") ||
+        ""
+    ).trim();
 }
 
-// ==========================================================
-// SAVE MASTER KONTRAK KE GAS
-// ==========================================================
+function setFmcMasterKontrakActivePeriodId_(periodId){
+    const value = String(periodId ?? "").trim();
+    if(!value) return;
 
-async function kirimMasterKontrakKeGAS(){
+    window.fmcMasterKontrakActivePeriodId = value;
 
-    const hasil =
-        validasiMasterKontrakUI();
+    try{
+        localStorage.setItem("fmcD2ActivePeriodId", value);
+    }catch(error){
+        console.warn("MASTER KONTRAK: gagal menyimpan active period.", error);
+    }
+}
 
-    if(!hasil.valid){
-        return {
-            success: false,
-            message: hasil.message
-        };
+function pilihFmcMasterKontrakPeriod_(result){
+    let periods = [];
+
+    if(Array.isArray(result?.periods)){
+        periods = result.periods;
+    }else if(Array.isArray(result?.data?.periods)){
+        periods = result.data.periods;
+    }else if(Array.isArray(result?.data)){
+        periods = result.data;
     }
 
-    const email =
-        pastikanTenantMasterKontrak();
-
-    const items =
-        dataMasterKontrakUI.map(
-            function(item){
-                return {
-                    bbAvg:
-                        Number(item.bbAvg),
-                    harga:
-                        Number(item.harga)
-                };
-            }
-        );
-
-    if(!items.length){
+    const normalized = periods.map(function(period){
+        const id = String(
+            period?.period_id || period?.id || ""
+        ).trim();
+        if(!id) return null;
         return {
-            success: false,
-            message:
-                "Belum ada data kontrak."
+            id: id,
+            status: String(period?.status || "").trim().toUpperCase(),
+            updated_at: String(period?.updated_at || period?.created_at || "").trim()
         };
+    }).filter(Boolean);
+
+    if(normalized.length === 1){
+        return normalized[0].id;
     }
 
-    /*
-     * Ikuti engine Pakan dan Operasional:
-     * semua request tenant memakai apiPost().
-     * api.js yang mengelola session/email tenant.
-     */
-    return await apiPost(
-        "saveMasterKontrak",
-        {
-            email: email,
-            items:
-                JSON.stringify(items)
+    const open = normalized.filter(function(period){
+        return period.status === "OPEN";
+    });
+
+    if(open.length === 1){
+        return open[0].id;
+    }
+
+    if(open.length > 1){
+        open.sort(function(a,b){
+            return (Date.parse(b.updated_at) || 0) - (Date.parse(a.updated_at) || 0);
+        });
+        return open[0].id;
+    }
+
+    return "";
+}
+
+async function resolveFmcMasterKontrakActivePeriodId_(){
+    const existing = getFmcMasterKontrakActivePeriodId_();
+    if(existing) return existing;
+
+    try{
+        const result = await apiPost("getPeriods", {});
+        const selected = pilihFmcMasterKontrakPeriod_(result);
+        if(selected){
+            setFmcMasterKontrakActivePeriodId_(selected);
         }
-    );
+        return selected;
+    }catch(error){
+        console.warn("MASTER KONTRAK: gagal resolve active period.", error);
+        return "";
+    }
 }
 
 // ==========================================================
-// SIMPAN UI
+// SIMPAN KE GAS
 // ==========================================================
 
 async function simpanMasterKontrakUI(){
 
     const hasil =
         validasiMasterKontrakUI();
+
 
     if(!hasil.valid){
 
@@ -850,12 +927,15 @@ async function simpanMasterKontrakUI(){
         );
 
         return;
+
     }
+
 
     const button =
         document.getElementById(
             "btnSimpanMasterKontrak"
         );
+
 
     if(button){
 
@@ -867,17 +947,50 @@ async function simpanMasterKontrakUI(){
             </span>
             MENYIMPAN...
         `;
+
     }
+
 
     try{
 
-        /*
-         * SAVE adalah tahap utama.
-         * Jika GAS mengembalikan success:true,
-         * data dianggap berhasil tersimpan.
-         */
+        // Pastikan nilai yang dikirim adalah angka.
+        const items =
+            window.fmcMasterKontrakDataUI.map(
+                function(item){
+
+                    return {
+
+                        bbAvg:
+                            Number(item.bbAvg),
+
+                        harga:
+                            Number(item.harga)
+
+                    };
+
+                }
+            );
+
+
+        const periodId =
+            await resolveFmcMasterKontrakActivePeriodId_();
+
+        if(!periodId){
+            throw new Error(
+                "Periode aktif Master Kontrak belum tersedia."
+            );
+        }
+
         const result =
-            await kirimMasterKontrakKeGAS();
+            await apiPost(
+                "saveMasterKontrak",
+                {
+                    period_id: periodId,
+                    items:
+                        JSON.stringify(items)
+                }
+            );
+
 
         if(
             !result ||
@@ -888,63 +1001,80 @@ async function simpanMasterKontrakUI(){
                 result?.message ||
                 "Data Master Kontrak gagal disimpan ke server."
             );
+
         }
 
-        /*
-         * 📢 sukses langsung setelah response SAVE
-         * dari GAS benar-benar success:true.
-         */
+
+        // --------------------------------------------------
+        // SAVE SERVER BERHASIL
+        // --------------------------------------------------
+
+        window.fmcMasterKontrakDataUI =
+            items.map(
+                item => ({
+                    bbAvg: item.bbAvg,
+                    harga: item.harga
+                })
+            );
+
+
+        simpanMasterKontrakSessionLocal();
+
+        renderBarisKontrakUI();
+
+
         tampilPesanMasterKontrak(
             result.message ||
             "Data Master Kontrak berhasil disimpan di server.",
             "success"
         );
 
-        // SAVE berhasil -> tombol berubah menjadi DATA TELAH TERSIMPAN.
-        setMasterKontrakSaveButtonState(true);
 
         tampilToastServerMasterKontrak(
-            "Data Master Kontrak berhasil tersimpan di server"
+            "📢 Data Master Kontrak berhasil tersimpan di server"
         );
 
-        /*
-         * GET verifikasi adalah tahap tambahan.
-         * Jika GET gagal, SAVE tidak dibatalkan.
-         * Ini mengikuti prinsip Operasional:
-         * refresh/GET tidak boleh mengubah SAVE sukses
-         * menjadi SAVE gagal.
-         */
+
+        // --------------------------------------------------
+        // VERIFIKASI DENGAN GET SERVER
+        // --------------------------------------------------
+
         try{
 
-            const serverItems =
-                await muatMasterKontrakDariGAS({
-                    silent: true
-                });
+            await muatMasterKontrakDariGAS({
+                silent: true
+            });
+
 
             tampilPesanMasterKontrak(
-                `Data Master Kontrak tersimpan dan berhasil dibaca kembali dari server (${serverItems.length} baris).`,
+                "Data Master Kontrak tersimpan dan berhasil diverifikasi dari server.",
                 "success"
             );
 
-        }catch(verifyError){
+        }
+        catch(verifyError){
 
             console.warn(
                 "MASTER KONTRAK: SAVE sukses, GET verifikasi gagal.",
                 verifyError
             );
 
+
             tampilPesanMasterKontrak(
-                "Data sudah tersimpan di server. Pembacaan ulang server belum berhasil.",
+                "Data sudah tersimpan di server. Verifikasi GET belum tersedia.",
                 "warning"
             );
+
         }
 
-    }catch(error){
+    }
+    catch(error){
 
         console.error(
             "MASTER KONTRAK SAVE ERROR:",
             error
         );
+
 
         tampilPesanMasterKontrak(
             error?.message ||
@@ -952,25 +1082,37 @@ async function simpanMasterKontrakUI(){
             "error"
         );
 
+
         tampilToastServerMasterKontrak(
-            "Data Master Kontrak belum berhasil tersimpan di server"
+            "📢❌ Data Master Kontrak belum berhasil tersimpan di server"
         );
 
-        // Gagal -> tetap dalam mode SIMPAN agar user bisa mencoba lagi.
-        setMasterKontrakSaveButtonState(false);
-
-    }finally{
-
-        // Jangan mengembalikan tombol secara paksa ke SIMPAN setelah SAVE sukses.
-        // State tombol sudah ditentukan oleh hasil SAVE di atas.
-        if(button && !masterKontrakDataTersimpan){
-            button.disabled = false;
-        }
     }
+    finally{
+
+        if(button){
+
+            button.disabled = false;
+
+            button.innerHTML = `
+                <span class="material-symbols-rounded">
+                    save
+                </span>
+                SIMPAN MASTER KONTRAK
+            `;
+
+        }
+
+    }
+
 }
+
 
 // ==========================================================
 // GET MASTER KONTRAK DARI GAS
+//
+// Action yang dipanggil:
+// getMasterKontrak
 // ==========================================================
 
 async function muatMasterKontrakDariGAS(
@@ -980,191 +1122,246 @@ async function muatMasterKontrakDariGAS(
     const silent =
         options.silent === true;
 
+
     try{
 
-        const email =
-            pastikanTenantMasterKontrak();
+        const periodId =
+            await resolveFmcMasterKontrakActivePeriodId_();
+
+        if(!periodId){
+            throw new Error(
+                "Periode aktif Master Kontrak belum tersedia."
+            );
+        }
 
         const result =
             await apiPost(
                 "getMasterKontrak",
                 {
-                    email: email
+                    period_id: periodId
                 }
             );
 
+
         if(
             !result ||
-            result.success !== true
+            result.success === false
         ){
+
             throw new Error(
                 result?.message ||
                 "Data Master Kontrak belum dapat dibaca dari server."
             );
+
         }
+
 
         const items =
             normalisasiResponseMasterKontrak(
                 result
             );
 
-        /*
-         * Server adalah sumber utama.
-         * Array kosong dari server berarti memang
-         * belum ada data kontrak.
-         */
-        dataMasterKontrakUI =
-            items.map(
-                function(item){
-                    return {
-                        bbAvg: item.bbAvg,
-                        harga: item.harga,
-                        __server: true
-                    };
-                }
-            );
 
-        renderBarisKontrakUI();
+        // --------------------------------------------------
+        // Jika server benar-benar mengembalikan array kosong,
+        // kosongkan UI. Jangan mempertahankan data lama
+        // sebagai data server.
+        // --------------------------------------------------
+
+        window.fmcMasterKontrakDataUI =
+            items;
+
+
         simpanMasterKontrakSessionLocal();
 
-        // Data yang berhasil dibaca dari server dianggap sudah tersimpan.
-        // Tidak menampilkan notif "berhasil dimuat dari server" lagi.
-        setMasterKontrakSaveButtonState(
-            items.length > 0
-        );
+        renderBarisKontrakUI();
+
+
+        if(!silent){
+
+            if(items.length){
+
+                tampilPesanMasterKontrak(
+                    `Data Master Kontrak berhasil dimuat dari server (${items.length} baris).`,
+                    "success"
+                );
+
+            }
+            else{
+
+                tampilPesanMasterKontrak(
+                    "Server belum memiliki data Master Kontrak.",
+                    "info"
+                );
+
+            }
+
+        }
+
 
         console.info(
             "MASTER KONTRAK GET OK:",
-            {
-                email: email,
-                items: items
-            }
+            items
         );
+
 
         return items;
 
-    }catch(error){
+    }
+    catch(error){
 
         console.error(
             "MASTER KONTRAK GET ERROR:",
             error
         );
 
+
         if(!silent){
 
             tampilPesanMasterKontrak(
-                error?.message ||
-                "Data server Master Kontrak belum dapat dimuat.",
+                "📢 Data server Master Kontrak belum dapat dimuat. Data lokal tetap ditampilkan.",
                 "warning"
             );
+
         }
 
+
         throw error;
+
     }
+
 }
 
+
 // ==========================================================
-// LOCAL CACHE PER TENANT
+// DATA UNTUK GAS
+// Fungsi terpisah agar mudah dipanggil modul lain.
+// ==========================================================
+
+async function kirimMasterKontrakKeGAS(){
+
+    const hasil =
+        validasiMasterKontrakUI();
+
+
+    if(!hasil.valid){
+
+        return {
+
+            success: false,
+
+            message:
+                hasil.message
+
+        };
+
+    }
+
+
+    const items =
+        window.fmcMasterKontrakDataUI.map(
+            function(item){
+
+                return {
+
+                    bbAvg:
+                        Number(item.bbAvg),
+
+                    harga:
+                        Number(item.harga)
+
+                };
+
+            }
+        );
+
+
+    return await apiPost(
+        "saveMasterKontrak",
+        {
+            items:
+                JSON.stringify(items)
+        }
+    );
+
+}
+
+
+// ==========================================================
+// LOCAL SESSION
+// Hanya cache/fallback UI.
+// Server tetap menjadi sumber utama.
 // ==========================================================
 
 function simpanMasterKontrakSessionLocal(){
 
     try{
 
-        const email =
-            getMasterKontrakTenantEmail();
-
-        if(!email){
-            return;
-        }
-
-        const cache =
-            JSON.parse(
-                localStorage.getItem(
-                    MASTER_KONTRAK_LOCAL_KEY
-                ) || "{}"
-            );
-
-        cache[email] =
-            dataMasterKontrakUI.map(
-                function(item){
-                    return {
-                        bbAvg: Number(item.bbAvg),
-                        harga: Number(item.harga)
-                    };
-                }
-            );
-
         localStorage.setItem(
-            MASTER_KONTRAK_LOCAL_KEY,
-            JSON.stringify(cache)
+            FMC_MASTER_KONTRAK_STORAGE,
+            JSON.stringify(
+                window.fmcMasterKontrakDataUI || []
+            )
         );
 
     }
     catch(error){
 
         console.warn(
-            "MASTER KONTRAK CACHE SAVE ERROR:",
+            "MASTER KONTRAK LOCAL SAVE ERROR:",
             error
         );
+
     }
+
 }
 
-function ambilMasterKontrakSessionLocal(){
+
+function muatMasterKontrakSessionLocal(){
 
     try{
 
-        const email =
-            getMasterKontrakTenantEmail();
-
-        if(!email){
-            return [];
-        }
-
-        const cache =
-            JSON.parse(
-                localStorage.getItem(
-                    MASTER_KONTRAK_LOCAL_KEY
-                ) || "{}"
+        const raw =
+            localStorage.getItem(
+                FMC_MASTER_KONTRAK_STORAGE
             );
 
-        const items =
-            cache[email];
 
-        if(!Array.isArray(items)){
-            return [];
+        if(!raw){
+            return;
         }
 
-        return items
-            .map(
-                function(item){
-                    return {
-                        bbAvg: Number(item?.bbAvg),
-                        harga: Number(item?.harga)
-                    };
-                }
-            )
-            .filter(
-                function(item){
-                    return Number.isFinite(item.bbAvg) &&
-                           Number.isFinite(item.harga);
-                }
-            );
+
+        const parsed =
+            JSON.parse(raw);
+
+
+        if(
+            Array.isArray(parsed)
+        ){
+
+            window.fmcMasterKontrakDataUI =
+                parsed
+                    .map(normalisasiItemMasterKontrak)
+                    .filter(Boolean);
+
+        }
 
     }
     catch(error){
 
         console.warn(
-            "MASTER KONTRAK CACHE READ ERROR:",
+            "MASTER KONTRAK LOCAL LOAD ERROR:",
             error
         );
 
-        return [];
     }
+
 }
 
+
 // ==========================================================
-// PESAN
+// PESAN UTAMA
 // ==========================================================
 
 function tampilPesanMasterKontrak(
@@ -1177,64 +1374,191 @@ function tampilPesanMasterKontrak(
             "masterKontrakMessage"
         );
 
-    if(!el) return;
+
+    if(!el){
+        return;
+    }
+
 
     el.style.display =
         "block";
+
 
     el.className =
         "masterKontrakMessage " +
         tipe;
 
+
     el.textContent =
         pesan;
+
 }
+
 
 // ==========================================================
 // TOAST SERVER
+// Tidak bergantung pada fungsi toast modul lain.
 // ==========================================================
 
 function tampilToastServerMasterKontrak(
     pesan
 ){
 
-    try{
+    let toast =
+        document.getElementById(
+            "masterKontrakServerToast"
+        );
 
-        // Toast global sudah menangani ikon 📢.
-        // Bersihkan ikon yang mungkin ikut terbawa dari caller
-        // agar notif tidak pernah menjadi "📢 📢".
-        const pesanBersih =
-            String(pesan || "")
-                .replace(/^(?:\s*📢\s*)+/, "")
-                .trim();
 
-        if(
-            typeof showUpdateToast ===
-            "function"
-        ){
-            showUpdateToast(pesanBersih);
-            return;
-        }
+    if(!toast){
 
-        if(
-            typeof showToast ===
-            "function"
-        ){
-            showToast(pesanBersih);
-            return;
-        }
+        toast =
+            document.createElement(
+                "div"
+            );
 
-        console.info(
-            "MASTER KONTRAK TOAST:",
-            pesan
+
+        toast.id =
+            "masterKontrakServerToast";
+
+
+        toast.style.position =
+            "fixed";
+
+        toast.style.left =
+            "50%";
+
+        toast.style.bottom =
+            "86px";
+
+        toast.style.transform =
+            "translateX(-50%) translateY(10px)";
+
+        toast.style.zIndex =
+            "99999";
+
+        toast.style.maxWidth =
+            "calc(100vw - 32px)";
+
+        toast.style.padding =
+            "12px 16px";
+
+        toast.style.borderRadius =
+            "14px";
+
+        toast.style.background =
+            "#173126";
+
+        toast.style.color =
+            "#ffffff";
+
+        toast.style.fontSize =
+            "14px";
+
+        toast.style.fontWeight =
+            "700";
+
+        toast.style.textAlign =
+            "center";
+
+        toast.style.boxShadow =
+            "0 8px 30px rgba(0,0,0,.22)";
+
+        toast.style.opacity =
+            "0";
+
+        toast.style.transition =
+            "opacity .2s ease, transform .2s ease";
+
+        toast.style.pointerEvents =
+            "none";
+
+
+        document.body.appendChild(
+            toast
         );
 
     }
-    catch(error){
 
-        console.warn(
-            "MASTER KONTRAK TOAST ERROR:",
-            error
+
+    toast.textContent =
+        pesan;
+
+
+    toast.style.opacity =
+        "1";
+
+    toast.style.transform =
+        "translateX(-50%) translateY(0)";
+
+
+    clearTimeout(
+        window.__fmcMasterKontrakToastTimer
+    );
+
+
+    window.__fmcMasterKontrakToastTimer =
+        setTimeout(
+            function(){
+
+                toast.style.opacity =
+                    "0";
+
+                toast.style.transform =
+                    "translateX(-50%) translateY(10px)";
+
+            },
+            3500
         );
-    }
+
 }
+
+
+// ==========================================================
+// DEBUG HELPER
+// Bisa dipanggil dari console:
+// debugMasterKontrakV2()
+// ==========================================================
+
+function debugMasterKontrakV2(){
+
+    const result = {
+
+        version:
+            window.fmcMasterKontrakVersion,
+
+        data:
+            window.fmcMasterKontrakDataUI,
+
+        page:
+            !!document.getElementById(
+                "masterKontrakPage"
+            ),
+
+        rows:
+            !!document.getElementById(
+                "masterKontrakRows"
+            ),
+
+        apiPost:
+            typeof apiPost === "function"
+
+    };
+
+
+    console.table(result);
+
+    console.log(
+        "MASTER KONTRAK V2 DATA:",
+        window.fmcMasterKontrakDataUI
+    );
+
+
+    return result;
+
+}
+
+
+// ==========================================================
+// END MASTER KONTRAK V2
+// ==========================================================

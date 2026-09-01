@@ -19,98 +19,33 @@
     style.textContent = `
         .operasionalTableScroll{
             width:100%;
-            max-width:100%;
             overflow-x:auto;
-            overflow-y:hidden;
             -webkit-overflow-scrolling:touch;
-            overscroll-behavior-x:contain;
-            scrollbar-width:thin;
-            padding-bottom:6px;
         }
 
         .operasionalDataTable{
-            width:max-content;
+            width:100%;
             min-width:760px;
             border-collapse:collapse;
-            table-layout:auto;
-            font-size:.78rem;
+            font-size:.82rem;
         }
 
         .operasionalDataTable th,
         .operasionalDataTable td{
-            padding:10px 9px;
+            padding:10px 8px;
             text-align:left;
             vertical-align:middle;
-            border-bottom:1px solid rgba(127,127,127,.16);
-            white-space:nowrap;
+            border-bottom:1px solid rgba(127,127,127,.18);
         }
 
         .operasionalDataTable th{
-            font-size:.65rem;
-            letter-spacing:.035em;
-            font-weight:700;
+            font-size:.68rem;
+            letter-spacing:.04em;
+            white-space:nowrap;
         }
 
-        .operasionalDataTable th:nth-child(1),
-        .operasionalDataTable td:nth-child(1){
-            min-width:105px;
-        }
-
-        .operasionalDataTable th:nth-child(2),
-        .operasionalDataTable td:nth-child(2){
-            min-width:95px;
-        }
-
-        .operasionalDataTable th:nth-child(3),
         .operasionalDataTable td:nth-child(3){
-            min-width:160px;
-            max-width:220px;
-        }
-
-        .operasionalDataTable th:nth-child(4),
-        .operasionalDataTable td:nth-child(4){
-            min-width:105px;
-        }
-
-        .operasionalDataTable th:nth-child(5),
-        .operasionalDataTable td:nth-child(5){
-            min-width:60px;
-            text-align:right;
-        }
-
-        .operasionalDataTable th:nth-child(6),
-        .operasionalDataTable td:nth-child(6){
-            min-width:120px;
-            text-align:right;
-        }
-
-        .operasionalDataTable th:nth-child(7),
-        .operasionalDataTable td:nth-child(7){
-            width:52px;
-            min-width:52px;
-            text-align:center;
-        }
-
-        .operasionalDataTable tbody tr:last-child td{
-            border-bottom:0;
-        }
-
-        .operasionalDetailMain{
-            display:block;
-            font-weight:600;
-            overflow:hidden;
-            text-overflow:ellipsis;
-            white-space:nowrap;
-        }
-
-        .operasionalDetailSub{
-            display:block;
-            margin-top:3px;
-            font-size:.67rem;
-            opacity:.68;
-            overflow:hidden;
-            text-overflow:ellipsis;
-            white-space:nowrap;
+            min-width:180px;
         }
 
         .operasionalNumber{
@@ -123,43 +58,21 @@
         }
 
         .operasionalActionCell{
-            text-align:center !important;
             width:52px;
-            min-width:52px !important;
+            text-align:center !important;
         }
 
         .operasionalDeleteBtn{
-            width:34px;
-            height:34px;
+            width:36px;
+            height:36px;
             display:inline-flex;
             align-items:center;
             justify-content:center;
             border:0;
-            border-radius:9px;
+            border-radius:10px;
             cursor:pointer;
-            padding:0;
         }
-
-        .operasionalDeleteBtn .material-symbols-rounded{
-            font-size:18px;
-        }
-
-        @media (max-width:600px){
-            .operasionalTableScroll{
-                margin-right:-2px;
-            }
-
-            .operasionalDataTable{
-                min-width:760px;
-            }
-
-            .operasionalDataTable th,
-            .operasionalDataTable td{
-                padding:9px 8px;
-            }
-        }
-
-    `
+    `;
 
     document.head.appendChild(style);
 
@@ -188,9 +101,9 @@ async function tampilOperasional(){
     if(!page) return;
 
     /*
-     * GET SERVER OPERASIONAL
-     * Server menjadi sumber utama data yang sudah tersimpan.
-     * Jika GET gagal, sesi yang masih ada tidak dihapus.
+     * D2 SOURCE OF TRUTH:
+     * selalu baca Operasional dari GAS 2 / JSON tenant.
+     * Jangan bergantung pada data sesi/localStorage.
      */
     try{
 
@@ -201,60 +114,84 @@ async function tampilOperasional(){
             );
 
         if(
-            result &&
-            result.success === true &&
-            result.data
+            !result ||
+            result.success !== true ||
+            !result.data
         ){
+            throw new Error(
+                result?.message ||
+                "Data Operasional dari server tidak tersedia."
+            );
+        }
 
-            const serverItems =
-                Array.isArray(result.data.items)
-                    ? result.data.items
-                    : [];
+        const serverItems =
+            Array.isArray(result.data.items)
+                ? result.data.items
+                : [];
 
-            window.fmcOperasionalDataSesi =
-                serverItems.map(
-                    function(item){
+        window.fmcOperasionalDataSesi =
+            serverItems.map(
+                function(item){
 
-                        return {
-                            tanggal:
-                                item.tanggal || "",
+                    return {
+                        id:
+                            item.id ||
+                            item.item_id ||
+                            "",
 
-                            kategori:
-                                item.kategori || "",
+                        id:
+                            item.id ||
+                            item.item_id ||
+                            "",
 
-                            keterangan:
-                                item.keterangan || "",
+                        tanggal:
+                            item.tanggal || "",
 
-                            harga:
-                                Number(item.harga) || 0,
+                        kategori:
+                            item.kategori || "",
 
-                            qty:
-                                Number(item.qty) || 0,
+                        keterangan:
+                            item.keterangan || "",
 
-                            total:
-                                Number(item.total) ||
-                                (
-                                    (Number(item.harga) || 0) *
-                                    (Number(item.qty) || 0)
-                                ),
+                        harga:
+                            Number(item.harga) || 0,
 
-                            __server: true
-                        };
+                        qty:
+                            Number(item.qty) || 0,
 
-                    }
+                        total:
+                            Number(item.total) ||
+                            (
+                                (Number(item.harga) || 0) *
+                                (Number(item.qty) || 0)
+                            ),
+
+                        __server: true
+                    };
+
+                }
+            );
+
+        if(result.period_id){
+            window.fmcOperasionalActivePeriodId =
+                String(result.period_id).trim();
+
+            try{
+                localStorage.setItem(
+                    "fmcD2ActivePeriodId",
+                    String(result.period_id).trim()
                 );
-
+            }catch(error){}
         }
 
     }catch(error){
 
-        console.warn(
+        console.error(
             "GET OPERASIONAL SERVER GAGAL:",
             error
         );
 
     }
-
 
     page.innerHTML = `
 
@@ -854,7 +791,6 @@ function renderOperasionalTable(){
             <table class="operasionalDataTable">
 
                 <thead>
-
                     <tr>
                         <th>TANGGAL</th>
                         <th>KATEGORI</th>
@@ -862,9 +798,8 @@ function renderOperasionalTable(){
                         <th>HARGA</th>
                         <th>QTY</th>
                         <th>TOTAL</th>
-                        <th>🗑️</th>
+                        <th>AKSI</th>
                     </tr>
-
                 </thead>
 
                 <tbody>
@@ -877,39 +812,27 @@ function renderOperasionalTable(){
                                     <tr>
 
                                         <td>
-                                            ${escapeOperasional(
-                                                item.tanggal
-                                            )}
+                                            ${escapeOperasional(item.tanggal)}
                                         </td>
 
                                         <td>
-                                            ${escapeOperasional(
-                                                item.kategori
-                                            )}
+                                            ${escapeOperasional(item.kategori)}
                                         </td>
 
                                         <td>
-                                            ${escapeOperasional(
-                                                item.keterangan
-                                            )}
+                                            ${escapeOperasional(item.keterangan)}
                                         </td>
 
                                         <td class="operasionalNumber">
-                                            ${formatRupiahOperasional(
-                                                item.harga
-                                            )}
+                                            ${formatRupiahOperasional(item.harga)}
                                         </td>
 
                                         <td class="operasionalNumber">
-                                            ${escapeOperasional(
-                                                item.qty
-                                            )}
+                                            ${escapeOperasional(item.qty)}
                                         </td>
 
                                         <td class="operasionalNumber operasionalTableTotal">
-                                            ${formatRupiahOperasional(
-                                                item.total
-                                            )}
+                                            ${formatRupiahOperasional(item.total)}
                                         </td>
 
                                         <td class="operasionalActionCell">
@@ -945,6 +868,7 @@ function renderOperasionalTable(){
 
 }
 
+
 // ==========================================================
 // REFRESH OPERASIONAL LANGSUNG DARI SERVER
 // ==========================================================
@@ -979,6 +903,11 @@ async function refreshOperasionalDariServer(){
                 function(item){
 
                     return {
+                        id:
+                            item.id ||
+                            item.item_id ||
+                            "",
+
                         tanggal:
                             item.tanggal || "",
 
@@ -1053,58 +982,97 @@ function renderOperasionalTableInPage(){
 // HAPUS DATA OPERASIONAL
 // ==========================================================
 
-function hapusDataOperasional(
+async function hapusDataOperasional(
     index
 ){
 
-    if(
-        !Number.isInteger(index)
-    ){
-
+    if(!Number.isInteger(index)){
         return;
-
     }
 
+    const rows = Array.isArray(window.fmcOperasionalDataSesi)
+        ? window.fmcOperasionalDataSesi
+        : [];
 
-    if(
-        index < 0 ||
-        index >=
-        window.fmcOperasionalDataSesi.length
-    ){
-
+    if(index < 0 || index >= rows.length){
         return;
-
     }
 
+    const item = rows[index] || {};
+    const serverId = String(
+        item.id ||
+        item.item_id ||
+        ""
+    ).trim();
 
-    const yakin =
-        confirm(
-            `Hapus data pengeluaran #${index + 1}?`
+    if(!confirm(`Hapus data pengeluaran #${index + 1}?`)){
+        return;
+    }
+
+    try{
+        if(item.__server && serverId){
+            const periodId = String(
+                window.fmcOperasionalActivePeriodId ||
+                localStorage.getItem("fmcD2ActivePeriodId") ||
+                ""
+            ).trim();
+
+            const result = await apiPost(
+                "deleteOperasional",
+                periodId
+                    ? { period_id: periodId, id: serverId }
+                    : { id: serverId }
+            );
+
+            if(!result || result.success !== true){
+                throw new Error(
+                    result?.message ||
+                    "Data operasional gagal dihapus dari server."
+                );
+            }
+
+            const serverItems = Array.isArray(result?.data?.items)
+                ? result.data.items
+                : [];
+
+            window.fmcOperasionalDataSesi = serverItems.map(function(row){
+                return {
+                    id: row.id || row.item_id || "",
+                    tanggal: row.tanggal || "",
+                    kategori: row.kategori || "",
+                    keterangan: row.keterangan || "",
+                    harga: Number(row.harga) || 0,
+                    qty: Number(row.qty) || 0,
+                    total: Number(row.total) || ((Number(row.harga) || 0) * (Number(row.qty) || 0)),
+                    __server: true
+                };
+            });
+
+            renderOperasionalTableInPage();
+            hitungTotalOperasional();
+
+            tampilPesanOperasional(
+                "Data operasional berhasil dihapus dari server.",
+                "success"
+            );
+            return;
+        }
+
+        rows.splice(index, 1);
+        renderOperasionalTableInPage();
+        hitungTotalOperasional();
+
+        tampilPesanOperasional(
+            "Data operasional berhasil dihapus dari data yang disiapkan.",
+            "success"
         );
-
-
-    if(!yakin){
-
-        return;
-
+    }catch(error){
+        console.error("HAPUS OPERASIONAL ERROR:", error);
+        tampilPesanOperasional(
+            error?.message || "Data operasional gagal dihapus.",
+            "error"
+        );
     }
-
-
-    window.fmcOperasionalDataSesi.splice(
-        index,
-        1
-    );
-
-
-    renderOperasionalTableInPage();
-    hitungTotalOperasional();
-
-
-    tampilPesanOperasional(
-        "Data operasional berhasil dihapus.",
-        "success"
-    );
-
 }
 
 
@@ -1198,13 +1166,18 @@ async function simpanOperasionalUI(){
     let items = [];
 
 
-    if(
-        window.fmcOperasionalDataSesi &&
-        window.fmcOperasionalDataSesi.length
-    ){
+    const pendingRows =
+        (Array.isArray(window.fmcOperasionalDataSesi)
+            ? window.fmcOperasionalDataSesi
+            : []
+        ).filter(function(item){
+            return !item.__server;
+        });
+
+    if(pendingRows.length){
 
         items =
-            window.fmcOperasionalDataSesi.map(
+            pendingRows.map(
                 function(item){
 
                     return {
@@ -1335,6 +1308,16 @@ async function simpanOperasionalUI(){
                 "saveOperasional",
 
                 {
+
+                    /*
+                     * Period D2 yang sedang aktif.
+                     */
+                    period_id:
+                        String(
+                            window.fmcOperasionalActivePeriodId ||
+                            localStorage.getItem("fmcD2ActivePeriodId") ||
+                            ""
+                        ).trim(),
 
                     /*
                      * Field utama.

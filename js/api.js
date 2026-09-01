@@ -1,11 +1,68 @@
-// ==========================================
-// FMC BROILER MOBILE V8
+// ==========================================================
+// FMC BROILER MOBILE
 // API.JS
-// BAGIAN 1 / 4
-// ==========================================
+// D2 BRIDGE V1
+// ==========================================================
+//
+// ARSITEKTUR:
+//
+// AUTH
+//   login
+//   register
+//   sendOTP
+//   verifyOTP
+//   sendResetOTP
+//   verifyResetOTP
+//   resetPIN
+//        ↓
+//      GAS 1
+//
+// DATA / OPERATIONAL
+//   dashboard
+//   harian
+//   flok
+//   keuangan
+//   RHPP
+//   DOC IN
+//   Pakan
+//   Operasional
+//   Master Kontrak
+//   OVK
+//   Plan Panen
+//   Timbang Panen
+//   Realisasi Panen
+//        ↓
+//      GAS 2
+//
+// ==========================================================
+
+
+// ==========================================================
+// GAS 1
+// AUTHENTICATION
+// ==========================================================
 
 const API_BASE =
 "https://script.google.com/macros/s/AKfycbzQV6bliXd_BlxOJgtXdacoHhtdbgWfHUV-vhW3DZSyaTWBSTdNuum5UG3YyWqGwUJh/exec";
+
+
+// ==========================================================
+// GAS 2
+// D2 OPERATIONAL API
+// ==========================================================
+
+const D2_API_BASE =
+"https://script.google.com/macros/s/AKfycbzoFAnJLwmB5_WumaaEakY1Ti9Dmu5q8q3y4yZZcwClNA-AP2YyyZqXSHVZUr_Vkthg/exec";
+
+
+// ==========================================================
+// LEGACY CONSTANT
+//
+// Dipertahankan supaya kode lama yang membaca
+// API_DATA / API_TENANT tidak langsung error.
+//
+// Tetapi DATA runtime D2 tidak lagi memakai endpoint ini.
+// ==========================================================
 
 const API_DATA =
 API_BASE + "?api=data";
@@ -13,136 +70,321 @@ API_BASE + "?api=data";
 const API_TENANT =
 API_BASE + "?action=tenantData";
 
-// ==========================================
+
+// ==========================================================
+// AUTH ACTION
+// ==========================================================
+
+const FMC_AUTH_ACTIONS =
+[
+    "login",
+    "register",
+    "sendOTP",
+    "verifyOTP",
+    "sendResetOTP",
+    "verifyResetOTP",
+    "resetPIN"
+];
+
+
+// ==========================================================
 // CACHE
-// ==========================================
+// ==========================================================
 
 let serverData = null;
 
 let lastDataVersion =
-localStorage.getItem("FMC_DATA_VERSION") || "";
-
-// ==========================================
-// API POST
-// ==========================================
-
-async function apiPost(action, data = {}) {
-
-    try {
-
-        // ==========================================
-        // SALIN DATA
-        // ==========================================
-
-        const payload = {
-            ...data
-        };
+localStorage.getItem(
+    "FMC_DATA_VERSION"
+) || "";
 
 
-        // ==========================================
-        // AUTH ACTION
-        // ==========================================
-        //
-        // Action berikut tidak menggunakan
-        // identitas Tenant otomatis karena
-        // digunakan sebelum / selama proses
-        // autentikasi.
-        //
-        // ==========================================
+// ==========================================================
+// AMBIL USER LOGIN
+// ==========================================================
 
-        const authActions = [
-            "login",
-            "register",
-            "sendOTP",
-            "verifyOTP",
-            "sendResetOTP",
-            "verifyResetOTP",
-            "resetPIN"
-        ];
+function fmcGetCurrentUser_(){
 
+    try{
 
-        // ==========================================
-        // TENANT IDENTITY V1
-        // ==========================================
-        //
-        // Semua action selain Auth dianggap
-        // sebagai action Tenant.
-        //
-        // Email diambil otomatis dari session
-        // FMC_USER.
-        //
-        // Modul berikut dapat memakai pola ini
-        // tanpa perubahan api.js lagi:
-        //
-        // DOC IN
-        // PAKAN
-        // OPERASIONAL
-        // INPUT FLOK
-        // MASTER KONTRAK
-        // OVK
-        // PLAN PANEN
-        // REALISASI PANEN
-        //
-        // ==========================================
+        const raw =
+            localStorage.getItem(
+                "FMC_USER"
+            );
 
-        if (
-            !authActions.includes(action)
-        ) {
+        if(!raw){
 
-            const user =
-                getLoginUser();
-
-            if (
-                user &&
-                user.email
-            ) {
-
-                payload.email =
-                    String(
-                        user.email
-                    )
-                    .trim()
-                    .toLowerCase();
-
-            }
+            return null;
 
         }
 
+        const user =
+            JSON.parse(raw);
 
-        // ==========================================
-        // REQUEST KE GOOGLE APPS SCRIPT
-        // ==========================================
+        if(
+            !user ||
+            typeof user !== "object"
+        ){
+
+            return null;
+
+        }
+
+        return user;
+
+    }
+    catch(error){
+
+        console.error(
+            "FMC GET CURRENT USER ERROR:",
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+// ==========================================================
+// NORMALISASI USER CONTEXT
+// ==========================================================
+
+function fmcGetUserContext_(){
+
+    const user =
+        fmcGetCurrentUser_();
+
+    if(!user){
+
+        return {
+
+            user_id: "",
+            tenant_id: "",
+            email: ""
+
+        };
+
+    }
+
+
+    return {
+
+        user_id:
+            String(
+                user.user_id ||
+                user.userid ||
+                user.id ||
+                ""
+            ).trim(),
+
+        tenant_id:
+            String(
+                user.tenant_id ||
+                user.tenantId ||
+                ""
+            ).trim(),
+
+        email:
+            String(
+                user.email ||
+                ""
+            )
+            .trim()
+            .toLowerCase()
+
+    };
+
+}
+
+
+// ==========================================================
+// CEK AUTH ACTION
+// ==========================================================
+
+function fmcIsAuthAction_(
+    action
+){
+
+    return FMC_AUTH_ACTIONS
+        .includes(
+            String(
+                action || ""
+            ).trim()
+        );
+
+}
+
+
+// ==========================================================
+// BANGUN PAYLOAD D2
+// ==========================================================
+//
+// Data user ditambahkan otomatis.
+//
+// Caller PWA tetap boleh mengirim field sendiri.
+// Field caller tidak boleh menimpa identity utama.
+// ==========================================================
+
+function fmcBuildD2Payload_(
+    action,
+    data
+){
+
+    const context =
+        fmcGetUserContext_();
+
+    const payload = {
+
+        action:
+            String(
+                action || ""
+            ).trim(),
+
+        user_id:
+            context.user_id,
+
+        tenant_id:
+            context.tenant_id,
+
+        email:
+            context.email
+
+    };
+
+
+    Object.keys(
+        data || {}
+    ).forEach(
+        function(key){
+
+            if(
+                key === "user_id" ||
+                key === "tenant_id" ||
+                key === "email"
+            ){
+
+                return;
+
+            }
+
+            payload[key] =
+                data[key];
+
+        }
+    );
+
+
+    return payload;
+
+}
+
+
+// ==========================================================
+// GENERIC API POST
+// ==========================================================
+//
+// AUTH:
+// GAS 1
+//
+// D2:
+// GAS 2
+// ==========================================================
+
+async function apiPost(
+    action,
+    data = {}
+){
+
+    const normalizedAction =
+        String(
+            action || ""
+        ).trim();
+
+
+    const isAuth =
+        fmcIsAuthAction_(
+            normalizedAction
+        );
+
+
+    const targetUrl =
+        isAuth
+            ? API_BASE
+            : D2_API_BASE;
+
+
+    try{
+
+        const payload =
+            isAuth
+
+                ? {
+                    action:
+                        normalizedAction,
+                    ...data
+                }
+
+                : fmcBuildD2Payload_(
+                    normalizedAction,
+                    data
+                );
+
+
+        console.log(
+            "FMC API POST:",
+            {
+                action:
+                    normalizedAction,
+
+                target:
+                    isAuth
+                        ? "GAS 1"
+                        : "GAS 2",
+
+                user_id:
+                    payload.user_id ||
+                    "",
+
+                tenant_id:
+                    payload.tenant_id ||
+                    "",
+
+                email:
+                    payload.email ||
+                    ""
+            }
+        );
+
 
         const response =
             await fetch(
-                API_BASE,
+                targetUrl,
                 {
 
-                    method: "POST",
+                    method:
+                        "POST",
 
                     headers: {
+
                         "Content-Type":
-                        "application/x-www-form-urlencoded"
+                            "application/x-www-form-urlencoded"
+
                     },
 
                     body:
-                        new URLSearchParams({
-
-                            action,
-
-                            ...payload
-
-                        })
+                        new URLSearchParams(
+                            payload
+                        )
 
                 }
             );
 
 
-        // ==========================================
-        // HTTP ERROR
-        // ==========================================
-
-        if (!response.ok) {
+        if(
+            !response.ok
+        ){
 
             throw new Error(
                 "HTTP " +
@@ -152,30 +394,42 @@ async function apiPost(action, data = {}) {
         }
 
 
-        // ==========================================
-        // RESPONSE JSON
-        // ==========================================
-
         const result =
             await response.json();
 
+
+        console.log(
+            "FMC API POST RESULT:",
+            result
+        );
+
+
         return result;
 
-
     }
-    catch (error) {
+    catch(error){
 
         console.error(
             "API POST ERROR:",
             error
         );
 
+
         return {
 
-            success: false,
+            success:
+                false,
 
             message:
-            "Tidak dapat terhubung ke server."
+                "Tidak dapat terhubung ke server.",
+
+            error:
+                error &&
+                error.message
+                    ? error.message
+                    : String(
+                        error
+                    )
 
         };
 
@@ -184,57 +438,118 @@ async function apiPost(action, data = {}) {
 }
 
 
-// ==========================================
-// API GET
-// ==========================================
+// ==========================================================
+// GENERIC API GET
+// ==========================================================
+//
+// DEFAULT GET
+// diarahkan ke GAS 2.
+//
+// AUTH tidak menggunakan apiGet().
+// ==========================================================
 
-async function apiGet(params = {}) {
+async function apiGet(
+    params = {}
+){
 
-    try {
+    try{
+
+        const context =
+            fmcGetUserContext_();
+
+
+        const query =
+            {
+
+                ...params,
+
+                user_id:
+                    params.user_id ||
+                    context.user_id,
+
+                tenant_id:
+                    params.tenant_id ||
+                    context.tenant_id,
+
+                email:
+                    params.email ||
+                    context.email,
+
+                t:
+                    Date.now()
+
+            };
+
 
         const url =
-            new URL(API_DATA);
+            new URL(
+                D2_API_BASE
+            );
 
-        Object.keys(params)
-            .forEach(key => {
+
+        Object.keys(
+            query
+        ).forEach(
+            function(key){
+
+                const value =
+                    query[key];
+
+                if(
+                    value === undefined ||
+                    value === null
+                ){
+
+                    return;
+
+                }
 
                 url.searchParams.set(
                     key,
-                    params[key]
+                    value
                 );
 
-            });
-
-        url.searchParams.set(
-            "t",
-            Date.now()
+            }
         );
 
+
         const response =
-            await fetch(url, {
+            await fetch(
+                url,
+                {
 
-                cache: "no-store"
+                    method:
+                        "GET",
 
-            });
+                    cache:
+                        "no-store"
 
-        if (!response.ok) {
+                }
+            );
+
+
+        if(
+            !response.ok
+        ){
 
             throw new Error(
-                "HTTP " + response.status
+                "HTTP " +
+                response.status
             );
 
         }
 
+
         return await response.json();
 
     }
-
-    catch (error) {
+    catch(error){
 
         console.error(
             "API GET ERROR:",
             error
         );
+
 
         return null;
 
@@ -242,108 +557,351 @@ async function apiGet(params = {}) {
 
 }
 
-// ==========================================
-// DATA SERVER TENANT V1
-// ==========================================
 
-async function ambilDataServer(force = false) {
+// ==========================================================
+// NORMALISASI D2 DASHBOARD BOUNDARY
+// ==========================================================
+//
+// Untuk sementara D2 API baru memberikan:
+//
+// context
+// status = BOUNDARY_READY
+//
+// Belum ada KPI/derived dashboard.
+//
+// Kita tidak menghitung KPI di PWA.
+// ==========================================================
 
-    if (serverData && !force) {
+function fmcNormalizeD2Dashboard_(
+    result
+){
+
+    const context =
+        result &&
+        result.context
+            ? result.context
+            : {};
+
+
+    const floks =
+        Array.isArray(
+            context.floks
+        )
+            ? context.floks
+            : [];
+
+
+    const flok =
+        floks.map(
+            function(item){
+
+                return {
+
+                    id:
+                        item.id ||
+                        "",
+
+                    nama:
+                        item.name ||
+                        item.nama ||
+                        item.id ||
+                        "",
+
+                    active:
+                        item.active !== false
+
+                };
+
+            }
+        );
+
+
+    return {
+
+        dashboard: {
+
+            farm: {
+
+                namaFarm:
+                    context.company ||
+                    context.nama ||
+                    "",
+
+                periode:
+                    "",
+
+                chickIn:
+                    0
+
+            },
+
+            kpi: {
+
+                docIn:
+                    0,
+
+                ayamHidup:
+                    0,
+
+                mati:
+                    0,
+
+                afkir:
+                    0,
+
+                mortalitas:
+                    0,
+
+                deplesi:
+                    0,
+
+                fcr:
+                    0,
+
+                ip:
+                    0
+
+            },
+
+            flok:
+                flok,
+
+            ekonomiFlok:
+                [],
+
+            realisasiPanen:
+                []
+
+        },
+
+
+        ai:
+            [],
+
+
+        profile: {
+
+            user_id:
+                context.user_id ||
+                "",
+
+            tenant_id:
+                context.tenant_id ||
+                "",
+
+            email:
+                context.email ||
+                "",
+
+            nama:
+                context.nama ||
+                "",
+
+            company:
+                context.company ||
+                "",
+
+            business:
+                context.business ||
+                "broiler"
+
+        },
+
+
+        config: {
+
+            flok_count:
+                Number(
+                    context.flok_count ||
+                    floks.length ||
+                    0
+                ),
+
+            floks:
+                floks
+
+        },
+
+
+        periods:
+            [],
+
+
+        d2: {
+
+            success:
+                result &&
+                result.success === true,
+
+            api_version:
+                result &&
+                result.api_version
+                    ? result.api_version
+                    : "",
+
+            action:
+                result &&
+                result.action
+                    ? result.action
+                    : "",
+
+            status:
+                result &&
+                result.status
+                    ? result.status
+                    : ""
+
+        }
+
+    };
+
+}
+
+
+// ==========================================================
+// DATA SERVER
+// ==========================================================
+//
+// Dashboard sekarang mengambil:
+// GAS 2 → action=getDashboard
+//
+// Jika boundary berhasil:
+// serverData tetap berupa object kompatibel PWA.
+//
+// ==========================================================
+
+async function ambilDataServer(
+    force = false
+){
+
+    if(
+        serverData &&
+        !force
+    ){
+
         return serverData;
+
     }
 
-    try {
 
-        const user = getLoginUser();
+    try{
 
-        if (!user || !user.email) {
+        const context =
+            fmcGetUserContext_();
+
+
+        if(
+            !context.email &&
+            !context.user_id
+        ){
 
             console.error(
-                "TENANT API: USER BELUM LOGIN"
+                "D2 API: USER BELUM LOGIN"
             );
+
+
+            if(
+                typeof statusServer ===
+                "function"
+            ){
+
+                statusServer(
+                    false
+                );
+
+            }
+
 
             return null;
-        }
-
-        const url =
-            new URL(API_TENANT);
-
-        url.searchParams.set(
-            "email",
-            user.email
-        );
-
-        url.searchParams.set(
-            "t",
-            Date.now()
-        );
-
-        const response =
-            await fetch(url, {
-                cache: "no-store"
-            });
-
-        if (!response.ok) {
-
-            throw new Error(
-                "HTTP " + response.status
-            );
 
         }
+
 
         const result =
-            await response.json();
+            await apiPost(
+                "getDashboard",
+                {}
+            );
 
-        if (
+
+        if(
             !result ||
-            result.success !== true ||
-            !result.data
-        ) {
+            result.success !== true
+        ){
 
             console.error(
-                "TENANT API ERROR:",
+                "D2 DASHBOARD API ERROR:",
                 result
             );
 
+
+            if(
+                typeof statusServer ===
+                "function"
+            ){
+
+                statusServer(
+                    false
+                );
+
+            }
+
+
             return null;
+
         }
+
 
         const data =
-            result.data;
+            fmcNormalizeD2Dashboard_(
+                result
+            );
 
-        serverData = data;
 
-        // ==================================
+        serverData =
+            data;
+
+
+        // ======================================================
         // STATUS SERVER
-        // ==================================
+        // ======================================================
 
-        if (
+        if(
             typeof statusServer ===
             "function"
-        ) {
+        ){
 
-            statusServer(true);
+            statusServer(
+                true
+            );
 
         }
 
-        // ==================================
-        // UPDATE NAMA FARM
-        // ==================================
 
-        if (
+        // ======================================================
+        // UPDATE NAMA FARM
+        // ======================================================
+
+        const farm =
+            data &&
             data.dashboard &&
             data.dashboard.farm
-        ) {
+                ? data.dashboard.farm
+                : null;
 
-            const farm =
-                data.dashboard.farm;
+
+        if(
+            farm &&
+            farm.namaFarm
+        ){
 
             const el =
                 document.getElementById(
                     "farmNama"
                 );
 
-            if (el) {
+
+            if(el){
 
                 el.innerHTML =
                     farm.namaFarm;
@@ -352,235 +910,351 @@ async function ambilDataServer(force = false) {
 
         }
 
+
         return data;
 
     }
-    catch (error) {
+    catch(error){
 
         console.error(
-            "TENANT DATA ERROR:",
+            "D2 TENANT DATA ERROR:",
             error
         );
 
-        if (
+
+        if(
             typeof statusServer ===
             "function"
-        ) {
+        ){
 
-            statusServer(false);
+            statusServer(
+                false
+            );
 
         }
+
 
         return null;
+
     }
 
 }
 
-// ==========================================
+
+// ==========================================================
 // REFRESH DATA
-// ==========================================
+// ==========================================================
 
-async function refreshData() {
+async function refreshData(){
 
-    try {
+    try{
 
-        serverData = null;
+        serverData =
+            null;
 
-        const data = await ambilDataServer(true);
 
-        if (data) {
+        const data =
+            await ambilDataServer(
+                true
+            );
 
-            await showPage(currentPage);
-            updateJam();
 
-            showUpdateToast("Data berhasil diperbarui");
+        if(data){
 
-        } else {
+            if(
+                typeof showPage ===
+                "function"
+            ){
 
-            showUpdateToast("Gagal mengambil data");
+                await showPage(
+                    currentPage
+                );
+
+            }
+
+
+            if(
+                typeof updateJam ===
+                "function"
+            ){
+
+                updateJam();
+
+            }
+
+
+            if(
+                typeof showUpdateToast ===
+                "function"
+            ){
+
+                showUpdateToast(
+                    "Data berhasil diperbarui"
+                );
+
+            }
+
+        }
+        else{
+
+            if(
+                typeof showUpdateToast ===
+                "function"
+            ){
+
+                showUpdateToast(
+                    "Gagal mengambil data"
+                );
+
+            }
 
         }
 
-    } catch (err) {
+    }
+    catch(error){
 
-        console.error(err);
-        showUpdateToast("Gagal memperbarui data");
+        console.error(
+            "REFRESH DATA ERROR:",
+            error
+        );
+
+
+        if(
+            typeof showUpdateToast ===
+            "function"
+        ){
+
+            showUpdateToast(
+                "Gagal memperbarui data"
+            );
+
+        }
 
     }
 
 }
 
-// ==========================================
-// LOGIN API
-// ==========================================
 
-async function loginAPI(email, pin) {
+// ==========================================================
+// D2 PERIOD HELPERS
+// ==========================================================
+// Period tetap melalui Unified Router GAS 2.
+// Tidak membuat endpoint baru.
+// ==========================================================
 
-    return await apiPost("login", {
-
-        email: email,
-
-        pin: pin
-
-    });
-
-}
-
-// ==========================================
-// REGISTER API
-// ==========================================
-
-async function registerAPI(data) {
-
+async function d2GetPeriods(
+    data = {}
+){
     return await apiPost(
-
-        "register",
-
+        "getPeriods",
         data
-
     );
-
 }
 
-// ==========================================
-// OTP API
-// ==========================================
 
-async function kirimOTP(email) {
+async function d2GetPeriod(
+    data = {}
+){
+    return await apiPost(
+        "getPeriod",
+        data
+    );
+}
+
+
+
+// ==========================================================
+// LOGIN API
+// ==========================================================
+//
+// Tetap GAS 1.
+// ==========================================================
+
+async function loginAPI(
+    email,
+    pin
+){
 
     return await apiPost(
-
-        "sendOTP",
-
+        "login",
         {
 
-            email: email
+            email:
+                email,
+
+            pin:
+                pin
 
         }
-
     );
 
 }
+
+
+// ==========================================================
+// REGISTER API
+// ==========================================================
+//
+// Tetap GAS 1.
+//
+// Setelah OTP verified,
+// GAS 1 yang melakukan provisioning
+// ke GAS 2.
+// ==========================================================
+
+async function registerAPI(
+    data
+){
+
+    return await apiPost(
+        "register",
+        data
+    );
+
+}
+
+
+// ==========================================================
+// OTP API
+// ==========================================================
+
+async function kirimOTP(
+    email
+){
+
+    return await apiPost(
+        "sendOTP",
+        {
+
+            email:
+                email
+
+        }
+    );
+
+}
+
 
 async function verifikasiOTP(
-
     email,
-
     otp
-
-) {
+){
 
     return await apiPost(
-
         "verifyOTP",
-
         {
 
-            email: email,
+            email:
+                email,
 
-            otp: otp
+            otp:
+                otp
 
         }
-
     );
 
 }
-// ==========================================
+
+
+// ==========================================================
 // RESET PIN API
-// ==========================================
+// ==========================================================
 
-async function sendResetOTPAPI(email){
+async function sendResetOTPAPI(
+    email
+){
 
     return await apiPost(
-
         "sendResetOTP",
-
         {
 
-            email: email
+            email:
+                email
 
         }
-
     );
 
 }
 
-async function verifyResetOTPAPI(email, otp){
+
+async function verifyResetOTPAPI(
+    email,
+    otp
+){
 
     return await apiPost(
-
         "verifyResetOTP",
-
         {
 
-            email: email,
+            email:
+                email,
 
-            code: otp
+            code:
+                otp
 
         }
-
     );
 
 }
 
-async function resetPINAPI(email, pin){
+
+async function resetPINAPI(
+    email,
+    pin
+){
 
     return await apiPost(
-
         "resetPIN",
-
         {
 
-            email: email,
+            email:
+                email,
 
-            pin: pin
+            pin:
+                pin
 
         }
-
     );
 
 }
-// ==========================================
+
+
+// ==========================================================
 // SESSION
-// ==========================================
+// ==========================================================
 
-function simpanSession(user) {
+function simpanSession(
+    user
+){
 
     localStorage.setItem(
-
         "FMC_LOGIN",
-
         "1"
-
     );
 
+
     localStorage.setItem(
-
         "FMC_USER",
-
-        JSON.stringify(user)
-
+        JSON.stringify(
+            user || {}
+        )
     );
 
 }
 
-function ambilSession() {
 
-    try {
+function ambilSession(){
+
+    try{
 
         return JSON.parse(
-
             localStorage.getItem(
-
                 "FMC_USER"
-
             )
-
         );
 
     }
-
-    catch (e) {
+    catch(error){
 
         return null;
 
@@ -588,73 +1262,72 @@ function ambilSession() {
 
 }
 
-function sudahLogin() {
+
+function sudahLogin(){
 
     return (
-
         localStorage.getItem(
-
             "FMC_LOGIN"
-
         ) === "1"
-
     );
 
 }
 
-function hapusSession() {
+
+function hapusSession(){
 
     localStorage.removeItem(
-
         "FMC_LOGIN"
-
     );
+
 
     localStorage.removeItem(
-
         "FMC_USER"
-
     );
+
+
+    clearApiCache();
 
 }
 
-// ==========================================
+
+// ==========================================================
 // LOGOUT API
-// ==========================================
+// ==========================================================
 
-async function logoutAPI() {
+async function logoutAPI(){
 
-    try {
+    try{
 
         hapusSession();
 
-        clearApiCache();
 
         return {
 
-            success: true,
+            success:
+                true,
 
-            message: "Logout berhasil."
+            message:
+                "Logout berhasil."
 
         };
 
     }
-
-    catch (error) {
+    catch(error){
 
         console.error(
-
             "LOGOUT ERROR:",
-
             error
-
         );
+
 
         return {
 
-            success: false,
+            success:
+                false,
 
-            message: "Logout gagal."
+            message:
+                "Logout gagal."
 
         };
 
@@ -662,37 +1335,62 @@ async function logoutAPI() {
 
 }
 
-// ==========================================
+
+// ==========================================================
 // CACHE
-// ==========================================
+// ==========================================================
 
-function clearApiCache() {
+function clearApiCache(){
 
-    serverData = null;
+    serverData =
+        null;
 
 }
 
-function getCachedData() {
+
+function getCachedData(){
 
     return serverData;
 
 }
 
-// ==========================================
-// SERVER
-// ==========================================
 
-async function cekKoneksiServer() {
+// ==========================================================
+// SERVER CONNECTION
+// ==========================================================
 
-    try {
+async function cekKoneksiServer(){
 
-        const data = await apiGet();
+    try{
 
-        return data !== null;
+        const context =
+            fmcGetUserContext_();
+
+
+        if(
+            !context.email &&
+            !context.user_id
+        ){
+
+            return false;
+
+        }
+
+
+        const result =
+            await apiPost(
+                "getDashboard",
+                {}
+            );
+
+
+        return (
+            result &&
+            result.success === true
+        );
 
     }
-
-    catch (error) {
+    catch(error){
 
         return false;
 
@@ -700,26 +1398,42 @@ async function cekKoneksiServer() {
 
 }
 
-// ==========================================
-// USER
-// ==========================================
 
-function getLoginUser() {
+// ==========================================================
+// USER
+// ==========================================================
+
+function getLoginUser(){
 
     return ambilSession();
 
 }
 
-// ==========================================
-// INITIALIZE
-// ==========================================
 
-(function () {
+// ==========================================================
+// INITIALIZE
+// ==========================================================
+
+(function(){
 
     console.log(
+        "===================================="
+    );
 
-        "API.JS Loaded"
+    console.log(
+        "FMC API.JS D2 BRIDGE V1 LOADED"
+    );
 
+    console.log(
+        "AUTH  : GAS 1"
+    );
+
+    console.log(
+        "DATA  : GAS 2"
+    );
+
+    console.log(
+        "===================================="
     );
 
 })();

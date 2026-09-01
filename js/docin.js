@@ -14,6 +14,392 @@ window.fmcDocInDataSesi =
     window.fmcDocInDataSesi || [];
 
 
+/*
+ * ==========================================
+ * D2 ACTIVE PERIOD
+ * ==========================================
+ *
+ * GET DOC IN membutuhkan period_id jika tenant
+ * mempunyai lebih dari satu periode.
+ */
+window.fmcD2ActivePeriodId =
+    window.fmcD2ActivePeriodId ||
+    localStorage.getItem("fmcD2ActivePeriodId") ||
+    "";
+
+function getFmcD2ActivePeriodId(){
+    return String(
+        window.fmcD2ActivePeriodId ||
+        localStorage.getItem("fmcD2ActivePeriodId") ||
+        ""
+    ).trim();
+}
+
+function setFmcD2ActivePeriodId(periodId){
+    const value =
+        String(periodId ?? "").trim();
+
+    if(!value){
+        return;
+    }
+
+    window.fmcD2ActivePeriodId = value;
+
+    try{
+        localStorage.setItem(
+            "fmcD2ActivePeriodId",
+            value
+        );
+    }
+    catch(error){
+        console.warn(
+            "DOC IN: gagal menyimpan active period.",
+            error
+        );
+    }
+}
+
+
+/*
+ * ==========================================
+ * RESOLVE ACTIVE PERIOD DARI DAFTAR SERVER
+ * ==========================================
+ *
+ * Aturan aman:
+ * 1. Jika pointer lokal masih ada, gunakan pointer itu.
+ * 2. Jika server hanya memiliki satu period, gunakan period tersebut.
+ * 3. Jika server memiliki beberapa period tetapi hanya
+ *    satu yang OPEN, gunakan satu-satunya OPEN.
+ * 4. Jika beberapa period OPEN, jangan menebak.
+ */
+function resolveFmcD2PeriodFromList_(
+    source
+){
+    const periods =
+        Array.isArray(source)
+            ? source
+            : (
+                source &&
+                Array.isArray(source.periods)
+                    ? source.periods
+                    : (
+                        source &&
+                        Array.isArray(source.data)
+                            ? source.data
+                            : (
+                                source &&
+                                source.data &&
+                                Array.isArray(
+                                    source.data.periods
+                                )
+                                    ? source.data.periods
+                                    : []
+                            )
+                    )
+            );
+
+    const normalized =
+        periods
+            .map(function(period){
+                const id =
+                    String(
+                        period?.period_id ||
+                        period?.id ||
+                        ""
+                    ).trim();
+
+                if(!id){
+                    return null;
+                }
+
+                return {
+                    id: id,
+                    status:
+                        String(
+                            period?.status ||
+                            ""
+                        ).trim().toUpperCase(),
+                    created_at:
+                        String(
+                            period?.created_at ||
+                            ""
+                        ).trim()
+                };
+            })
+            .filter(Boolean);
+
+    if(normalized.length === 1){
+        return normalized[0].id;
+    }
+
+    const open =
+        normalized.filter(function(period){
+            return period.status === "OPEN";
+        });
+
+    if(open.length === 1){
+        return open[0].id;
+    }
+
+    return "";
+}
+
+
+/*
+ * Ambil period dari GAS 2 hanya ketika
+ * pointer aktif belum tersedia.
+ */
+async function resolveFmcD2ActivePeriod_(){
+    /*
+     * FMC D2 ACTIVE PERIOD — SERVER IS SOURCE OF TRUTH.
+     *
+     * LocalStorage hanya cache.
+     * JANGAN pernah memakai pointer lokal sebelum server
+     * memberikan active_period_id terbaru. Ini mencegah
+     * PWA tertahan di periode lama (mis. 8) ketika server
+     * sudah berpindah ke periode baru (mis. 9).
+     */
+
+    if(typeof d2GetPeriods !== "function"){
+        console.warn(
+            "DOC IN: d2GetPeriods() belum tersedia."
+        );
+
+        /* Cache hanya fallback terakhir ketika API bridge
+         * memang belum tersedia. */
+        return String(
+            window.fmcD2ActivePeriodId ||
+            localStorage.getItem("fmcD2ActivePeriodId") ||
+            ""
+        ).trim();
+    }
+
+    try{
+        const result = await d2GetPeriods({});
+
+        if(!result || result.success !== true){
+            console.warn(
+                "DOC IN PERIOD GET:",
+                result?.message ||
+                "getPeriods gagal."
+            );
+            return "";
+        }
+
+        /*
+         * PRIORITAS MUTLAK:
+         * active_period_id dari server.
+         */
+        const serverActiveId = String(
+            result.active_period_id ||
+            result.activePeriodId ||
+            result.data?.active_period_id ||
+            result.data?.activePeriodId ||
+            ""
+        ).trim();
+
+        const serverActiveNo = String(
+            result.active_period_no ||
+            result.activePeriodNo ||
+            result.data?.active_period_no ||
+            result.data?.activePeriodNo ||
+            ""
+        ).trim();
+
+        if(serverActiveId){
+            setFmcD2ActivePeriodId(serverActiveId);
+            window.fmcD2ActivePeriodNo = serverActiveNo;
+            return serverActiveId;
+        }
+
+        /*
+         * Kompatibilitas dengan bridge lama: jika server belum
+         * mengirim pointer aktif, coba daftar period.
+         */
+        const periodId =
+            resolveFmcD2PeriodFromList_(result);
+
+        if(periodId){
+            setFmcD2ActivePeriodId(periodId);
+            return periodId;
+        }
+
+        /*
+         * Jangan memakai cache lama jika server gagal menentukan
+         * active period. Dengan dua periode, memakai cache lama
+         * justru dapat mengembalikan PWA ke periode 8.
+         */
+        console.warn(
+            "DOC IN: active period server belum tersedia."
+        );
+        return "";
+    }
+    catch(error){
+        console.error(
+            "DOC IN PERIOD RESOLVE ERROR:",
+            error
+        );
+
+        return "";
+    }
+}
+
+function resolveFmcD2PeriodId(source){
+    if(!source || typeof source !== "object"){
+        return "";
+    }
+
+    return String(
+        source.period_id ||
+        source.periodId ||
+        source.active_period_id ||
+        source.activePeriodId ||
+        source.period?.period_id ||
+        source.period?.periodId ||
+        source.data?.period_id ||
+        source.data?.periodId ||
+        source.doc_in?.period_id ||
+        source.docIn?.period_id ||
+        ""
+    ).trim();
+}
+
+
+// ==========================================
+// D2 DYNAMIC FLOK CONFIG
+// ==========================================
+
+const FMC_DOCIN_MAX_FLOK = 6;
+
+const FMC_DOCIN_FLOK_LETTERS = [
+    "A", "B", "C", "D", "E", "F"
+];
+
+function getDocInFlokConfig(){
+    let user = {};
+
+    try{
+        if(typeof getLoginUser === "function"){
+            user = getLoginUser() || {};
+        }
+    }
+    catch(error){
+        console.warn("DOC IN: gagal membaca session user.", error);
+    }
+
+    let floks = [];
+
+    if(Array.isArray(user.floks)){
+        floks = user.floks;
+    }
+    else if(Array.isArray(user?.config?.floks)){
+        floks = user.config.floks;
+    }
+
+    const normalized = [];
+
+    floks.forEach(function(item){
+        const id = String(
+            item?.id ||
+            item?.name ||
+            ""
+        )
+        .trim()
+        .toUpperCase()
+        .replace(/^FLOK\s+/, "");
+
+        if(
+            FMC_DOCIN_FLOK_LETTERS.includes(id) &&
+            !normalized.includes(id)
+        ){
+            normalized.push(id);
+        }
+    });
+
+    /*
+     * Jika session belum membawa daftar FLOK,
+     * gunakan flok_count sebagai fallback.
+     */
+    if(!normalized.length){
+        const count = Number(
+            user.flok_count ??
+            user.cage ??
+            user.config?.flok_count ??
+            user.config?.cage ??
+            0
+        );
+
+        if(Number.isInteger(count) && count > 0){
+            return FMC_DOCIN_FLOK_LETTERS.slice(
+                0,
+                Math.min(count, FMC_DOCIN_MAX_FLOK)
+            );
+        }
+    }
+
+    return normalized.slice(0, FMC_DOCIN_MAX_FLOK);
+}
+
+
+function renderDocInFlokInputs(){
+    const wrap =
+        document.getElementById(
+            "docinFlokInputs"
+        );
+
+    if(!wrap) return;
+
+    const floks =
+        getDocInFlokConfig();
+
+    wrap.innerHTML =
+        floks.map(function(letter){
+
+            return `
+                <div
+                    class="docinFlok"
+                    data-flok="${letter}">
+
+                    <div class="docinFlokTitle">
+                        FLOK ${letter}
+                    </div>
+
+                    <label for="docinPop${letter}">
+                        Populasi
+                    </label>
+
+                    <input
+                        type="number"
+                        id="docinPop${letter}"
+                        min="0"
+                        step="1"
+                        inputmode="numeric"
+                        placeholder="Jumlah ekor">
+
+                    <label for="docinTgl${letter}">
+                        Tanggal DOC
+                    </label>
+
+                    <input
+                        type="date"
+                        id="docinTgl${letter}">
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+function getDocInFlokLetters(){
+    const floks =
+        getDocInFlokConfig();
+
+    return floks.length
+        ? floks
+        : ["A"];
+}
+
+
 // ==========================================
 // TAMPILKAN HALAMAN DOC IN
 // ==========================================
@@ -157,135 +543,10 @@ async function tampilDocIn(){
                 </h3>
 
 
-                <!-- FLOK A -->
-
-                <div class="docinFlok">
-
-                    <div class="docinFlokTitle">
-                        FLOK A
-                    </div>
-
-
-                    <label for="docinPopA">
-                        Populasi
-                    </label>
-
-                    <input
-                        type="number"
-                        id="docinPopA"
-                        min="0"
-                        step="1"
-                        inputmode="numeric"
-                        placeholder="Jumlah ekor">
-
-
-                    <label for="docinTglA">
-                        Tanggal DOC
-                    </label>
-
-                    <input
-                        type="date"
-                        id="docinTglA">
-
-                </div>
-
-
-                <!-- FLOK B -->
-
-                <div class="docinFlok">
-
-                    <div class="docinFlokTitle">
-                        FLOK B
-                    </div>
-
-
-                    <label for="docinPopB">
-                        Populasi
-                    </label>
-
-                    <input
-                        type="number"
-                        id="docinPopB"
-                        min="0"
-                        step="1"
-                        inputmode="numeric"
-                        placeholder="Jumlah ekor">
-
-
-                    <label for="docinTglB">
-                        Tanggal DOC
-                    </label>
-
-                    <input
-                        type="date"
-                        id="docinTglB">
-
-                </div>
-
-
-                <!-- FLOK C -->
-
-                <div class="docinFlok">
-
-                    <div class="docinFlokTitle">
-                        FLOK C
-                    </div>
-
-
-                    <label for="docinPopC">
-                        Populasi
-                    </label>
-
-                    <input
-                        type="number"
-                        id="docinPopC"
-                        min="0"
-                        step="1"
-                        inputmode="numeric"
-                        placeholder="Jumlah ekor">
-
-
-                    <label for="docinTglC">
-                        Tanggal DOC
-                    </label>
-
-                    <input
-                        type="date"
-                        id="docinTglC">
-
-                </div>
-
-
-                <!-- FLOK D -->
-
-                <div class="docinFlok">
-
-                    <div class="docinFlokTitle">
-                        FLOK D
-                    </div>
-
-
-                    <label for="docinPopD">
-                        Populasi
-                    </label>
-
-                    <input
-                        type="number"
-                        id="docinPopD"
-                        min="0"
-                        step="1"
-                        inputmode="numeric"
-                        placeholder="Jumlah ekor">
-
-
-                    <label for="docinTglD">
-                        Tanggal DOC
-                    </label>
-
-                    <input
-                        type="date"
-                        id="docinTglD">
-
+                <div
+                    id="docinFlokInputs"
+                    class="docinFlokInputs">
+                    <!-- FLOK dinamis A-F dibuat oleh renderDocInFlokInputs() -->
                 </div>
 
             </div>
@@ -403,6 +664,8 @@ async function tampilDocIn(){
     `;
 
 
+    renderDocInFlokInputs();
+
     // Muat data server seperti sebelumnya
     await muatDocIn();
 
@@ -416,101 +679,63 @@ async function tampilDocIn(){
 
 function ambilFormDocIn(){
 
-    return {
-
+    const result = {
         tanggal:
             document.getElementById(
                 "docinTanggal"
             )?.value || "",
-
 
         perusahaan:
             document.getElementById(
                 "docinPerusahaan"
             )?.value.trim() || "",
 
-
         periode:
             document.getElementById(
                 "docinPeriode"
             )?.value || "",
-
 
         supplier:
             document.getElementById(
                 "docinSupplier"
             )?.value.trim() || "",
 
-
         harga:
             document.getElementById(
                 "docinHarga"
             )?.value || "",
 
-
-        flokA: {
-
-            populasi:
-                document.getElementById(
-                    "docinPopA"
-                )?.value || "",
-
-            tanggal:
-                document.getElementById(
-                    "docinTglA"
-                )?.value || ""
-
-        },
-
-
-        flokB: {
-
-            populasi:
-                document.getElementById(
-                    "docinPopB"
-                )?.value || "",
-
-            tanggal:
-                document.getElementById(
-                    "docinTglB"
-                )?.value || ""
-
-        },
-
-
-        flokC: {
-
-            populasi:
-                document.getElementById(
-                    "docinPopC"
-                )?.value || "",
-
-            tanggal:
-                document.getElementById(
-                    "docinTglC"
-                )?.value || ""
-
-        },
-
-
-        flokD: {
-
-            populasi:
-                document.getElementById(
-                    "docinPopD"
-                )?.value || "",
-
-            tanggal:
-                document.getElementById(
-                    "docinTglD"
-                )?.value || ""
-
-        }
-
+        floks: {}
     };
 
-}
+    getDocInFlokLetters().forEach(
+        function(letter){
 
+            result.floks[letter] = {
+                populasi:
+                    document.getElementById(
+                        "docinPop" + letter
+                    )?.value || "",
+
+                tanggal:
+                    document.getElementById(
+                        "docinTgl" + letter
+                    )?.value || ""
+            };
+
+            /*
+             * Field lama tetap tersedia untuk
+             * kompatibilitas internal.
+             */
+            result[
+                "flok" + letter
+            ] = result.floks[letter];
+
+        }
+    );
+
+    return result;
+}
 
 
 // ==========================================
@@ -605,6 +830,8 @@ function tambahDataDocIn(){
      * ke sesi PWA.
      */
 
+    data.__fmcLocalDraft = true;
+
     window.fmcDocInDataSesi.push(
         data
     );
@@ -643,7 +870,6 @@ function renderDocInTable(){
     const data =
         window.fmcDocInDataSesi || [];
 
-
     if(!data.length){
 
         return `
@@ -654,11 +880,9 @@ function renderDocInTable(){
                     inventory_2
                 </span>
 
-
                 <strong>
                     Belum ada data
                 </strong>
-
 
                 <small>
                     Data DOC In yang ditambahkan
@@ -671,7 +895,6 @@ function renderDocInTable(){
 
     }
 
-
     return `
 
         <div class="docinRekapList">
@@ -680,13 +903,29 @@ function renderDocInTable(){
                 data.map(
                     function(item,index){
 
+                        const floks =
+                            Array.isArray(item.floks)
+                                ? item.floks
+                                : getDocInFlokLetters().map(
+                                    function(letter){
+                                        return {
+                                            id: letter,
+                                            populasi:
+                                                item[
+                                                    "flok" + letter
+                                                ]?.populasi || "",
+                                            tanggal:
+                                                item[
+                                                    "flok" + letter
+                                                ]?.tanggal || ""
+                                        };
+                                    }
+                                );
+
                         return `
 
                             <div
                                 class="docinRekapItem">
-
-
-                                <!-- HEADER -->
 
                                 <div
                                     class="docinRekapHeader">
@@ -705,7 +944,6 @@ function renderDocInTable(){
 
                                     </div>
 
-
                                     <button
                                         type="button"
                                         class="docinDeleteBtn"
@@ -720,168 +958,88 @@ function renderDocInTable(){
 
                                 </div>
 
-
-                                <!-- DATA UTAMA -->
-
                                 <div
                                     class="docinRekapGrid">
 
-
                                     <div>
-
-                                        <small>
-                                            PT / CV
-                                        </small>
-
+                                        <small>PT / CV</small>
                                         <strong>
                                             ${escapeDocIn(
                                                 item.perusahaan
                                             )}
                                         </strong>
-
                                     </div>
 
-
                                     <div>
-
-                                        <small>
-                                            PERIODE
-                                        </small>
-
+                                        <small>PERIODE</small>
                                         <strong>
                                             ${escapeDocIn(
                                                 item.periode
                                             )}
                                         </strong>
-
                                     </div>
 
-
                                     <div>
-
-                                        <small>
-                                            SUPPLIER
-                                        </small>
-
+                                        <small>SUPPLIER</small>
                                         <strong>
                                             ${escapeDocIn(
                                                 item.supplier
                                             )}
                                         </strong>
-
                                     </div>
 
-
                                     <div>
-
-                                        <small>
-                                            HARGA / EKOR
-                                        </small>
-
+                                        <small>HARGA / EKOR</small>
                                         <strong>
                                             ${escapeDocIn(
                                                 item.harga
                                             )}
                                         </strong>
-
                                     </div>
 
-
                                 </div>
-
-
-                                <!-- DATA FLOK -->
 
                                 <div
                                     class="docinRekapFlok">
 
+                                    ${
+                                        floks.map(
+                                            function(flok){
 
-                                    <div>
+                                                const id =
+                                                    String(
+                                                        flok?.id || ""
+                                                    )
+                                                    .trim()
+                                                    .toUpperCase();
 
-                                        <small>
-                                            FLOK A
-                                        </small>
+                                                return `
+                                                    <div>
 
-                                        <strong>
-                                            ${escapeDocIn(
-                                                item.flokA.populasi
-                                            )}
-                                        </strong>
+                                                        <small>
+                                                            FLOK ${escapeDocIn(id)}
+                                                        </small>
 
-                                        <small>
-                                            ${escapeDocIn(
-                                                item.flokA.tanggal
-                                            )}
-                                        </small>
+                                                        <strong>
+                                                            ${escapeDocIn(
+                                                                flok?.populasi ?? ""
+                                                            )}
+                                                        </strong>
 
-                                    </div>
+                                                        <small>
+                                                            ${escapeDocIn(
+                                                                flok?.tanggal ?? ""
+                                                            )}
+                                                        </small>
 
+                                                    </div>
+                                                `;
 
-                                    <div>
-
-                                        <small>
-                                            FLOK B
-                                        </small>
-
-                                        <strong>
-                                            ${escapeDocIn(
-                                                item.flokB.populasi
-                                            )}
-                                        </strong>
-
-                                        <small>
-                                            ${escapeDocIn(
-                                                item.flokB.tanggal
-                                            )}
-                                        </small>
-
-                                    </div>
-
-
-                                    <div>
-
-                                        <small>
-                                            FLOK C
-                                        </small>
-
-                                        <strong>
-                                            ${escapeDocIn(
-                                                item.flokC.populasi
-                                            )}
-                                        </strong>
-
-                                        <small>
-                                            ${escapeDocIn(
-                                                item.flokC.tanggal
-                                            )}
-                                        </small>
-
-                                    </div>
-
-
-                                    <div>
-
-                                        <small>
-                                            FLOK D
-                                        </small>
-
-                                        <strong>
-                                            ${escapeDocIn(
-                                                item.flokD.populasi
-                                            )}
-                                        </strong>
-
-                                        <small>
-                                            ${escapeDocIn(
-                                                item.flokD.tanggal
-                                            )}
-                                        </small>
-
-                                    </div>
-
+                                            }
+                                        ).join("")
+                                    }
 
                                 </div>
-
 
                             </div>
 
@@ -896,7 +1054,6 @@ function renderDocInTable(){
     `;
 
 }
-
 
 
 // ==========================================
@@ -981,27 +1138,26 @@ function hapusDataDocIn(index){
 function kosongkanFormDocIn(){
 
     const ids = [
-
         "docinTanggal",
         "docinPerusahaan",
         "docinPeriode",
         "docinSupplier",
-        "docinHarga",
-
-        "docinPopA",
-        "docinTglA",
-
-        "docinPopB",
-        "docinTglB",
-
-        "docinPopC",
-        "docinTglC",
-
-        "docinPopD",
-        "docinTglD"
-
+        "docinHarga"
     ];
 
+    getDocInFlokLetters().forEach(
+        function(letter){
+
+            ids.push(
+                "docinPop" + letter
+            );
+
+            ids.push(
+                "docinTgl" + letter
+            );
+
+        }
+    );
 
     ids.forEach(
         function(id){
@@ -1009,11 +1165,8 @@ function kosongkanFormDocIn(){
             const el =
                 document.getElementById(id);
 
-
             if(el){
-
                 el.value = "";
-
             }
 
         }
@@ -1022,140 +1175,118 @@ function kosongkanFormDocIn(){
 }
 
 
-
 // ==========================================
 // SIMPAN DOC IN
 // ==========================================
 
 async function simpanDocIn(){
 
-    const formData =
-        ambilFormDocIn();
-
-
     /*
-     * Jika ada data di rekapan,
-     * gunakan rekapan sebagai sumber utama.
+     * Jika sudah ada data di
+     * "Data Yang Disiapkan",
+     * gunakan data sesi tersebut sebagai
+     * sumber utama.
      *
-     * Jika belum ada rekapan,
-     * gunakan data form lama.
+     * Form boleh kosong karena memang
+     * dikosongkan setelah TAMBAH DATA.
+     *
+     * Validasi form hanya dilakukan jika
+     * belum ada data sesi.
      */
+    const adaDataSesi =
+        Array.isArray(window.fmcDocInDataSesi) &&
+        window.fmcDocInDataSesi.length > 0;
 
-    let items = [];
+    let formData = null;
 
+    if(!adaDataSesi){
 
-    if(
-        window.fmcDocInDataSesi &&
-        window.fmcDocInDataSesi.length
-    ){
-
-        items =
-            window.fmcDocInDataSesi.map(
-                function(item){
-
-                    return {
-
-                        tanggal:
-                            item.tanggal,
-
-                        perusahaan:
-                            item.perusahaan,
-
-                        periode:
-                            item.periode,
-
-                        supplier:
-                            item.supplier,
-
-                        harga:
-                            item.harga,
-
-                        popA:
-                            item.flokA.populasi,
-
-                        tglA:
-                            item.flokA.tanggal,
-
-                        popB:
-                            item.flokB.populasi,
-
-                        tglB:
-                            item.flokB.tanggal,
-
-                        popC:
-                            item.flokC.populasi,
-
-                        tglC:
-                            item.flokC.tanggal,
-
-                        popD:
-                            item.flokD.populasi,
-
-                        tglD:
-                            item.flokD.tanggal
-
-                    };
-
-                }
-            );
-
-    }else{
-
-        /*
-         * Kompatibilitas dengan
-         * cara lama.
-         */
+        formData =
+            ambilFormDocIn();
 
         if(!validasiDocIn(formData)){
             return;
         }
 
+    }
+
+    let items = [];
+
+    if(adaDataSesi){
+
+        items =
+            window.fmcDocInDataSesi.map(
+                function(item){
+
+                    const floks =
+                        getDocInFlokLetters().map(
+                            function(letter){
+
+                                const source =
+                                    item.floks?.[letter] ||
+                                    item[
+                                        "flok" + letter
+                                    ] ||
+                                    {};
+
+                                return {
+                                    id: letter,
+                                    name:
+                                        "FLOK " + letter,
+                                    populasi:
+                                        source.populasi || "",
+                                    tanggal:
+                                        source.tanggal || ""
+                                };
+
+                            }
+                        );
+
+                    return {
+                        tanggal: item.tanggal,
+                        perusahaan: item.perusahaan,
+                        periode: item.periode,
+                        supplier: item.supplier,
+                        harga: item.harga,
+                        floks: floks,
+                        __fmcLocalDraft:
+                            item.__fmcLocalDraft === true
+                    };
+
+                }
+            );
+
+    }
+    else{
 
         items = [
-
             {
+                tanggal: formData.tanggal,
+                perusahaan: formData.perusahaan,
+                periode: formData.periode,
+                supplier: formData.supplier,
+                harga: formData.harga,
 
-                tanggal:
-                    formData.tanggal,
+                floks:
+                    getDocInFlokLetters().map(
+                        function(letter){
 
-                perusahaan:
-                    formData.perusahaan,
+                            const source =
+                                formData.floks[letter];
 
-                periode:
-                    formData.periode,
+                            return {
+                                id: letter,
+                                name:
+                                    "FLOK " + letter,
+                                populasi:
+                                    source?.populasi || "",
+                                tanggal:
+                                    source?.tanggal || ""
+                            };
 
-                supplier:
-                    formData.supplier,
-
-                harga:
-                    formData.harga,
-
-                popA:
-                    formData.flokA.populasi,
-
-                tglA:
-                    formData.flokA.tanggal,
-
-                popB:
-                    formData.flokB.populasi,
-
-                tglB:
-                    formData.flokB.tanggal,
-
-                popC:
-                    formData.flokC.populasi,
-
-                tglC:
-                    formData.flokC.tanggal,
-
-                popD:
-                    formData.flokD.populasi,
-
-                tglD:
-                    formData.flokD.tanggal
-
+                        }
+                    )
             }
-
         ];
 
     }
@@ -1217,19 +1348,36 @@ async function simpanDocIn(){
          */
 
 
-        const pertama =
-            items[0];
 
+        const localDrafts =
+            items.filter(function(item){
+                return item.__fmcLocalDraft === true;
+            });
+
+        const pertama =
+            localDrafts.length
+                ? localDrafts[localDrafts.length - 1]
+                : items[items.length - 1];
+
+        if(!pertama){
+            throw new Error(
+                "Data DOC In yang akan disimpan tidak ditemukan."
+            );
+        }
+
+        const requestedPeriodNo =
+            String(pertama.periode ?? "").trim();
+
+        if(!requestedPeriodNo){
+            throw new Error(
+                "Periode DOC In yang akan disimpan belum tersedia."
+            );
+        }
 
         const result =
             await apiPost(
-
                 "saveDocIn",
-
                 {
-
-                    // Data lama
-
                     tanggal:
                         pertama.tanggal,
 
@@ -1237,7 +1385,7 @@ async function simpanDocIn(){
                         pertama.perusahaan,
 
                     periode:
-                        pertama.periode,
+                        requestedPeriodNo,
 
                     supplier:
                         pertama.supplier,
@@ -1245,38 +1393,61 @@ async function simpanDocIn(){
                     harga:
                         pertama.harga,
 
+                    /*
+                     * Struktur utama D2:
+                     * seluruh FLOK tenant yang aktif.
+                     */
+                    floks:
+                        JSON.stringify(
+                            pertama.floks
+                        ),
+
+                    flok_count:
+                        pertama.floks.length,
+
+                    /*
+                     * Kompatibilitas backend lama A-D.
+                     */
                     popA:
-                        pertama.popA,
+                        pertama.floks.find(
+                            f => f.id === "A"
+                        )?.populasi || "",
 
                     tglA:
-                        pertama.tglA,
+                        pertama.floks.find(
+                            f => f.id === "A"
+                        )?.tanggal || "",
 
                     popB:
-                        pertama.popB,
+                        pertama.floks.find(
+                            f => f.id === "B"
+                        )?.populasi || "",
 
                     tglB:
-                        pertama.tglB,
+                        pertama.floks.find(
+                            f => f.id === "B"
+                        )?.tanggal || "",
 
                     popC:
-                        pertama.popC,
+                        pertama.floks.find(
+                            f => f.id === "C"
+                        )?.populasi || "",
 
                     tglC:
-                        pertama.tglC,
+                        pertama.floks.find(
+                            f => f.id === "C"
+                        )?.tanggal || "",
 
                     popD:
-                        pertama.popD,
+                        pertama.floks.find(
+                            f => f.id === "D"
+                        )?.populasi || "",
 
                     tglD:
-                        pertama.tglD,
-
-
-                    // Data baru
-
-                    items:
-                        items
-
+                        pertama.floks.find(
+                            f => f.id === "D"
+                        )?.tanggal || ""
                 }
-
             );
 
 
@@ -1294,6 +1465,60 @@ async function simpanDocIn(){
 
         }
 
+
+
+
+        /*
+         * Server confirmation: jika backend mengembalikan nomor
+         * periode, nomor tersebut harus sama dengan yang diminta.
+         */
+        const returnedPeriodNo =
+            String(
+                result.period_no ??
+                result.periodNo ??
+                result.active_period_no ??
+                result.activePeriodNo ??
+                result.data?.period_no ??
+                result.data?.periodNo ??
+                result.data?.active_period_no ??
+                result.data?.activePeriodNo ??
+                ""
+            ).trim();
+
+        if(
+            returnedPeriodNo &&
+            returnedPeriodNo !== requestedPeriodNo
+        ){
+            throw new Error(
+                "Server mengembalikan Periode " +
+                returnedPeriodNo +
+                ", bukan Periode " +
+                requestedPeriodNo +
+                ". Data tidak dianggap berhasil."
+            );
+        }
+
+
+        /*
+         * GAS 2 mengembalikan period_id yang digunakan.
+         * Simpan sebagai pointer periode aktif.
+         */
+        const savedPeriodId =
+            resolveFmcD2PeriodId(result);
+
+        if(savedPeriodId){
+            setFmcD2ActivePeriodId(
+                savedPeriodId
+            );
+        }
+
+        if(
+            result.data &&
+            typeof result.data === "object"
+        ){
+            window.fmcDocInLastServerData =
+                result.data;
+        }
 
         tampilPesanDocIn(
 
@@ -1382,42 +1607,286 @@ async function simpanDocIn(){
 
 
 // ==========================================
+// NORMALISASI DATA SERVER -> SESI PWA
+// ==========================================
+
+function normalisasiDocInServerKeSesi(
+    data,
+    periodId = ""
+){
+    if(!data || typeof data !== "object"){
+        return null;
+    }
+
+    const floks =
+        Array.isArray(data.floks)
+            ? data.floks.map(function(flok){
+                const id =
+                    String(
+                        flok?.id ||
+                        flok?.flok ||
+                        flok?.kode ||
+                        flok?.name ||
+                        ""
+                    )
+                    .trim()
+                    .toUpperCase()
+                    .replace(/^FLOK\s+/, "");
+
+                return {
+                    id: id,
+                    name:
+                        flok?.name ||
+                        ("FLOK " + id),
+                    populasi:
+                        flok?.populasi ??
+                        flok?.population ??
+                        "",
+                    tanggal:
+                        flok?.tanggal ??
+                        flok?.tanggal_doc ??
+                        flok?.doc_date ??
+                        ""
+                };
+            }).filter(function(flok){
+                return /^[A-F]$/.test(flok.id);
+            })
+            : getDocInFlokLetters().map(
+                function(letter){
+                    return {
+                        id: letter,
+                        name:
+                            "FLOK " + letter,
+                        populasi:
+                            data["pop" + letter] ??
+                            data["flok" + letter]?.populasi ??
+                            "",
+                        tanggal:
+                            data["tgl" + letter] ??
+                            data["flok" + letter]?.tanggal ??
+                            ""
+                    };
+                }
+            );
+
+    const item = {
+        __fmcLocalDraft: false,
+        tanggal:
+            data.tanggal ||
+            data.tanggal_doc_in ||
+            data.doc_in_date ||
+            "",
+
+        perusahaan:
+            data.perusahaan ||
+            data.company ||
+            data.nama_pt_cv ||
+            "",
+
+        periode:
+            data.periode ||
+            data.period ||
+            data.period_id ||
+            periodId ||
+            "",
+
+        supplier:
+            data.supplier ||
+            data.supplier_doc ||
+            "",
+
+        harga:
+            data.harga ??
+            data.harga_doc ??
+            data.harga_per_ekor ??
+            "",
+
+        floks: {}
+    };
+
+    floks.forEach(function(flok){
+        item.floks[flok.id] = {
+            populasi:
+                flok.populasi ?? "",
+            tanggal:
+                flok.tanggal ?? ""
+        };
+
+        item["flok" + flok.id] =
+            item.floks[flok.id];
+    });
+
+    return item;
+}
+
+
+// ==========================================
+// RESTORE SERVER -> "DATA YANG DISIAPKAN"
+// ==========================================
+
+function restoreDocInServerToPWA(
+    data,
+    periodId = ""
+){
+    const item =
+        normalisasiDocInServerKeSesi(
+            data,
+            periodId
+        );
+
+    if(!item){
+        return false;
+    }
+
+    /*
+     * Satu DOC IN aktif per period.
+     * Server menjadi sumber utama, jadi replace
+     * agar tidak terjadi duplikat saat halaman dibuka.
+     */
+    window.fmcDocInDataSesi = [item];
+
+    window.fmcDocInLastServerData =
+        data;
+
+    if(item.periode){
+        setFmcD2ActivePeriodId(
+            item.periode
+        );
+    }
+    else if(periodId){
+        setFmcD2ActivePeriodId(
+            periodId
+        );
+    }
+
+    renderDocInTableInPage();
+
+    return true;
+}
+
+
+// ==========================================
 // LOAD DATA DOC IN
 // ==========================================
 
 async function muatDocIn(){
 
     /*
-     * Fungsi ini tetap menggunakan
-     * backend yang sekarang.
+     * GET DOC IN bukan hanya mengisi form.
+     * Record server juga harus dipulihkan ke
+     * "Data Yang Disiapkan".
      *
-     * Rekapan sesi PWA tidak dihapus
-     * oleh fungsi ini.
+     * Period:
+     * - gunakan pointer aktif jika tersedia
+     * - jika belum ada, baca getPeriods
+     * - jangan menebak jika ada >1 OPEN period
      */
 
     try{
 
-        const result =
-            await apiPost(
-                "getDocIn"
-            );
+        let periodId =
+            await resolveFmcD2ActivePeriod_();
+
+        let result = null;
+
+        if(periodId){
+
+            result =
+                await apiPost(
+                    "getDocIn",
+                    {
+                        period_id:
+                            periodId
+                    }
+                );
+
+        }
+        else{
+
+            /*
+             * Fallback kompatibilitas:
+             * backend boleh resolve sendiri jika
+             * tenant hanya mempunyai satu period.
+             */
+            result =
+                await apiPost(
+                    "getDocIn",
+                    {}
+                );
+
+        }
 
 
         if(
             !result ||
-            result.success !== true ||
-            !result.data
+            result.success !== true
         ){
+
+            console.warn(
+                "DOC IN GET:",
+                result?.message ||
+                "Response getDocIn tidak valid."
+            );
+
+            /*
+             * Jangan menghapus staging PWA
+             * bila GET server gagal.
+             */
+            return;
+
+        }
+
+
+        const returnedPeriodId =
+            resolveFmcD2PeriodId(
+                result
+            );
+
+        if(returnedPeriodId){
+
+            setFmcD2ActivePeriodId(
+                returnedPeriodId
+            );
+
+            periodId =
+                returnedPeriodId;
+
+        }
+
+
+        const data =
+            result.data ||
+            result.doc_in ||
+            null;
+
+
+        if(!data){
+
+            console.info(
+                "DOC IN GET: data belum tersedia."
+            );
 
             return;
 
         }
 
 
+        /*
+         * 1. Isi form dari server.
+         */
         isiFormDocIn(
-            result.data
+            data
         );
 
+
+        /*
+         * 2. Pulihkan record server ke
+         *    "Data Yang Disiapkan".
+         */
+        restoreDocInServerToPWA(
+            data,
+            periodId
+        );
 
     }
     catch(error){
@@ -1432,7 +1901,6 @@ async function muatDocIn(){
 }
 
 
-
 // ==========================================
 // ISI DATA KE FORM
 // ==========================================
@@ -1440,7 +1908,6 @@ async function muatDocIn(){
 function isiFormDocIn(data){
 
     if(!data) return;
-
 
     const setValue = (
         id,
@@ -1450,101 +1917,103 @@ function isiFormDocIn(data){
         const el =
             document.getElementById(id);
 
-
         if(el){
-
             el.value =
                 value ?? "";
-
         }
 
     };
-
 
     setValue(
         "docinTanggal",
         data.tanggal
     );
 
-
     setValue(
         "docinPerusahaan",
         data.perusahaan
     );
 
-
     setValue(
         "docinPeriode",
-        data.periode
+        data.periode ||
+        data.period ||
+        data.period_id
     );
-
 
     setValue(
         "docinSupplier",
         data.supplier
     );
 
-
     setValue(
         "docinHarga",
         data.harga
     );
 
-
-    setValue(
-        "docinPopA",
-        data.popA
-    );
-
-
-    setValue(
-        "docinTglA",
-        data.tglA
-    );
-
-
-    setValue(
-        "docinPopB",
-        data.popB
-    );
-
-
-    setValue(
-        "docinTglB",
-        data.tglB
-    );
-
-
-    setValue(
-        "docinPopC",
-        data.popC
-    );
-
-
-    setValue(
-        "docinTglC",
-        data.tglC
-    );
-
-
-    setValue(
-        "docinPopD",
-        data.popD
-    );
-
-
-    setValue(
-        "docinTglD",
-        data.tglD
-    );
-
-
     /*
-     * Total DOC bukan dihitung di sini.
-     *
-     * Nilainya harus datang
-     * dari spreadsheet.
+     * D2 dynamic FLOK.
      */
+    if(Array.isArray(data.floks)){
+
+        data.floks.forEach(
+            function(flok){
+
+                const letter =
+                    String(
+                        flok?.id ||
+                        ""
+                    )
+                    .trim()
+                    .toUpperCase();
+
+                if(
+                    !FMC_DOCIN_FLOK_LETTERS
+                        .includes(letter)
+                ){
+                    return;
+                }
+
+                setValue(
+                    "docinPop" + letter,
+                    flok.populasi
+                );
+
+                setValue(
+                    "docinTgl" + letter,
+                    flok.tanggal
+                );
+
+            }
+        );
+
+    }
+    else{
+
+        /*
+         * Legacy A-D fallback.
+         */
+        getDocInFlokLetters().forEach(
+            function(letter){
+
+                setValue(
+                    "docinPop" + letter,
+                    data[
+                        "pop" + letter
+                    ]
+                );
+
+                setValue(
+                    "docinTgl" + letter,
+                    data[
+                        "tgl" + letter
+                    ]
+                );
+
+            }
+        );
+
+    }
 
     setValue(
         "docinTotal",
@@ -1552,7 +2021,6 @@ function isiFormDocIn(data){
     );
 
 }
-
 
 
 // ==========================================

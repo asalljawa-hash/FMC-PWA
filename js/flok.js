@@ -98,7 +98,7 @@ async function tampilFlok(){
 
                     <h2>
 
-                        Flok ${item.nama}
+                        Flok ${String(item.nama || '').replace(/^flok\s+/i, '')}
 
                     </h2>
 

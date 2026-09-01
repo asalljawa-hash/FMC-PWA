@@ -267,11 +267,11 @@ function validateRegister() {
     if (
         !Number.isInteger(cage) ||
         cage < 1 ||
-        cage > 4
+        cage > 6
     ) {
 
         showMessage(
-            "Jumlah kandang harus antara 1 sampai 4 kandang.",
+            "Jumlah kandang harus antara 1 sampai 6 kandang.",
             "error"
         );
 
