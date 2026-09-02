@@ -88,6 +88,301 @@ if (FMC_INPUTFLOK_BROWSER) {
 
 
 
+
+// ==========================================================
+// FMC INPUT FLOK — FAST OPEN CACHE V1
+// ==========================================================
+//
+// Tujuan:
+// - halaman cepat tampil setelah aplikasi dibuka kembali
+// - cache HANYA untuk tampilan sementara
+// - DB / Calculation Engine tetap SOURCE OF TRUTH
+// - cache dipisahkan per tenant + period
+// - serverLoaded tetap FALSE sampai server benar-benar tersinkron
+//
+// Cache tidak pernah dipakai untuk SAVE sebelum server sync berhasil.
+// ==========================================================
+
+const FMC_INPUTFLOK_FAST_CACHE_VERSION = "V1";
+const FMC_INPUTFLOK_FAST_CACHE_PREFIX = "fmcInputFlokFastCache_";
+const FMC_INPUTFLOK_FAST_LAST_PERIOD_PREFIX = "fmcInputFlokFastLastPeriod_";
+
+function fmcInputFlokGetTenantKey_() {
+    if (!FMC_INPUTFLOK_BROWSER) {
+        return "";
+    }
+
+    const candidates = [];
+
+    try {
+        const server = window.serverData || null;
+        if (server) {
+            candidates.push(
+                server.tenant_id,
+                server.tenantId,
+                server.context?.tenant_id,
+                server.context?.tenantId,
+                server.profile?.tenant_id,
+                server.profile?.tenantId,
+                server.user_id,
+                server.userId
+            );
+        }
+    } catch (error) {}
+
+    try {
+        const user =
+            typeof getLoginUser === "function"
+                ? getLoginUser()
+                : typeof ambilSession === "function"
+                    ? ambilSession()
+                    : null;
+
+        if (user) {
+            candidates.push(
+                user.tenant_id,
+                user.tenantId,
+                user.profile?.tenant_id,
+                user.profile?.tenantId,
+                user.user_id,
+                user.userId,
+                user.id
+            );
+        }
+    } catch (error) {}
+
+    for (const value of candidates) {
+        const key = String(value ?? "").trim();
+        if (key) {
+            return key;
+        }
+    }
+
+    // Tidak membuat cache global bila tenant tidak dapat dikenali.
+    return "";
+}
+
+function fmcInputFlokCacheSafePart_(value) {
+    return encodeURIComponent(String(value ?? "").trim());
+}
+
+function fmcInputFlokCacheKey_(tenantKey, periodId) {
+    return (
+        FMC_INPUTFLOK_FAST_CACHE_PREFIX +
+        fmcInputFlokCacheSafePart_(tenantKey) +
+        "_" +
+        fmcInputFlokCacheSafePart_(periodId)
+    );
+}
+
+function fmcInputFlokLastPeriodKey_(tenantKey) {
+    return (
+        FMC_INPUTFLOK_FAST_LAST_PERIOD_PREFIX +
+        fmcInputFlokCacheSafePart_(tenantKey)
+    );
+}
+
+function fmcInputFlokWriteFastCache_(periodId) {
+    if (!FMC_INPUTFLOK_BROWSER) {
+        return;
+    }
+
+    const tenantKey = fmcInputFlokGetTenantKey_();
+    const period = String(periodId ?? "").trim();
+
+    if (!tenantKey || !period) {
+        return;
+    }
+
+    try {
+        let previous = null;
+
+        try {
+            const oldRaw = localStorage.getItem(
+                fmcInputFlokCacheKey_(tenantKey, period)
+            );
+            previous = oldRaw ? JSON.parse(oldRaw) : null;
+        } catch (error) {
+            previous = null;
+        }
+
+        const payload = {
+            version: FMC_INPUTFLOK_FAST_CACHE_VERSION,
+            tenant_id: tenantKey,
+            period_id: period,
+            period_no: String(
+                window.fmcInputFlokActivePeriodNo ||
+                previous?.period_no ||
+                ""
+            ).trim(),
+            saved_at: Date.now(),
+            active_floks: getInputFlokDaftarAktif_(),
+            docin: window.fmcInputFlokDocIn || previous?.docin || null,
+            floks: previous?.floks && typeof previous.floks === "object"
+                ? previous.floks
+                : {}
+        };
+
+        const active = getInputFlokDaftarAktif_();
+
+        active.forEach(flok => {
+            const current = window.fmcInputFlokHasilServer?.[flok];
+
+            // Hanya overwrite cache FLOK bila state server saat ini benar-benar
+            // berupa array. Ini mencegah cache FLOK lain terhapus saat user
+            // hanya membuka satu FLOK.
+            if (Array.isArray(current)) {
+                payload.floks[flok] = {
+                    items: current
+                };
+            } else if (!payload.floks[flok]) {
+                payload.floks[flok] = { items: [] };
+            }
+        });
+
+        localStorage.setItem(
+            fmcInputFlokCacheKey_(tenantKey, period),
+            JSON.stringify(payload)
+        );
+
+        localStorage.setItem(
+            fmcInputFlokLastPeriodKey_(tenantKey),
+            period
+        );
+    } catch (error) {
+        // Cache adalah optimasi saja; kegagalannya tidak boleh mengganggu PWA.
+        console.warn("INPUT FLOK CACHE: gagal menyimpan cache.", error);
+    }
+}
+
+function fmcInputFlokHydrateFastCache_() {
+    if (!FMC_INPUTFLOK_BROWSER) {
+        return null;
+    }
+
+    const tenantKey = fmcInputFlokGetTenantKey_();
+    if (!tenantKey) {
+        return null;
+    }
+
+    try {
+        const lastPeriod = String(
+            localStorage.getItem(
+                fmcInputFlokLastPeriodKey_(tenantKey)
+            ) || ""
+        ).trim();
+
+        if (!lastPeriod) {
+            return null;
+        }
+
+        const raw = localStorage.getItem(
+            fmcInputFlokCacheKey_(tenantKey, lastPeriod)
+        );
+
+        if (!raw) {
+            return null;
+        }
+
+        const cache = JSON.parse(raw);
+
+        if (
+            !cache ||
+            cache.version !== FMC_INPUTFLOK_FAST_CACHE_VERSION ||
+            String(cache.tenant_id || "") !== tenantKey ||
+            String(cache.period_id || "") !== lastPeriod
+        ) {
+            return null;
+        }
+
+        const activeFloks = Array.isArray(cache.active_floks)
+            ? cache.active_floks
+                .map(x => String(x || "").trim().toUpperCase())
+                .filter(x => ["A", "B", "C", "D", "E", "F"].includes(x))
+            : [];
+
+        if (activeFloks.length) {
+            window.fmcInputFlokActiveList = activeFloks;
+        }
+
+        window.fmcInputFlokActivePeriodId = lastPeriod;
+        window.fmcInputFlokActivePeriodNo =
+            String(cache.period_no || "").trim();
+
+        if (
+            cache.docin &&
+            typeof cache.docin === "object"
+        ) {
+            window.fmcInputFlokDocIn = cache.docin;
+        }
+
+        if (!window.fmcInputFlokDataSesi) {
+            window.fmcInputFlokDataSesi = {};
+        }
+
+        if (!window.fmcInputFlokHasilServer) {
+            window.fmcInputFlokHasilServer = {};
+        }
+
+        if (!window.fmcInputFlokServerLoaded) {
+            window.fmcInputFlokServerLoaded = {};
+        }
+
+        activeFloks.forEach(flok => {
+            const cachedItems = Array.isArray(cache.floks?.[flok]?.items)
+                ? cache.floks[flok].items
+                : [];
+
+            window.fmcInputFlokHasilServer[flok] = cachedItems;
+
+            window.fmcInputFlokDataSesi[flok] = cachedItems
+                .filter(item => Number.isFinite(Number(item?.umur)))
+                .map(item => ({
+                    flok: flok,
+                    umur: Number(item.umur),
+                    tanggal: item.tanggal || "",
+                    mati: Number(item.mati) || 0,
+                    afkir: Number(item.afkir) || 0,
+                    bbAvg: Number(item.bbAvg) || 0,
+                    konsumsiPakan: Number(item.konsumsiPakan) || 0,
+                    jenisPakan: item.jenisPakan || "",
+                    __cache: true
+                }));
+
+            // Sangat penting: cache TIDAK dianggap sudah diverifikasi server.
+            window.fmcInputFlokServerLoaded[flok] = false;
+        });
+
+        window.fmcInputFlokFastCacheHydrated = true;
+        window.fmcInputFlokFastCachePeriodId = lastPeriod;
+
+        return cache;
+    } catch (error) {
+        console.warn("INPUT FLOK CACHE: cache tidak dapat dibaca.", error);
+        return null;
+    }
+}
+
+function fmcInputFlokRenderCurrent_() {
+    const flok = getInputFlokAktif();
+    const rekap = document.getElementById("inputFlokRekap");
+
+    if (rekap && flok) {
+        rekap.innerHTML = renderRekapInputFlok(flok);
+    }
+
+    const umurEl = document.getElementById("inputFlokUmur");
+    const umurBerikutnya = tentukanUmurBerikutnyaInputFlok(flok);
+
+    if (umurEl) {
+        umurEl.value = String(umurBerikutnya);
+    }
+
+    if (flok) {
+        tampilkanTanggalInputFlok(flok, umurBerikutnya);
+    }
+}
+
 function getInputFlokDaftarAktif_() {
 
     if (!FMC_INPUTFLOK_BROWSER) {
@@ -637,25 +932,50 @@ function assertInputFlokPeriod_(
 async function tampilInputFlok() {
 
     const page =
-        document.getElementById(
-            "inputFlokPage"
-        );
+        document.getElementById("inputFlokPage");
 
     if (!page) {
-
         console.warn(
             "INPUT FLOK: #inputFlokPage tidak ditemukan."
         );
-
         return;
     }
 
+    // ======================================================
+    // FAST PATH
+    // ======================================================
+    // Pulihkan cache terlebih dahulu agar halaman bisa tampil
+    // tanpa menunggu round-trip GAS. Cache bukan source of truth.
+    // ======================================================
 
-    const daftarFlok =
-        await resolveInputFlokDaftarAktif_();
+    const cached =
+        fmcInputFlokHydrateFastCache_();
 
-    if (!getInputFlokDaftarAktif_().includes(
-        String(window.fmcFlokAktif || "").trim().toUpperCase()
+    let daftarFlok =
+        getInputFlokDaftarAktif_();
+
+    // Jika belum ada cache/config lokal, baru tunggu konfigurasi server.
+    if (!daftarFlok.length) {
+        try {
+            daftarFlok =
+                await resolveInputFlokDaftarAktif_();
+        } catch (error) {
+            console.warn(
+                "INPUT FLOK: konfigurasi FLOK belum tersedia.",
+                error
+            );
+            return;
+        }
+    }
+
+    if (!daftarFlok.length) {
+        return;
+    }
+
+    if (!daftarFlok.includes(
+        String(window.fmcFlokAktif || "")
+            .trim()
+            .toUpperCase()
     )) {
         window.fmcFlokAktif = daftarFlok[0];
     }
@@ -663,139 +983,63 @@ async function tampilInputFlok() {
     const flokAktif =
         getInputFlokAktif();
 
-
-    window.fmcFlokAktif =
-        flokAktif;
-
+    window.fmcFlokAktif = flokAktif;
 
     // ======================================================
-    // RENDER HALAMAN
+    // RENDER HALAMAN SEGERA
     // ======================================================
 
     page.innerHTML = `
 
         <div class="card flokInputCard">
 
-            <!-- ==================================================
-                 HEADER
-            ================================================== -->
-
             <div class="flokInputHeader">
-
                 <div>
-
                     <div class="flokHeaderSmall">
                         FMC BROILER MOBILE V11
                     </div>
-
                     <h2>
-
-                        <span class="material-symbols-rounded">
-                            edit_note
-                        </span>
-
+                        <span class="material-symbols-rounded">edit_note</span>
                         FLOK ${flokAktif}
-
                     </h2>
-
                     <p>
                         Input Data Produksi FLOK
                     </p>
-
                 </div>
-
 
                 <div class="flokStatusBadge">
-
-                    <span class="material-symbols-rounded">
-                        HOME
-                    </span>
-
+                    <span class="material-symbols-rounded">HOME</span>
                     FLOK ${flokAktif}
-
                 </div>
-
             </div>
-
-
-            <!-- ==================================================
-                 PILIH FLOK
-            ================================================== -->
 
             <div class="flokSelector">
-
                 ${getInputFlokDaftarAktif_().map(f => `
-
-                        <button
-                            type="button"
-                            class="flokSelectorBtn ${
-                                flokAktif === f
-                                    ? "active"
-                                    : ""
-                            }"
-                            onclick="pilihInputFlok('${f}')">
-
-                            FLOK ${f}
-
-                        </button>
-
-                    `)
-                    .join("")}
-
+                    <button
+                        type="button"
+                        class="flokSelectorBtn ${flokAktif === f ? "active" : ""}"
+                        onclick="pilihInputFlok('${f}')">
+                        FLOK ${f}
+                    </button>
+                `).join("")}
             </div>
 
-
-            <!-- ==================================================
-                 DATA PRODUKSI
-            ================================================== -->
-
             <div class="flokInputSection">
-
                 <h3>
-
-                    <span class="material-symbols-rounded">
-                        edit_note
-                    </span>
-
+                    <span class="material-symbols-rounded">edit_note</span>
                     Data Produksi
-
                 </h3>
 
-
-                <!-- ==================================================
-                     UMUR
-                ================================================== -->
-
-                <label for="inputFlokUmur">
-                    Umur
-                </label>
-
+                <label for="inputFlokUmur">Umur</label>
                 <select
                     id="inputFlokUmur"
                     onchange="ubahUmurInputFlok(this.value)">
-
-                    ${buatPilihanUmurInputFlok(
-                        flokAktif
-                    )}
-
+                    ${buatPilihanUmurInputFlok(flokAktif)}
                 </select>
 
-
-                <!-- ==================================================
-                     TANGGAL
-                     READONLY
-                ================================================== -->
-
-                <label for="inputFlokTanggal">
-                    Tanggal
-                </label>
-
+                <label for="inputFlokTanggal">Tanggal</label>
                 <div class="flokTanggalWrap">
-
-                    <span class="material-symbols-rounded">
-                        calendar_month
-                    </span>
-
+                    <span class="material-symbols-rounded">calendar_month</span>
                     <input
                         type="text"
                         id="inputFlokTanggal"
@@ -803,21 +1047,11 @@ async function tampilInputFlok() {
                         readonly
                         tabindex="-1"
                         aria-readonly="true">
-
-                    <span class="flokReadonlyIcon">
-                        lock
-                    </span>
-
+                    <span class="flokReadonlyIcon">lock</span>
                 </div>
-
                 <small class="flokAutoInfo">
                     Otomatis mengikuti tanggal DOC IN dan umur
                 </small>
-
-
-                <!-- ==================================================
-                     PESAN URUTAN
-                ================================================== -->
 
                 <div
                     id="inputFlokUrutanMessage"
@@ -825,15 +1059,7 @@ async function tampilInputFlok() {
                     style="display:none;">
                 </div>
 
-
-                <!-- ==================================================
-                     MATI
-                ================================================== -->
-
-                <label for="inputFlokMati">
-                    Mati
-                </label>
-
+                <label for="inputFlokMati">Mati</label>
                 <input
                     type="number"
                     id="inputFlokMati"
@@ -843,15 +1069,7 @@ async function tampilInputFlok() {
                     placeholder="Jumlah ayam mati"
                     autocomplete="off">
 
-
-                <!-- ==================================================
-                     AFKIR
-                ================================================== -->
-
-                <label for="inputFlokAfkir">
-                    Afkir
-                </label>
-
+                <label for="inputFlokAfkir">Afkir</label>
                 <input
                     type="number"
                     id="inputFlokAfkir"
@@ -861,15 +1079,7 @@ async function tampilInputFlok() {
                     placeholder="Jumlah ayam afkir"
                     autocomplete="off">
 
-
-                <!-- ==================================================
-                     BB AVG
-                ================================================== -->
-
-                <label for="inputFlokBBAvg">
-                    BB Avg
-                </label>
-
+                <label for="inputFlokBBAvg">BB Avg</label>
                 <input
                     type="number"
                     id="inputFlokBBAvg"
@@ -879,15 +1089,7 @@ async function tampilInputFlok() {
                     placeholder="Berat badan rata-rata"
                     autocomplete="off">
 
-
-                <!-- ==================================================
-                     KONSUMSI PAKAN
-                ================================================== -->
-
-                <label for="inputFlokKonsumsi">
-                    Konsumsi Pakan
-                </label>
-
+                <label for="inputFlokKonsumsi">Konsumsi Pakan</label>
                 <input
                     type="number"
                     id="inputFlokKonsumsi"
@@ -897,47 +1099,17 @@ async function tampilInputFlok() {
                     placeholder="Jumlah konsumsi pakan"
                     autocomplete="off">
 
-
-                <!-- ==================================================
-                     JENIS PAKAN
-                ================================================== -->
-
-                <label for="inputFlokJenisPakan">
-                    Jenis Pakan
-                </label>
-
+                <label for="inputFlokJenisPakan">Jenis Pakan</label>
                 <select
                     id="inputFlokJenisPakan"
                     onchange="ubahHargaInputFlok(this.value)">
-
-                    <option value="">
-                        Pilih jenis pakan
-                    </option>
-
-                    <option value="BR1">
-                        BR1
-                    </option>
-
-                    <option value="BR2">
-                        BR2
-                    </option>
-
-                    <option value="BR3">
-                        BR3
-                    </option>
-
+                    <option value="">Pilih jenis pakan</option>
+                    <option value="BR1">BR1</option>
+                    <option value="BR2">BR2</option>
+                    <option value="BR3">BR3</option>
                 </select>
 
-
-                <!-- ==================================================
-                     HARGA PAKAN
-                     READONLY
-                ================================================== -->
-
-                <label for="inputFlokHarga">
-                    Harga / Kg
-                </label>
-
+                <label for="inputFlokHarga">Harga / Kg</label>
                 <input
                     type="text"
                     id="inputFlokHarga"
@@ -947,123 +1119,85 @@ async function tampilInputFlok() {
                     aria-readonly="true"
                     placeholder="Otomatis dari MASTER PAKAN">
 
-
-                <!-- ==================================================
-                     PESAN
-                ================================================== -->
-
                 <div
                     id="inputFlokMessage"
                     class="flokMessage"
                     style="display:none;">
                 </div>
 
-
-                <!-- ==================================================
-                     TAMBAH DATA
-                ================================================== -->
-
                 <button
                     type="button"
                     id="btnTambahDataInputFlok"
                     class="flokSaveBtn"
                     onclick="tambahDataInputFlokUI()">
-
-                    <span class="material-symbols-rounded">
-                        add
-                    </span>
-
+                    <span class="material-symbols-rounded">add</span>
                     TAMBAH DATA
-
                 </button>
-
             </div>
-
-
-            <!-- ==================================================
-                 REKAP DATA
-            ================================================== -->
 
             <div
                 id="inputFlokRekap"
                 class="flokRekapCard">
-
-                ${renderRekapInputFlok(
-                    flokAktif
-                )}
-
+                ${renderRekapInputFlok(flokAktif)}
             </div>
-
-
-            <!-- ==================================================
-                 SIMPAN DATA FLOK
-                 PWA -> GAS
-            ================================================== -->
 
             <button
                 type="button"
                 id="btnSimpanInputFlok"
                 class="flokSaveBtn"
                 onclick="simpanInputFlokKeGAS()">
-
-                <span class="material-symbols-rounded">
-                    save
-                </span>
-
+                <span class="material-symbols-rounded">save</span>
                 SIMPAN DATA FLOK
-
             </button>
 
         </div>
-
     `;
 
-
-    // ======================================================
-    // LOAD DOC IN TENANT
-    // ======================================================
-    //
-    // Sumber resmi tanggal:
-    // 📝 DOC IN -> H3/H4/H5/H6
-    //
-    try {
-
-        await muatDOCInputFlok();
-
-        // Ambil data Input FLOK yang sudah tersimpan di server.
-        // Hasil ini hanya untuk mengisi rekapan + KPI; tidak menulis
-        // kembali tanggal DOC IN ke spreadsheet.
-        await muatInputFlokDariGAS(
-            flokAktif
-        );
-
-    } catch (error) {
-
-        console.warn(
-            "INPUT FLOK: gagal mengambil DOC IN.",
-            error
-        );
-
+    // Cache sudah ada -> render benar-benar langsung.
+    if (cached) {
+        fmcInputFlokRenderCurrent_();
     }
 
-
     // ======================================================
-    // SET UMUR AWAL
+    // BACKGROUND SYNC
+    // ======================================================
+    // Tidak menahan first paint. Server tetap menjadi source of truth.
     // ======================================================
 
+    Promise.resolve().then(async () => {
+        try {
+            // Setelah first paint, validasi ulang konfigurasi tenant dari server.
+            // Ini menjaga agar cache lama tidak pernah menjadi source of truth.
+            const serverFloks =
+                await resolveInputFlokDaftarAktif_();
+
+            let syncFlok = flokAktif;
+
+            if (!serverFloks.includes(syncFlok)) {
+                syncFlok = serverFloks[0] || flokAktif;
+                window.fmcFlokAktif = syncFlok;
+            }
+
+            await muatDOCInputFlok();
+            await muatInputFlokDariGAS(syncFlok);
+
+            // Setelah server sukses, render ulang dengan data terbaru.
+            fmcInputFlokRenderCurrent_();
+        } catch (error) {
+            console.warn(
+                "INPUT FLOK: background sync gagal.",
+                error
+            );
+        }
+    });
+
+    // Set umur awal segera, lalu DOC IN akan diperbarui saat sync selesai.
     const umurEl =
-        document.getElementById(
-            "inputFlokUmur"
-        );
+        document.getElementById("inputFlokUmur");
 
     if (umurEl) {
-
-        ubahUmurInputFlok(
-            umurEl.value
-        );
-
+        ubahUmurInputFlok(umurEl.value);
     }
-
 }
 
 
@@ -1354,6 +1488,18 @@ async function muatDOCInputFlok() {
 
     window.fmcInputFlokDocIn =
         result.data;
+
+    // DOC IN ikut dicache agar tanggal bisa muncul pada fast open.
+    try {
+        const periodId =
+            window.fmcInputFlokActivePeriodId ||
+            window.fmcInputFlokFastCachePeriodId ||
+            "";
+
+        if (periodId) {
+            fmcInputFlokWriteFastCache_(periodId);
+        }
+    } catch (error) {}
 
     return window.fmcInputFlokDocIn;
 
@@ -2243,35 +2389,41 @@ function ambilKPIInputFlok(
         };
     }
 
+    // Engine D2 V2 menyimpan populasi hidup pada field
+    // "populasiHidup" di setiap baris calculated. Beberapa bridge
+    // lama dapat memakai "live" / "ayamHidup", jadi semua alias
+    // yang kompatibel tetap diterima di sini.
     const terakhir =
-        hasil[hasil.length - 1];
+        hasil[hasil.length - 1] || {};
+
+    const live =
+        terakhir.live ??
+        terakhir.ayamHidup ??
+        terakhir.AyamHidup ??
+        terakhir["Ayam Hidup"] ??
+        terakhir.AYAM_HIDUP ??
+        terakhir.populasiHidup ??
+        terakhir["populasi_hidup"];
 
     return {
         ayamHidup:
-            terakhir.ayamHidup ??
-            "—",
+            formatJumlahInputFlok_(live),
 
         mortalitas:
-            terakhir.mortalitas ??
-            "—",
+            formatPersenInputFlok_(terakhir.mortalitas),
 
         bbAvg:
-            terakhir.bbAvg ??
-            "—",
+            formatBBInputFlok(terakhir.bbAvg),
 
         fcr:
-            terakhir.fcr ??
-            "—",
+            formatFCRInputFlok_(terakhir.fcr),
 
         ip:
-            terakhir.ip ??
-            "—",
+            formatIPInputFlok_(terakhir.ip),
 
         tonase:
-            terakhir.tonase ??
-            "—"
+            formatTonaseInputFlok_(terakhir.tonase)
     };
-
 }
 
 
@@ -2635,6 +2787,85 @@ function buatKpiInputFlok(
 
 
 // ==========================================================
+// FORMAT KPI PROFESIONAL FMC
+// ==========================================================
+// Nilai DB/Engine tidak diubah. Ini murni formatter tampilan PWA.
+
+function fmcNumberOrNull_(nilai) {
+    if (nilai === null || nilai === undefined || nilai === "") {
+        return null;
+    }
+
+    const angka = Number(nilai);
+    return Number.isFinite(angka) ? angka : null;
+}
+
+function formatJumlahInputFlok_(nilai) {
+    const angka = fmcNumberOrNull_(nilai);
+
+    if (angka === null) {
+        return "—";
+    }
+
+    return new Intl.NumberFormat("id-ID", {
+        maximumFractionDigits: 0
+    }).format(angka);
+}
+
+function formatPersenInputFlok_(nilai) {
+    const angka = fmcNumberOrNull_(nilai);
+
+    if (angka === null) {
+        return "—";
+    }
+
+    return new Intl.NumberFormat("id-ID", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(angka * 100) + "%";
+}
+
+function formatFCRInputFlok_(nilai) {
+    const angka = fmcNumberOrNull_(nilai);
+
+    if (angka === null) {
+        return "—";
+    }
+
+    return new Intl.NumberFormat("id-ID", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(angka);
+}
+
+function formatIPInputFlok_(nilai) {
+    const angka = fmcNumberOrNull_(nilai);
+
+    if (angka === null) {
+        return "—";
+    }
+
+    return new Intl.NumberFormat("id-ID", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(angka);
+}
+
+function formatTonaseInputFlok_(nilai) {
+    const angka = fmcNumberOrNull_(nilai);
+
+    if (angka === null) {
+        return "—";
+    }
+
+    return new Intl.NumberFormat("id-ID", {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3
+    }).format(angka);
+}
+
+
+// ==========================================================
 // FORMAT ANGKA
 // ==========================================================
 
@@ -2895,6 +3126,9 @@ async function muatInputFlokDariGAS(
                 jenisPakan: item.jenisPakan || ""
             }));
 
+    // Server sukses -> cache aman untuk pembukaan berikutnya.
+    fmcInputFlokWriteFastCache_(periodId);
+
     return result;
 }
 
@@ -2985,13 +3219,21 @@ async function kirimInputFlokKeGAS(
         "getInputFlok setelah save"
     );
 
-    const serverItems = Array.isArray(getResult.data.raw)
+    // D2 API dapat mengembalikan dua bentuk data:
+    // - raw       = input user / sumber sesi
+    // - items     = hasil calculated dari Calculation Engine
+    // KPI wajib memakai calculated, sedangkan tabel input memakai raw.
+    const rawItems = Array.isArray(getResult.data.raw)
         ? getResult.data.raw
-        : getResult.data.items;
+        : (Array.isArray(getResult.data.items) ? getResult.data.items : []);
 
-    window.fmcInputFlokHasilServer[flok] = serverItems;
+    const calculatedItems = Array.isArray(getResult.data.items)
+        ? getResult.data.items
+        : rawItems;
 
-    window.fmcInputFlokDataSesi[flok] = serverItems.map(item => ({
+    window.fmcInputFlokHasilServer[flok] = calculatedItems;
+
+    window.fmcInputFlokDataSesi[flok] = rawItems.map(item => ({
         flok: flok,
         umur: Number(item.umur),
         tanggal: item.tanggal || '',
@@ -3002,6 +3244,8 @@ async function kirimInputFlokKeGAS(
         jenisPakan: item.jenisPakan || '',
         __server: true
     }));
+
+    fmcInputFlokWriteFastCache_(periodId);
 
     return getResult;
 }

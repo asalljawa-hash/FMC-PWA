@@ -572,189 +572,215 @@ async function apiGet(
 // Kita tidak menghitung KPI di PWA.
 // ==========================================================
 
-function fmcNormalizeD2Dashboard_(
-    result
-){
+function fmcNormalizeD2Dashboard_(result){
+
+    result = result && typeof result === "object" ? result : {};
+
+    const sourceDashboard =
+        result.dashboard && typeof result.dashboard === "object"
+            ? result.dashboard
+            : {};
 
     const context =
-        result &&
-        result.context
+        result.context && typeof result.context === "object"
             ? result.context
             : {};
 
+    const farmRaw = sourceDashboard.farm;
+    const farmSource = farmRaw && typeof farmRaw === "object" ? farmRaw : {};
 
-    const floks =
-        Array.isArray(
-            context.floks
-        )
-            ? context.floks
-            : [];
+    const namaFarm =
+        farmSource.namaFarm ||
+        farmSource.farm ||
+        (typeof farmRaw === "string" ? farmRaw : "") ||
+        context.company ||
+        context.nama ||
+        "";
 
+    const periode =
+        sourceDashboard.periode ||
+        result.period_id ||
+        result.period_no ||
+        context.period_id ||
+        context.period_no ||
+        "";
 
-    const flok =
-        floks.map(
-            function(item){
+    const tanggalDOC =
+        sourceDashboard.tanggalDOC ||
+        sourceDashboard.tanggalDoc ||
+        sourceDashboard.docDate ||
+        "";
 
-                return {
+    const docPopulation = sourceDashboard.docPopulation != null
+        ? sourceDashboard.docPopulation
+        : (sourceDashboard.docIn != null ? sourceDashboard.docIn : 0);
 
-                    id:
-                        item.id ||
-                        "",
+    const livePopulation = sourceDashboard.livePopulation != null
+        ? sourceDashboard.livePopulation
+        : (sourceDashboard.ayamHidup != null ? sourceDashboard.ayamHidup : 0);
 
-                    nama:
-                        item.name ||
-                        item.nama ||
-                        item.id ||
-                        "",
+    const totalMati = sourceDashboard.totalMati != null
+        ? sourceDashboard.totalMati
+        : (sourceDashboard.mati != null ? sourceDashboard.mati : 0);
 
-                    active:
-                        item.active !== false
+    const totalAfkir = sourceDashboard.totalAfkir != null
+        ? sourceDashboard.totalAfkir
+        : (sourceDashboard.afkir != null ? sourceDashboard.afkir : 0);
 
-                };
+    const mortalitas = sourceDashboard.mortalitas != null ? sourceDashboard.mortalitas : 0;
+    const totalDepletion = sourceDashboard.totalDepletion != null
+        ? sourceDashboard.totalDepletion
+        : (sourceDashboard.deplesi != null ? sourceDashboard.deplesi : 0);
+    const totalFeed = sourceDashboard.totalFeed != null ? sourceDashboard.totalFeed : 0;
+    const totalTonase = sourceDashboard.totalTonase != null ? sourceDashboard.totalTonase : 0;
+    const totalBiayaPakan = sourceDashboard.totalBiayaPakan != null ? sourceDashboard.totalBiayaPakan : 0;
+    const fcr = sourceDashboard.fcr != null ? sourceDashboard.fcr : 0;
+    const ip = sourceDashboard.ip != null ? sourceDashboard.ip : 0;
 
-            }
-        );
+    const sourceFloks = Array.isArray(sourceDashboard.floks)
+        ? sourceDashboard.floks
+        : (Array.isArray(sourceDashboard.flok)
+            ? sourceDashboard.flok
+            : (Array.isArray(context.floks) ? context.floks : []));
 
+    const flok = sourceFloks.map(function(item){
+        item = item && typeof item === "object" ? item : {};
+
+        return {
+            id: item.id || item.flok || item.name || "",
+            nama: item.nama || item.name || item.flok || item.id || "",
+            active: item.active !== false,
+            hidup: item.hidup != null
+                ? item.hidup
+                : (item.live != null ? item.live : (item.ayamHidup != null ? item.ayamHidup : 0)),
+            mati: item.mati != null ? item.mati : (item.kematian != null ? item.kematian : 0),
+            afkir: item.afkir != null ? item.afkir : 0,
+            mortalitas: item.mortalitas != null ? item.mortalitas : 0,
+            bb: item.bb != null ? item.bb : (item.bbAvg != null ? item.bbAvg : 0),
+            bbAvg: item.bbAvg != null ? item.bbAvg : (item.bb != null ? item.bb : 0),
+            fcr: item.fcr != null ? item.fcr : 0,
+            ip: item.ip != null ? item.ip : 0,
+            status: item.status || item.statusPanen || "BELUM"
+        };
+    });
+
+    const ekonomiFlok = Array.isArray(sourceDashboard.ekonomiFlok)
+        ? sourceDashboard.ekonomiFlok
+        : (Array.isArray(sourceDashboard.ekonomi_flok) ? sourceDashboard.ekonomi_flok : []);
+
+    const realisasiPanen = Array.isArray(sourceDashboard.realisasiPanen)
+        ? sourceDashboard.realisasiPanen
+        : (Array.isArray(sourceDashboard.realisasi_panen) ? sourceDashboard.realisasi_panen : []);
 
     return {
-
         dashboard: {
-
             farm: {
-
-                namaFarm:
-                    context.company ||
-                    context.nama ||
-                    "",
-
-                periode:
-                    "",
-
-                chickIn:
-                    0
-
+                namaFarm: namaFarm,
+                periode: periode,
+                chickIn: docPopulation,
+                tanggalDOC: tanggalDOC
             },
-
             kpi: {
-
-                docIn:
-                    0,
-
-                ayamHidup:
-                    0,
-
-                mati:
-                    0,
-
-                afkir:
-                    0,
-
-                mortalitas:
-                    0,
-
-                deplesi:
-                    0,
-
-                fcr:
-                    0,
-
-                ip:
-                    0
-
+                docIn: docPopulation,
+                ayamHidup: livePopulation,
+                mati: totalMati,
+                afkir: totalAfkir,
+                mortalitas: mortalitas,
+                deplesi: totalDepletion,
+                fcr: fcr,
+                ip: ip
             },
-
-            flok:
-                flok,
-
-            ekonomiFlok:
-                [],
-
-            realisasiPanen:
-                []
-
+            flok: flok,
+            ekonomiFlok: ekonomiFlok,
+            realisasiPanen: realisasiPanen,
+            harian: result.harian != null ? result.harian : (sourceDashboard.harian != null ? sourceDashboard.harian : null),
+            keuangan: result.keuangan != null ? result.keuangan : (sourceDashboard.keuangan != null ? sourceDashboard.keuangan : null),
+            rhpp: result.rhpp != null ? result.rhpp : (sourceDashboard.rhpp != null ? sourceDashboard.rhpp : null),
+            tanggalDOC: tanggalDOC,
+            docPopulation: docPopulation,
+            livePopulation: livePopulation,
+            totalMati: totalMati,
+            totalAfkir: totalAfkir,
+            mortalitas: mortalitas,
+            totalDepletion: totalDepletion,
+            totalFeed: totalFeed,
+            totalTonase: totalTonase,
+            totalBiayaPakan: totalBiayaPakan
         },
-
-
-        ai:
-            [],
-
-
+        ai: Array.isArray(result.ai) ? result.ai : [],
         profile: {
-
-            user_id:
-                context.user_id ||
-                "",
-
-            tenant_id:
-                context.tenant_id ||
-                "",
-
-            email:
-                context.email ||
-                "",
-
-            nama:
-                context.nama ||
-                "",
-
-            company:
-                context.company ||
-                "",
-
-            business:
-                context.business ||
-                "broiler"
-
+            user_id: result.user_id || context.user_id || "",
+            tenant_id: result.tenant_id || context.tenant_id || "",
+            email: result.email || context.email || "",
+            nama: context.nama || "",
+            company: namaFarm || context.company || "",
+            business: context.business || "broiler"
         },
-
-
         config: {
-
-            flok_count:
-                Number(
-                    context.flok_count ||
-                    floks.length ||
-                    0
-                ),
-
-            floks:
-                floks
-
+            flok_count: Number(context.flok_count || sourceFloks.length || flok.length || 0),
+            floks: flok
         },
-
-
-        periods:
-            [],
-
-
+        periods: Array.isArray(result.periods) ? result.periods : [],
         d2: {
-
-            success:
-                result &&
-                result.success === true,
-
-            api_version:
-                result &&
-                result.api_version
-                    ? result.api_version
-                    : "",
-
-            action:
-                result &&
-                result.action
-                    ? result.action
-                    : "",
-
-            status:
-                result &&
-                result.status
-                    ? result.status
-                    : ""
-
+            success: result.success === true,
+            engine_version: result.engine_version || "",
+            api_version: result.api_version || "",
+            action: result.action || "",
+            status: result.status || "",
+            tenant_id: result.tenant_id || context.tenant_id || "",
+            period_id: result.period_id || result.period_no || ""
         }
-
     };
+}
 
+// ==========================================================
+// FMC D2 — EXTRACT HARIAN / KEUANGAN
+// ==========================================================
+//
+// Patch minimal:
+// - Dashboard tetap melalui getDashboard.
+// - Harian melalui action=getHarian.
+// - Keuangan melalui action=getKeuangan.
+// - Jika salah satu modul belum tersedia, Dashboard TETAP
+//   berhasil dan modul yang gagal hanya menjadi data kosong.
+// - Tidak menghitung ulang data di PWA.
+// ==========================================================
+
+function fmcExtractD2ModuleData_(result, moduleName){
+
+    if(
+        !result ||
+        result.success !== true
+    ){
+        return null;
+    }
+
+    if(
+        result[moduleName] !== undefined &&
+        result[moduleName] !== null
+    ){
+        return result[moduleName];
+    }
+
+    if(
+        result.data &&
+        typeof result.data === "object" &&
+        result.data[moduleName] !== undefined &&
+        result.data[moduleName] !== null
+    ){
+        return result.data[moduleName];
+    }
+
+    if(
+        result.payload &&
+        typeof result.payload === "object" &&
+        result.payload[moduleName] !== undefined &&
+        result.payload[moduleName] !== null
+    ){
+        return result.payload[moduleName];
+    }
+
+    return null;
 }
 
 
@@ -762,12 +788,15 @@ function fmcNormalizeD2Dashboard_(
 // DATA SERVER
 // ==========================================================
 //
-// Dashboard sekarang mengambil:
+// Dashboard:
 // GAS 2 → action=getDashboard
 //
-// Jika boundary berhasil:
-// serverData tetap berupa object kompatibel PWA.
+// Tambahan:
+// GAS 2 → action=getHarian
+// GAS 2 → action=getKeuangan
 //
+// Semua request menggunakan identity yang sama dari session.
+// Tidak ada fallback ke GAS 1 / Spreadsheet legacy.
 // ==========================================================
 
 async function ambilDataServer(
@@ -856,6 +885,93 @@ async function ambilDataServer(
             fmcNormalizeD2Dashboard_(
                 result
             );
+
+
+        /*
+         * ======================================================
+         * HARIAN + KEUANGAN
+         * ======================================================
+         *
+         * Paralel supaya tidak menambah waktu tunggu secara
+         * berurutan. Kegagalan salah satu modul tidak boleh
+         * menjatuhkan Dashboard yang sudah stabil.
+         */
+
+        const moduleResults =
+            await Promise.all([
+                apiPost(
+                    "getHarian",
+                    {}
+                ),
+                apiPost(
+                    "getKeuangan",
+                    {}
+                )
+            ]);
+
+
+        const harianData =
+            fmcExtractD2ModuleData_(
+                moduleResults[0],
+                "harian"
+            );
+
+
+        const keuanganData =
+            fmcExtractD2ModuleData_(
+                moduleResults[1],
+                "keuangan"
+            );
+
+
+        /*
+         * Tambahkan modul ke struktur runtime PWA.
+         * Dashboard/KPI/Flok yang sudah berhasil tidak diganti.
+         */
+
+        data.harian =
+            harianData !== null
+                ? harianData
+                : (
+                    data.dashboard &&
+                    data.dashboard.harian !== null &&
+                    data.dashboard.harian !== undefined
+                        ? data.dashboard.harian
+                        : {
+                            tanggal: "",
+                            totalMati: 0,
+                            flok: []
+                        }
+                );
+
+
+        data.keuangan =
+            keuanganData !== null
+                ? keuanganData
+                : (
+                    data.dashboard &&
+                    data.dashboard.keuangan !== null &&
+                    data.dashboard.keuangan !== undefined
+                        ? data.dashboard.keuangan
+                        : {
+                            totalEkor: 0,
+                            totalTonase: 0,
+                            flokPanen: 0,
+                            bbTertinggi: 0,
+                            umurTertua: 0,
+                            flokTerbaik: "-",
+                            totalPakan: 0,
+                            biayaOperasional: 0,
+                            estimasiOmset: 0,
+                            costEkor: 0,
+                            costKg: 0,
+                            marginProduksi: 0,
+                            bonusKematian: 0,
+                            bonusPasar: 0,
+                            estimasiLaba: 0,
+                            profitOwner: 0
+                        }
+                );
 
 
         serverData =

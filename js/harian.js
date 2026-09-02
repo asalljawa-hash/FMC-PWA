@@ -1,6 +1,7 @@
 // ==========================================
 // FMC BOILER MOBILE V11
 // HARIAN.JS
+// BASELINE-SAFE — FORMAT MORTALITAS SAJA
 // ==========================================
 
 async function tampilHarian(){
@@ -14,15 +15,10 @@ async function tampilHarian(){
         <div class="card">
 
             <h2>
-
                 <span class="material-symbols-rounded">
-
                 cloud_off
-
                 </span>
-
                 Server Offline
-
             </h2>
 
             <p>Tidak dapat mengambil data harian.</p>
@@ -32,10 +28,39 @@ async function tampilHarian(){
         `;
 
         return;
-
     }
 
     const harian=data.harian;
+
+    /*
+     * PATCH FORMAT SAJA
+     * -----------------
+     * Tidak mengubah data/API.
+     * Tidak membuat function global baru.
+     * Mortalitas dari API = rasio.
+     * Contoh 0.0038 -> 0,38%
+     *
+     * Helper dibuat LOCAL di dalam tampilHarian
+     * supaya tidak bentrok dengan file JS lain.
+     */
+    const formatMortalitas = (value) => {
+
+        if(value === null || value === undefined || value === ""){
+            return "-";
+        }
+
+        const n = Number(value);
+
+        if(!Number.isFinite(n)){
+            return String(value);
+        }
+
+        return new Intl.NumberFormat("id-ID", {
+            style: "percent",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(n);
+    };
 
     let html=`
 
@@ -44,23 +69,17 @@ async function tampilHarian(){
 <div>
 
 <div class="heroSmall">
-
 FMC BOILER MOBILE V11
-
 </div>
 
 <h1>
-
 Laporan Harian
-
 </h1>
 
 <div class="heroDate">
 
 <span class="material-symbols-rounded">
-
 calendar_month
-
 </span>
 
 ${harian.tanggal}
@@ -83,14 +102,13 @@ ${harian.tanggal}
 
 </div>
 
+
 <div class="card">
 
 <h2>
 
 <span class="material-symbols-rounded">
-
 warning
-
 </span>
 
 Total Kematian Hari Ini
@@ -111,17 +129,16 @@ ${harian.totalMati}
 </div>
 
 <p style="text-align:center;">
-
 Ekor
-
 </p>
 
 </div>
 
 `;
-harian.flok.forEach(f=>{
 
-    html += `
+    harian.flok.forEach(f=>{
+
+        html += `
 
 <div class="card">
 
@@ -138,9 +155,7 @@ harian.flok.forEach(f=>{
     <div class="onlineBadge">
 
             <span class="material-symbols-rounded">
-
                 check_circle
-
             </span>
 
             AKTIF
@@ -149,14 +164,17 @@ harian.flok.forEach(f=>{
 
     </div>
 
+
 <div class="harianGrid">
 
     <div class="harianItem">
 
         <div class="kpiIcon">
+
             <span class="material-symbols-rounded">
                 schedule
             </span>
+
         </div>
 
         <h4>Umur</h4>
@@ -165,12 +183,15 @@ harian.flok.forEach(f=>{
 
     </div>
 
+
     <div class="harianItem">
 
         <div class="kpiIcon">
+
             <span class="material-symbols-rounded">
                 warning
             </span>
+
         </div>
 
         <h4>Mati</h4>
@@ -179,17 +200,20 @@ harian.flok.forEach(f=>{
 
     </div>
 
+
     <div class="harianItem">
 
         <div class="kpiIcon">
+
             <span class="material-symbols-rounded">
                 pie_chart
             </span>
+
         </div>
 
         <h4>Mortalitas</h4>
 
-        <b>${f.mortalitas}</b>
+        <b>${formatMortalitas(f.mortalitas)}</b>
 
     </div>
 
@@ -199,9 +223,10 @@ harian.flok.forEach(f=>{
 
 `;
 
-});
+    });
 
-html += `
+
+    html += `
 
 <div
 style="
@@ -217,6 +242,6 @@ Powered by Dasbor FMC Analytics
 
 `;
 
-document.getElementById("harianPage").innerHTML = html;
+    document.getElementById("harianPage").innerHTML = html;
 
 }

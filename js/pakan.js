@@ -435,12 +435,15 @@ async function tampilPakan(){
 
     pasangEventPakan();
 
-    await resolveFmcPakanActivePeriod();
-
     /*
-     * Ambil stok aktual dari GAS setelah halaman dibuat.
+     * FAST OPEN:
+     * Jangan menahan render halaman hanya karena GAS lambat.
+     * Jika ringkasan stok sudah pernah berhasil diambil dalam
+     * sesi aplikasi ini, tampilkan langsung. Sinkronisasi terbaru
+     * berjalan di background.
      */
-    await muatRingkasanStokPakan();
+    tampilkanCacheRingkasanStokPakan();
+    syncRingkasanStokPakanBackground();
 
 }
 
@@ -512,10 +515,96 @@ function syncPakanItemsFromServer(result){
 }
 
 // ==========================================================
+// FAST CACHE RINGKASAN STOK PAKAN
+// ==========================================================
+
+window.fmcPakanStockCache =
+    window.fmcPakanStockCache || null;
+
+window.fmcPakanStockSyncPromise =
+    window.fmcPakanStockSyncPromise || null;
+
+function renderRingkasanStokPakan(stock){
+    const stokBR1 = document.getElementById("stokBR1");
+    const stokBR2 = document.getElementById("stokBR2");
+    const stokBR3 = document.getElementById("stokBR3");
+    const totalStok = document.getElementById("totalStokPakan");
+
+    const safe = stock && typeof stock === "object"
+        ? stock
+        : {};
+
+    const nilaiStok = function(kode){
+        const item = safe[String(kode || "").trim().toUpperCase()];
+        if(!item || typeof item !== "object") return 0;
+
+        const sisaZak = Number(item.sisaZak);
+        if(Number.isFinite(sisaZak)) return sisaZak;
+
+        const sisaKg = Number(item.sisaKg);
+        if(Number.isFinite(sisaKg)) return sisaKg / 50;
+
+        return 0;
+    };
+
+    const br1 = nilaiStok("BR1");
+    const br2 = nilaiStok("BR2");
+    const br3 = nilaiStok("BR3");
+    const total = br1 + br2 + br3;
+
+    if(stokBR1) stokBR1.textContent = formatAngkaPakan(br1);
+    if(stokBR2) stokBR2.textContent = formatAngkaPakan(br2);
+    if(stokBR3) stokBR3.textContent = formatAngkaPakan(br3);
+    if(totalStok) totalStok.textContent = formatAngkaPakan(total);
+}
+
+function tampilkanCacheRingkasanStokPakan(){
+    if(
+        window.fmcPakanStockCache &&
+        window.fmcPakanStockCache.stock
+    ){
+        renderRingkasanStokPakan(
+            window.fmcPakanStockCache.stock
+        );
+        return true;
+    }
+
+    return false;
+}
+
+async function syncRingkasanStokPakanBackground(){
+    if(window.fmcPakanStockSyncPromise){
+        return window.fmcPakanStockSyncPromise;
+    }
+
+    window.fmcPakanStockSyncPromise = (async function(){
+        try{
+            const periodId =
+                getFmcPakanActivePeriodId() ||
+                await resolveFmcPakanActivePeriod();
+
+            await muatRingkasanStokPakan(
+                periodId,
+                { background: true }
+            );
+        }catch(error){
+            console.warn(
+                "PAKAN background stock sync:",
+                error
+            );
+        }finally{
+            window.fmcPakanStockSyncPromise = null;
+        }
+    })();
+
+    return window.fmcPakanStockSyncPromise;
+}
+
+// ==========================================================
 // LOAD RINGKASAN STOK DARI GAS
 // ==========================================================
 
-async function muatRingkasanStokPakan(){
+async function muatRingkasanStokPakan(periodIdArg, options){
 
     const stokBR1 = document.getElementById("stokBR1");
     const stokBR2 = document.getElementById("stokBR2");
@@ -526,10 +615,15 @@ async function muatRingkasanStokPakan(){
         return;
     }
 
-    if(stokBR1) stokBR1.textContent = "…";
-    if(stokBR2) stokBR2.textContent = "…";
-    if(stokBR3) stokBR3.textContent = "…";
-    if(totalStok) totalStok.textContent = "…";
+    const optionsSafe = options || {};
+    const hasCache = tampilkanCacheRingkasanStokPakan();
+
+    if(!hasCache){
+        if(stokBR1) stokBR1.textContent = "…";
+        if(stokBR2) stokBR2.textContent = "…";
+        if(stokBR3) stokBR3.textContent = "…";
+        if(totalStok) totalStok.textContent = "…";
+    }
 
     try{
 
@@ -538,7 +632,11 @@ async function muatRingkasanStokPakan(){
          * Setiap item memiliki kode dan sisaStok dari kolom N.
          */
         const periodId =
-            await resolveFmcPakanActivePeriod();
+            String(
+                periodIdArg ||
+                getFmcPakanActivePeriodId() ||
+                ""
+            ).trim();
 
         const result =
             await apiPost(
@@ -583,49 +681,13 @@ async function muatRingkasanStokPakan(){
          */
         const stock = result?.data?.stock || {};
 
-        const nilaiStok = function(kode){
-            const key = String(kode || "")
-                .trim()
-                .toUpperCase();
-
-            const item = stock[key];
-
-            if(!item || typeof item !== "object"){
-                return 0;
-            }
-
-            /*
-             * UI Ringkasan Stok menampilkan satuan ZAK.
-             * Engine sudah menghitung sisaZak sesuai
-             * baseline: sisaKg / 50.
-             */
-            const sisaZak = Number(item.sisaZak);
-
-            if(Number.isFinite(sisaZak)){
-                return sisaZak;
-            }
-
-            /*
-             * Fallback jika backend hanya mengirim sisaKg.
-             */
-            const sisaKg = Number(item.sisaKg);
-
-            if(Number.isFinite(sisaKg)){
-                return sisaKg / 50;
-            }
-
-            return 0;
+        window.fmcPakanStockCache = {
+            periodId: periodId,
+            stock: stock,
+            updatedAt: Date.now()
         };
 
-        const br1 = nilaiStok("BR1");
-        const br2 = nilaiStok("BR2");
-        const br3 = nilaiStok("BR3");
-        const total = br1 + br2 + br3;
-
-        if(stokBR1) stokBR1.textContent = formatAngkaPakan(br1);
-        if(stokBR2) stokBR2.textContent = formatAngkaPakan(br2);
-        if(stokBR3) stokBR3.textContent = formatAngkaPakan(br3);
-        if(totalStok) totalStok.textContent = formatAngkaPakan(total);
+        renderRingkasanStokPakan(stock);
 
     }catch(error){
 
@@ -1191,7 +1253,9 @@ async function hapusDataPakanServer(id){
         });
 
 
-        await muatRingkasanStokPakan();
+        await muatRingkasanStokPakan(
+            getFmcPakanActivePeriodId()
+        );
 
 
         tampilPesanPakan(
@@ -1746,7 +1810,9 @@ async function simpanPakanUI(){
         /*
          * Refresh ringkasan stok langsung dari GAS.
          */
-        await muatRingkasanStokPakan();
+        await muatRingkasanStokPakan(
+            getFmcPakanActivePeriodId()
+        );
 
 
         /*

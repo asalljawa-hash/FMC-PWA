@@ -91,6 +91,12 @@ window.fmcOperasionalDataSesi =
 // TAMPILKAN HALAMAN OPERASIONAL
 // ==========================================================
 
+// FMC FAST OPEN — OPERASIONAL CACHE (DISPLAY ONLY)
+function fmcOperasionalCacheKey_(){ return "fmc_operasional_fast_cache_v3"; }
+function fmcOperasionalSaveCache_(items){ try{ localStorage.setItem(fmcOperasionalCacheKey_(),JSON.stringify({saved_at:Date.now(),items:Array.isArray(items)?items:[]})); }catch(e){ console.warn("OPERASIONAL CACHE SAVE:",e); } }
+function fmcOperasionalApplyCache_(){ try{ const raw=localStorage.getItem(fmcOperasionalCacheKey_()); if(!raw)return false; const p=JSON.parse(raw); if(!p||!Array.isArray(p.items))return false; window.fmcOperasionalDataSesi=p.items.map(function(item){ return {id:item.id||item.item_id||"",tanggal:item.tanggal||"",kategori:item.kategori||"",keterangan:item.keterangan||"",harga:Number(item.harga)||0,qty:Number(item.qty)||0,total:Number(item.total)||((Number(item.harga)||0)*(Number(item.qty)||0)),__server:true}; }); return true; }catch(e){ console.warn("OPERASIONAL CACHE LOAD:",e); return false; } }
+async function fmcOperasionalSyncServer_(){ try{ const result=await apiPost("getOperasional",{}); if(!result||result.success!==true||!result.data)throw new Error(result?.message||"Data Operasional dari server tidak tersedia."); const rows=Array.isArray(result.data.items)?result.data.items:[]; window.fmcOperasionalDataSesi=rows.map(function(item){ return {id:item.id||item.item_id||"",tanggal:item.tanggal||"",kategori:item.kategori||"",keterangan:item.keterangan||"",harga:Number(item.harga)||0,qty:Number(item.qty)||0,total:Number(item.total)||((Number(item.harga)||0)*(Number(item.qty)||0)),__server:true}; }); fmcOperasionalSaveCache_(window.fmcOperasionalDataSesi); if(result.period_id){ window.fmcOperasionalActivePeriodId=String(result.period_id).trim(); try{localStorage.setItem("fmcD2ActivePeriodId",String(result.period_id).trim());}catch(e){} } if(document.getElementById("operasionalTableWrap"))renderOperasionalTableInPage(); if(typeof hitungTotalOperasional==="function")hitungTotalOperasional(); }catch(e){ console.error("GET OPERASIONAL SERVER GAGAL:",e); } }
+
 async function tampilOperasional(){
 
     const page =
@@ -100,98 +106,7 @@ async function tampilOperasional(){
 
     if(!page) return;
 
-    /*
-     * D2 SOURCE OF TRUTH:
-     * selalu baca Operasional dari GAS 2 / JSON tenant.
-     * Jangan bergantung pada data sesi/localStorage.
-     */
-    try{
-
-        const result =
-            await apiPost(
-                "getOperasional",
-                {}
-            );
-
-        if(
-            !result ||
-            result.success !== true ||
-            !result.data
-        ){
-            throw new Error(
-                result?.message ||
-                "Data Operasional dari server tidak tersedia."
-            );
-        }
-
-        const serverItems =
-            Array.isArray(result.data.items)
-                ? result.data.items
-                : [];
-
-        window.fmcOperasionalDataSesi =
-            serverItems.map(
-                function(item){
-
-                    return {
-                        id:
-                            item.id ||
-                            item.item_id ||
-                            "",
-
-                        id:
-                            item.id ||
-                            item.item_id ||
-                            "",
-
-                        tanggal:
-                            item.tanggal || "",
-
-                        kategori:
-                            item.kategori || "",
-
-                        keterangan:
-                            item.keterangan || "",
-
-                        harga:
-                            Number(item.harga) || 0,
-
-                        qty:
-                            Number(item.qty) || 0,
-
-                        total:
-                            Number(item.total) ||
-                            (
-                                (Number(item.harga) || 0) *
-                                (Number(item.qty) || 0)
-                            ),
-
-                        __server: true
-                    };
-
-                }
-            );
-
-        if(result.period_id){
-            window.fmcOperasionalActivePeriodId =
-                String(result.period_id).trim();
-
-            try{
-                localStorage.setItem(
-                    "fmcD2ActivePeriodId",
-                    String(result.period_id).trim()
-                );
-            }catch(error){}
-        }
-
-    }catch(error){
-
-        console.error(
-            "GET OPERASIONAL SERVER GAGAL:",
-            error
-        );
-
-    }
+    fmcOperasionalApplyCache_();
 
     page.innerHTML = `
 
@@ -464,6 +379,8 @@ async function tampilOperasional(){
 
     // Tampilkan kondisi total awal
     hitungTotalOperasional();
+
+    Promise.resolve().then(function(){ fmcOperasionalSyncServer_(); });
 
 }
 

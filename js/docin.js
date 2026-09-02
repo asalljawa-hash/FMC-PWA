@@ -404,6 +404,11 @@ function getDocInFlokLetters(){
 // TAMPILKAN HALAMAN DOC IN
 // ==========================================
 
+// FMC FAST OPEN — DOC IN CACHE (DISPLAY ONLY)
+function fmcDocInCacheKey_(){ const p=String(window.fmcD2ActivePeriodId||localStorage.getItem("fmcD2ActivePeriodId")||"default").trim()||"default"; return "fmc_docin_fast_cache_v3_"+p; }
+function fmcDocInSaveCache_(data,periodId){ try{ localStorage.setItem("fmc_docin_fast_cache_v3_"+String(periodId||"default").trim(),JSON.stringify({saved_at:Date.now(),data:data||null})); }catch(e){ console.warn("DOC IN CACHE SAVE:",e); } }
+function fmcDocInApplyCache_(){ try{ const raw=localStorage.getItem(fmcDocInCacheKey_()); if(!raw)return false; const parsed=JSON.parse(raw),data=parsed?.data; if(!data)return false; isiFormDocIn(data); restoreDocInServerToPWA(data,window.fmcD2ActivePeriodId||localStorage.getItem("fmcD2ActivePeriodId")||""); return true; }catch(e){ console.warn("DOC IN CACHE APPLY:",e); return false; } }
+
 async function tampilDocIn(){
 
     const page =
@@ -666,8 +671,8 @@ async function tampilDocIn(){
 
     renderDocInFlokInputs();
 
-    // Muat data server seperti sebelumnya
-    await muatDocIn();
+    fmcDocInApplyCache_();
+    Promise.resolve().then(function(){ muatDocIn(); });
 
 }
 
@@ -1858,6 +1863,8 @@ async function muatDocIn(){
             result.data ||
             result.doc_in ||
             null;
+
+        fmcDocInSaveCache_(data, periodId);
 
 
         if(!data){

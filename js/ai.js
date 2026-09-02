@@ -182,11 +182,11 @@ ACTIVE
 
 <div class="gridCard">
 
-${aiCard("pie_chart","Mortalitas",kpi.mortalitas)}
+${aiCard("pie_chart","Mortalitas",aiMortalitas(kpi.mortalitas))}
 
-${aiCard("🍗","FCR",kpi.fcr)}
+${aiCard("🍗","FCR",aiFCR(kpi.fcr))}
 
-${aiCard("🏆","IP",kpi.ip)}
+${aiCard("🏆","IP",aiIP(kpi.ip))}
 
 ${aiCard("🥇","Flok Terbaik",terbaik?terbaik.nama:"-")}
 
@@ -260,6 +260,118 @@ Powered by FMC AI Analytics
     document.getElementById("aiPage").innerHTML=html;
 
 }
+
+
+// ==========================================
+// FORMAT ANGKA AI
+// ==========================================
+// Tampilan AI hanya memformat angka untuk UI.
+// Nilai sumber dari server tidak diubah.
+// Mortalitas dari backend berupa rasio 0..1,
+// sehingga ditampilkan sebagai persen.
+// ==========================================
+
+function aiNumber(value, decimals = 2){
+
+    const n =
+        Number(
+            String(
+                value ?? ""
+            )
+            .replace(",", ".")
+        );
+
+    if(!Number.isFinite(n)){
+        return "-";
+    }
+
+    return n.toLocaleString(
+        "id-ID",
+        {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        }
+    );
+
+}
+
+
+function aiMortalitas(value){
+
+    const n =
+        Number(
+            String(
+                value ?? ""
+            )
+            .replace(",", ".")
+        );
+
+    if(!Number.isFinite(n)){
+        return "-";
+    }
+
+    return (
+        n * 100
+    ).toLocaleString(
+        "id-ID",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    ) + "%";
+
+}
+
+
+function aiFCR(value){
+
+    const n =
+        Number(
+            String(
+                value ?? ""
+            )
+            .replace(",", ".")
+        );
+
+    if(!Number.isFinite(n)){
+        return "-";
+    }
+
+    return n.toLocaleString(
+        "id-ID",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+}
+
+
+function aiIP(value){
+
+    const n =
+        Number(
+            String(
+                value ?? ""
+            )
+            .replace(",", ".")
+        );
+
+    if(!Number.isFinite(n)){
+        return "-";
+    }
+
+    return n.toLocaleString(
+        "id-ID",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+}
+
 
 function aiCard(icon,judul,nilai){
 
