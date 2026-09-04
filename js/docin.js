@@ -953,7 +953,8 @@ function renderDocInTable(){
                                         type="button"
                                         class="docinDeleteBtn"
                                         onclick="hapusDataDocIn(${index})"
-                                        aria-label="Hapus data">
+                                        aria-label="Hapus data"
+                                        style="display:none;">
 
                                         <span class="material-symbols-rounded">
                                             delete
@@ -1180,6 +1181,139 @@ function kosongkanFormDocIn(){
 }
 
 
+// ==========================================================
+// LOADING SIMPAN DOC IN — FMC iOS STYLE
+// Mengikuti tampilan loading Pakan.js.
+// Hanya tampilan. Tidak mengubah proses API/GAS.
+// ==========================================================
+
+function fmcShowDocInSaving_(){
+
+    if(document.getElementById("fmcDocInSaving")){
+        return;
+    }
+
+    if(!document.getElementById("fmcDocInSavingStyle")){
+
+        const style =
+            document.createElement("style");
+
+        style.id =
+            "fmcDocInSavingStyle";
+
+        style.textContent = `
+            @keyframes fmcDocInSavingFadeIn{
+                from{opacity:0;transform:scale(.96)}
+                to{opacity:1;transform:scale(1)}
+            }
+
+            @keyframes fmcDocInSavingSpinner{
+                to{transform:rotate(360deg)}
+            }
+
+            #fmcDocInSaving{
+                position:fixed;
+                inset:0;
+                z-index:999999;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                padding:24px;
+                box-sizing:border-box;
+                background:rgba(0,0,0,.34);
+                backdrop-filter:blur(10px);
+                -webkit-backdrop-filter:blur(10px);
+            }
+
+            #fmcDocInSaving .fmc-docin-saving-card{
+                width:min(250px,calc(100vw - 48px));
+                box-sizing:border-box;
+                padding:28px 24px 24px;
+                border-radius:28px;
+                background:rgba(30,30,32,.96);
+                color:#fff;
+                text-align:center;
+                box-shadow:0 20px 60px rgba(0,0,0,.35);
+                animation:fmcDocInSavingFadeIn .18s ease-out;
+            }
+
+            #fmcDocInSaving .fmc-docin-saving-spinner{
+                width:42px;
+                height:42px;
+                margin:0 auto 18px;
+                border:4px solid rgba(255,255,255,.22);
+                border-top-color:#fff;
+                border-radius:50%;
+                animation:fmcDocInSavingSpinner .78s linear infinite;
+            }
+
+            #fmcDocInSaving .fmc-docin-saving-title{
+                font-size:18px;
+                line-height:1.3;
+                font-weight:750;
+                letter-spacing:-.2px;
+            }
+
+            #fmcDocInSaving .fmc-docin-saving-text{
+                margin-top:7px;
+                font-size:13px;
+                line-height:1.45;
+                color:rgba(255,255,255,.68);
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    const overlay =
+        document.createElement("div");
+
+    overlay.id =
+        "fmcDocInSaving";
+
+    overlay.setAttribute(
+        "role",
+        "status"
+    );
+
+    overlay.setAttribute(
+        "aria-live",
+        "polite"
+    );
+
+    overlay.innerHTML = `
+        <div class="fmc-docin-saving-card">
+            <div
+                class="fmc-docin-saving-spinner"
+                aria-hidden="true">
+            </div>
+
+            <div class="fmc-docin-saving-title">
+                Menyiapkan Data
+            </div>
+
+            <div class="fmc-docin-saving-text">
+                Mohon tunggu sebentar...
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+}
+
+function fmcHideDocInSaving_(){
+
+    const overlay =
+        document.getElementById(
+            "fmcDocInSaving"
+        );
+
+    if(overlay){
+        overlay.remove();
+    }
+}
+
+
 // ==========================================
 // SIMPAN DOC IN
 // ==========================================
@@ -1296,6 +1430,8 @@ async function simpanDocIn(){
 
     }
 
+
+    fmcShowDocInSaving_();
 
     const button =
         document.getElementById(
@@ -1588,6 +1724,8 @@ async function simpanDocIn(){
 
     }
     finally{
+
+        fmcHideDocInSaving_();
 
         if(button){
 

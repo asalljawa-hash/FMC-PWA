@@ -627,7 +627,282 @@ function ubahDataKontrakUI(
 // HAPUS BARIS
 // ==========================================================
 
-function hapusBarisKontrakUI(index){
+function fmcConfirmHapusMasterKontrak_(index){
+
+    return new Promise(function(resolve){
+
+        const existing =
+            document.getElementById(
+                "fmcMasterKontrakDeleteDialog"
+            );
+
+        if(existing){
+            existing.remove();
+        }
+
+        const styleId =
+            "fmcMasterKontrakDeleteDialogStyle";
+
+        if(!document.getElementById(styleId)){
+
+            const style =
+                document.createElement("style");
+
+            style.id = styleId;
+
+            style.textContent = `
+                @keyframes fmcMasterKontrakDialogIn{
+                    from{opacity:0}
+                    to{opacity:1}
+                }
+
+                @keyframes fmcMasterKontrakCardIn{
+                    from{opacity:0;transform:scale(.96) translateY(8px)}
+                    to{opacity:1;transform:scale(1) translateY(0)}
+                }
+
+                #fmcMasterKontrakDeleteDialog{
+                    position:fixed;
+                    inset:0;
+                    z-index:99999;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    padding:24px;
+                    box-sizing:border-box;
+                    background:rgba(0,0,0,.52);
+                    backdrop-filter:blur(4px);
+                    -webkit-backdrop-filter:blur(4px);
+                    animation:fmcMasterKontrakDialogIn .18s ease-out;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-card{
+                    width:min(100%,390px);
+                    box-sizing:border-box;
+                    background:#fff;
+                    color:#172033;
+                    border-radius:26px;
+                    padding:24px 22px 18px;
+                    box-shadow:0 22px 60px rgba(0,0,0,.28);
+                    transform-origin:center;
+                    animation:fmcMasterKontrakCardIn .2s ease-out;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-icon{
+                    width:54px;
+                    height:54px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    border-radius:17px;
+                    margin-bottom:16px;
+                    background:#fff1f2;
+                    color:#dc2626;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-icon .material-symbols-rounded{
+                    font-size:29px;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-title{
+                    margin:0;
+                    font-size:20px;
+                    line-height:1.25;
+                    font-weight:750;
+                    letter-spacing:-.2px;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-message{
+                    margin:9px 0 0;
+                    font-size:14px;
+                    line-height:1.5;
+                    color:#667085;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-highlight{
+                    display:flex;
+                    align-items:center;
+                    gap:12px;
+                    margin-top:18px;
+                    padding:13px 14px;
+                    border-radius:16px;
+                    background:#f8fafc;
+                    border:1px solid #e5e7eb;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-highlight-icon{
+                    width:40px;
+                    height:40px;
+                    flex:0 0 40px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    border-radius:13px;
+                    background:#eef2ff;
+                    color:#4f46e5;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-detail{
+                    min-width:0;
+                    font-size:14px;
+                    font-weight:700;
+                    color:#344054;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-actions{
+                    display:flex;
+                    gap:10px;
+                    margin-top:20px;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-btn{
+                    flex:1;
+                    min-height:46px;
+                    border:0;
+                    border-radius:14px;
+                    font-size:14px;
+                    font-weight:750;
+                    cursor:pointer;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-cancel{
+                    background:#f2f4f7;
+                    color:#344054;
+                }
+
+                #fmcMasterKontrakDeleteDialog .fmc-mkd-delete{
+                    background:#dc2626;
+                    color:#fff;
+                }
+            `;
+
+            document.head.appendChild(style);
+        }
+
+        const dialog =
+            document.createElement("div");
+
+        dialog.id =
+            "fmcMasterKontrakDeleteDialog";
+
+        dialog.setAttribute("role","dialog");
+        dialog.setAttribute("aria-modal","true");
+        dialog.setAttribute("aria-labelledby","fmcMasterKontrakDeleteTitle");
+
+        dialog.innerHTML = `
+            <div class="fmc-mkd-card" role="document">
+
+                <div class="fmc-mkd-icon" aria-hidden="true">
+                    <span class="material-symbols-rounded">
+                        delete_forever
+                    </span>
+                </div>
+
+                <h2
+                    class="fmc-mkd-title"
+                    id="fmcMasterKontrakDeleteTitle">
+                    Hapus Data Kontrak?
+                </h2>
+
+                <p class="fmc-mkd-message">
+                    Data kontrak yang dipilih akan dihapus dari daftar.
+                    Tindakan ini tidak dapat dibatalkan.
+                </p>
+
+                <div class="fmc-mkd-highlight">
+                    <div class="fmc-mkd-highlight-icon" aria-hidden="true">
+                        <span class="material-symbols-rounded">
+                            handshake
+                        </span>
+                    </div>
+                    <div class="fmc-mkd-detail">
+                        Baris kontrak ${index + 1}
+                    </div>
+                </div>
+
+                <div class="fmc-mkd-actions">
+                    <button type="button" class="fmc-mkd-btn fmc-mkd-cancel">
+                        Batal
+                    </button>
+                    <button type="button" class="fmc-mkd-btn fmc-mkd-delete">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(dialog);
+
+        const cancelBtn =
+            dialog.querySelector(".fmc-mkd-cancel");
+
+        const deleteBtn =
+            dialog.querySelector(".fmc-mkd-delete");
+
+        let finished = false;
+
+        const close = function(result){
+            if(finished) return;
+            finished = true;
+
+            if(dialog.parentNode){
+                dialog.remove();
+            }
+
+            document.removeEventListener(
+                "keydown",
+                onKeyDown
+            );
+
+            resolve(result);
+        };
+
+        const onKeyDown = function(event){
+            if(event.key === "Escape"){
+                close(false);
+            }
+        };
+
+        if(cancelBtn){
+            cancelBtn.addEventListener(
+                "click",
+                function(){
+                    close(false);
+                }
+            );
+        }
+
+        if(deleteBtn){
+            deleteBtn.addEventListener(
+                "click",
+                function(){
+                    close(true);
+                }
+            );
+        }
+
+        dialog.addEventListener(
+            "click",
+            function(event){
+                if(event.target === dialog){
+                    close(false);
+                }
+            }
+        );
+
+        document.addEventListener(
+            "keydown",
+            onKeyDown
+        );
+
+        if(deleteBtn){
+            deleteBtn.focus();
+        }
+    });
+}
+
+
+async function hapusBarisKontrakUI(index){
 
     const data =
         window.fmcMasterKontrakDataUI;
@@ -643,9 +918,7 @@ function hapusBarisKontrakUI(index){
 
 
     const yakin =
-        confirm(
-            `Hapus data kontrak pada baris ${index + 1}?`
-        );
+        await fmcConfirmHapusMasterKontrak_(index);
 
 
     if(!yakin){
@@ -910,6 +1183,114 @@ async function resolveFmcMasterKontrakActivePeriodId_(){
 }
 
 // ==========================================================
+// LOADING SIMPAN MASTER KONTRAK — FMC iOS STYLE
+// Tampilan saja. Tidak mengubah proses API/GAS.
+// ==========================================================
+
+function fmcShowMasterKontrakSaving_(){
+
+    if(document.getElementById("fmcMasterKontrakSaving")){
+        return;
+    }
+
+    if(!document.getElementById("fmcMasterKontrakSavingStyle")){
+
+        const style = document.createElement("style");
+        style.id = "fmcMasterKontrakSavingStyle";
+        style.textContent = `
+            @keyframes fmcMasterKontrakSavingFadeIn{
+                from{opacity:0;transform:scale(.96)}
+                to{opacity:1;transform:scale(1)}
+            }
+
+            @keyframes fmcMasterKontrakSavingSpinner{
+                to{transform:rotate(360deg)}
+            }
+
+            #fmcMasterKontrakSaving{
+                position:fixed;
+                inset:0;
+                z-index:999999;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                padding:24px;
+                box-sizing:border-box;
+                background:rgba(0,0,0,.34);
+                backdrop-filter:blur(10px);
+                -webkit-backdrop-filter:blur(10px);
+            }
+
+            #fmcMasterKontrakSaving .fmc-mks-card{
+                width:min(250px,calc(100vw - 48px));
+                box-sizing:border-box;
+                padding:28px 24px 24px;
+                border-radius:28px;
+                background:rgba(30,30,32,.96);
+                color:#fff;
+                text-align:center;
+                box-shadow:0 20px 60px rgba(0,0,0,.35);
+                animation:fmcMasterKontrakSavingFadeIn .18s ease-out;
+            }
+
+            #fmcMasterKontrakSaving .fmc-mks-spinner{
+                width:42px;
+                height:42px;
+                margin:0 auto 18px;
+                border:4px solid rgba(255,255,255,.22);
+                border-top-color:#fff;
+                border-radius:50%;
+                animation:fmcMasterKontrakSavingSpinner .78s linear infinite;
+            }
+
+            #fmcMasterKontrakSaving .fmc-mks-title{
+                font-size:18px;
+                line-height:1.3;
+                font-weight:750;
+                letter-spacing:-.2px;
+            }
+
+            #fmcMasterKontrakSaving .fmc-mks-text{
+                margin-top:7px;
+                font-size:13px;
+                line-height:1.45;
+                color:rgba(255,255,255,.68);
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    const overlay = document.createElement("div");
+    overlay.id = "fmcMasterKontrakSaving";
+    overlay.setAttribute("role","status");
+    overlay.setAttribute("aria-live","polite");
+
+    overlay.innerHTML = `
+        <div class="fmc-mks-card">
+            <div class="fmc-mks-spinner" aria-hidden="true"></div>
+            <div class="fmc-mks-title">Menyiapkan Data</div>
+            <div class="fmc-mks-text">Mohon tunggu sebentar...</div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+}
+
+function fmcHideMasterKontrakSaving_(){
+
+    const overlay =
+        document.getElementById(
+            "fmcMasterKontrakSaving"
+        );
+
+    if(overlay){
+        overlay.remove();
+    }
+}
+
+
+// ==========================================================
 // SIMPAN KE GAS
 // ==========================================================
 
@@ -949,6 +1330,8 @@ async function simpanMasterKontrakUI(){
         `;
 
     }
+
+    fmcShowMasterKontrakSaving_();
 
 
     try{
@@ -1030,11 +1413,6 @@ async function simpanMasterKontrakUI(){
         );
 
 
-        tampilToastServerMasterKontrak(
-            "📢 Data Master Kontrak berhasil tersimpan di server"
-        );
-
-
         // --------------------------------------------------
         // VERIFIKASI DENGAN GET SERVER
         // --------------------------------------------------
@@ -1051,6 +1429,13 @@ async function simpanMasterKontrakUI(){
                 "success"
             );
 
+            // Loading harus benar-benar selesai terlebih dahulu.
+            fmcHideMasterKontrakSaving_();
+
+            tampilToastServerMasterKontrak(
+                "📢 Data Master Kontrak berhasil tersimpan di server"
+            );
+
         }
         catch(verifyError){
 
@@ -1063,6 +1448,13 @@ async function simpanMasterKontrakUI(){
             tampilPesanMasterKontrak(
                 "Data sudah tersimpan di server. Verifikasi GET belum tersedia.",
                 "warning"
+            );
+
+            // Loading harus selesai sebelum notifikasi tampil.
+            fmcHideMasterKontrakSaving_();
+
+            tampilToastServerMasterKontrak(
+                "📢 Data Master Kontrak berhasil tersimpan di server"
             );
 
         }
@@ -1083,12 +1475,16 @@ async function simpanMasterKontrakUI(){
         );
 
 
+        fmcHideMasterKontrakSaving_();
+
         tampilToastServerMasterKontrak(
             "📢❌ Data Master Kontrak belum berhasil tersimpan di server"
         );
 
     }
     finally{
+
+        fmcHideMasterKontrakSaving_();
 
         if(button){
 
@@ -1428,8 +1824,8 @@ function tampilToastServerMasterKontrak(
         toast.style.left =
             "50%";
 
-        toast.style.bottom =
-            "86px";
+        toast.style.top =
+            "16px";
 
         toast.style.transform =
             "translateX(-50%) translateY(10px)";

@@ -896,6 +896,412 @@ function renderOperasionalTableInPage(){
 
 
 // ==========================================================
+// DIALOG HAPUS OPERASIONAL — FMC PROFESSIONAL
+// Hanya mengganti tampilan konfirmasi. Logika hapus tetap sama.
+// ==========================================================
+
+function fmcConfirmHapusOperasional_(item, index){
+
+    return new Promise(function(resolve){
+
+        const existing = document.getElementById(
+            "fmcOperasionalDeleteDialog"
+        );
+
+        if(existing){
+            existing.remove();
+        }
+
+        const styleId = "fmcOperasionalDeleteDialogStyle";
+
+        if(!document.getElementById(styleId)){
+
+            const style = document.createElement("style");
+            style.id = styleId;
+
+            style.textContent = `
+                #fmcOperasionalDeleteDialog{
+                    position:fixed;
+                    inset:0;
+                    z-index:99999;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    padding:20px;
+                    box-sizing:border-box;
+                    background:rgba(0,0,0,.55);
+                    backdrop-filter:blur(8px);
+                    -webkit-backdrop-filter:blur(8px);
+                    animation:fmcOperasionalDialogIn .18s ease-out;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-card{
+                    width:min(100%,390px);
+                    box-sizing:border-box;
+                    background:#202124;
+                    color:#fff;
+                    border-radius:28px;
+                    padding:28px 22px 18px;
+                    box-shadow:0 24px 70px rgba(0,0,0,.42);
+                    animation:fmcOperasionalCardIn .2s ease-out;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-icon{
+                    width:56px;
+                    height:56px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    border-radius:18px;
+                    margin-bottom:18px;
+                    background:#fff0f0;
+                    color:#dc2626;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-icon .material-symbols-rounded{
+                    font-size:30px;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-title{
+                    margin:0 0 8px;
+                    font-size:22px;
+                    line-height:1.25;
+                    font-weight:750;
+                    letter-spacing:-.25px;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-text{
+                    margin:0 0 18px;
+                    color:rgba(255,255,255,.68);
+                    font-size:15px;
+                    line-height:1.5;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-info{
+                    display:flex;
+                    flex-direction:column;
+                    gap:4px;
+                    margin-bottom:20px;
+                    padding:13px 15px;
+                    border-radius:15px;
+                    background:rgba(255,255,255,.07);
+                    color:#fff;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-category{
+                    font-size:16px;
+                    font-weight:700;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                    white-space:nowrap;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-detail{
+                    font-size:13px;
+                    color:rgba(255,255,255,.58);
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                    white-space:nowrap;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-actions{
+                    display:grid;
+                    grid-template-columns:1fr 1fr;
+                    gap:12px;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-btn{
+                    min-height:54px;
+                    border:0;
+                    border-radius:17px;
+                    font:inherit;
+                    font-size:16px;
+                    font-weight:750;
+                    cursor:pointer;
+                    -webkit-tap-highlight-color:transparent;
+                    transition:transform .12s ease, filter .12s ease;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-btn:active{
+                    transform:scale(.97);
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-cancel{
+                    background:#303136;
+                    color:#fff;
+                }
+
+                #fmcOperasionalDeleteDialog .fmc-od-delete{
+                    background:#e52525;
+                    color:#fff;
+                    box-shadow:0 8px 22px rgba(229,37,37,.22);
+                }
+
+                @keyframes fmcOperasionalDialogIn{
+                    from{opacity:0}
+                    to{opacity:1}
+                }
+
+                @keyframes fmcOperasionalCardIn{
+                    from{opacity:0;transform:scale(.94) translateY(8px)}
+                    to{opacity:1;transform:scale(1) translateY(0)}
+                }
+            `;
+
+            document.head.appendChild(style);
+        }
+
+        const kategori = escapeOperasional(
+            item?.kategori || "Pengeluaran"
+        );
+
+        const keterangan = escapeOperasional(
+            item?.keterangan || "Tanpa keterangan"
+        );
+
+        const nomor = index + 1;
+
+        const dialog = document.createElement("div");
+        dialog.id = "fmcOperasionalDeleteDialog";
+
+        dialog.innerHTML = `
+            <div class="fmc-od-card" role="dialog" aria-modal="true" aria-labelledby="fmcOperasionalDeleteTitle">
+
+                <div class="fmc-od-icon">
+                    <span class="material-symbols-rounded">delete</span>
+                </div>
+
+                <h2 class="fmc-od-title" id="fmcOperasionalDeleteTitle">
+                    Hapus Data Operasional?
+                </h2>
+
+                <p class="fmc-od-text">
+                    Data yang dipilih akan dihapus dari daftar pengeluaran.
+                    Tindakan ini tidak dapat dibatalkan.
+                </p>
+
+                <div class="fmc-od-info">
+                    <div class="fmc-od-category">
+                        ${kategori}
+                    </div>
+                    <div class="fmc-od-detail">
+                        Data pengeluaran #${nomor} • ${keterangan}
+                    </div>
+                </div>
+
+                <div class="fmc-od-actions">
+                    <button type="button" class="fmc-od-btn fmc-od-cancel">
+                        Batal
+                    </button>
+
+                    <button type="button" class="fmc-od-btn fmc-od-delete">
+                        Hapus
+                    </button>
+                </div>
+
+            </div>
+        `;
+
+        document.body.appendChild(dialog);
+
+        const cancelBtn = dialog.querySelector(".fmc-od-cancel");
+        const deleteBtn = dialog.querySelector(".fmc-od-delete");
+
+        let finished = false;
+
+        const close = function(result){
+            if(finished) return;
+            finished = true;
+
+            if(dialog.parentNode){
+                dialog.remove();
+            }
+
+            document.removeEventListener("keydown", onKeyDown);
+            resolve(result);
+        };
+
+        const onKeyDown = function(event){
+            if(event.key === "Escape"){
+                close(false);
+            }
+        };
+
+        if(cancelBtn){
+            cancelBtn.addEventListener("click", function(){
+                close(false);
+            });
+        }
+
+        if(deleteBtn){
+            deleteBtn.addEventListener("click", function(){
+                close(true);
+            });
+        }
+
+        dialog.addEventListener("click", function(event){
+            if(event.target === dialog){
+                close(false);
+            }
+        });
+
+        document.addEventListener("keydown", onKeyDown);
+
+        if(deleteBtn){
+            deleteBtn.focus();
+        }
+    });
+}
+
+
+// ==========================================================
+// LOADING SIMPAN OPERASIONAL — FMC iOS STYLE
+// Hanya UI. Tidak mengubah proses API/GAS.
+// ==========================================================
+
+function fmcShowOperasionalSaving(){
+
+    if(document.getElementById("fmcOperasionalSaving")){
+        return;
+    }
+
+    const styleId = "fmcOperasionalSavingStyle";
+
+    if(!document.getElementById(styleId)){
+
+        const style = document.createElement("style");
+        style.id = styleId;
+
+        style.textContent = `
+            #fmcOperasionalSaving{
+                position:fixed;
+                inset:0;
+                z-index:99998;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:rgba(0,0,0,.38);
+                backdrop-filter:blur(8px);
+                -webkit-backdrop-filter:blur(8px);
+                opacity:0;
+                transition:opacity .2s ease;
+            }
+
+            #fmcOperasionalSaving .fmc-os-card{
+                min-width:210px;
+                max-width:280px;
+                padding:28px 26px;
+                border-radius:26px;
+                box-sizing:border-box;
+                background:rgba(35,35,40,.97);
+                color:#fff;
+                text-align:center;
+                box-shadow:0 18px 55px rgba(0,0,0,.35);
+                transform:scale(.94);
+                transition:transform .2s ease;
+            }
+
+            #fmcOperasionalSaving .fmc-os-spinner{
+                position:relative;
+                width:42px;
+                height:42px;
+                margin:0 auto 18px;
+            }
+
+            #fmcOperasionalSaving .fmc-os-spinner span{
+                position:absolute;
+                width:4px;
+                height:11px;
+                border-radius:999px;
+                background:#fff;
+                left:19px;
+                top:2px;
+                transform-origin:2px 19px;
+                animation:fmcOperasionalSpinnerFade 1s linear infinite;
+            }
+
+            #fmcOperasionalSaving .fmc-os-title{
+                font-size:18px;
+                font-weight:700;
+                margin-bottom:6px;
+            }
+
+            #fmcOperasionalSaving .fmc-os-text{
+                font-size:14px;
+                color:rgba(255,255,255,.68);
+            }
+
+            @keyframes fmcOperasionalSpinnerFade{
+                0%{opacity:.15}
+                50%{opacity:1}
+                100%{opacity:.15}
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    const overlay = document.createElement("div");
+    overlay.id = "fmcOperasionalSaving";
+
+    const dots = Array.from({length:8}, function(_, index){
+        return `<span style="transform:rotate(${index * 45}deg);animation-delay:${-(1 - index * .10)}s;opacity:${.18 + index * .10}"></span>`;
+    }).join("");
+
+    overlay.innerHTML = `
+        <div class="fmc-os-card">
+            <div class="fmc-os-spinner">
+                ${dots}
+            </div>
+
+            <div class="fmc-os-title">
+                Menyimpan Data
+            </div>
+
+            <div class="fmc-os-text">
+                Mohon tunggu sebentar...
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    requestAnimationFrame(function(){
+        overlay.style.opacity = "1";
+        const card = overlay.querySelector(".fmc-os-card");
+        if(card){
+            card.style.transform = "scale(1)";
+        }
+    });
+}
+
+
+function fmcHideOperasionalSaving(){
+
+    const overlay = document.getElementById(
+        "fmcOperasionalSaving"
+    );
+
+    if(!overlay){
+        return;
+    }
+
+    overlay.style.opacity = "0";
+
+    const card = overlay.querySelector(".fmc-os-card");
+    if(card){
+        card.style.transform = "scale(.94)";
+    }
+
+    setTimeout(function(){
+        if(overlay.parentNode){
+            overlay.remove();
+        }
+    }, 200);
+}
+
+
+// ==========================================================
 // HAPUS DATA OPERASIONAL
 // ==========================================================
 
@@ -922,7 +1328,13 @@ async function hapusDataOperasional(
         ""
     ).trim();
 
-    if(!confirm(`Hapus data pengeluaran #${index + 1}?`)){
+    const confirmed =
+        await fmcConfirmHapusOperasional_(
+            item,
+            index
+        );
+
+    if(!confirmed){
         return;
     }
 
@@ -1125,15 +1537,35 @@ async function simpanOperasionalUI(){
     }else{
 
         /*
+         * Jika tidak ada data pending dan form kosong,
+         * jangan kirim request SAVE kosong ke GAS 2.
+         */
+        const formData =
+            ambilFormOperasional();
+
+        const formKosong =
+            !formData.kategori &&
+            !formData.keterangan &&
+            formData.harga <= 0 &&
+            formData.qty <= 0;
+
+        if(formKosong){
+
+            tampilPesanOperasional(
+                "Tidak ada data baru untuk disimpan.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        /*
          * Kompatibilitas:
          * jika user langsung menekan SIMPAN
          * tanpa menekan TAMBAH DATA,
          * form tetap dapat diproses.
          */
-
-        const formData =
-            ambilFormOperasional();
-
 
         if(
             !validasiOperasional(
@@ -1197,6 +1629,9 @@ async function simpanOperasionalUI(){
         `;
 
     }
+
+
+    fmcShowOperasionalSaving();
 
 
     try{
@@ -1364,6 +1799,8 @@ async function simpanOperasionalUI(){
 
     }
     finally{
+
+        fmcHideOperasionalSaving();
 
         if(button){
 

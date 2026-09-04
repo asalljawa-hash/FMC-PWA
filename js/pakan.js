@@ -1045,34 +1045,7 @@ function renderPakanTable(){
             ${
                 data.map(function(item,index){
 
-                    const tombolHapus =
-                        item.__source === "session"
-                            ? `
-                                <button
-                                    type="button"
-                                    class="pakanDeleteBtn"
-                                    onclick="hapusDataPakan(${Number(item.__sessionIndex)})"
-                                    aria-label="Hapus data yang belum disimpan">
-
-                                    <span class="material-symbols-rounded">
-                                        delete
-                                    </span>
-
-                                </button>
-                              `
-                            : `
-                                <button
-                                    type="button"
-                                    class="pakanDeleteBtn"
-                                    onclick="hapusDataPakanServer(${JSON.stringify(String(item.id ?? ""))})"
-                                    aria-label="Hapus data pakan tersimpan">
-
-                                    <span class="material-symbols-rounded">
-                                        delete
-                                    </span>
-
-                                </button>
-                              `;
+                    const tombolHapus = "";
 
                     return `
 
@@ -1202,7 +1175,18 @@ async function hapusDataPakanServer(id){
     }
 
 
-    if(!confirm("Hapus data pakan tersimpan ini?")){
+    const confirmed =
+        await fmcConfirmHapusPakan_(
+            "server",
+            null,
+            {
+                kode: "",
+                jenis: "Data pakan tersimpan",
+                tanggal: ""
+            }
+        );
+
+    if(!confirmed){
         return;
     }
 
@@ -1285,7 +1269,7 @@ async function hapusDataPakanServer(id){
 // HAPUS DATA PAKAN SESI / PENDING
 // ==========================================================
 
-function hapusDataPakan(index){
+async function hapusDataPakan(index){
 
     const sessionRows =
         Array.isArray(window.fmcPakanDataSesi)
@@ -1307,7 +1291,16 @@ function hapusDataPakan(index){
     }
 
 
-    if(!confirm("Hapus data pakan yang belum disimpan ini?")){
+    const item = sessionRows[targetIndex] || {};
+
+    const confirmed =
+        await fmcConfirmHapusPakan_(
+            "session",
+            targetIndex,
+            item
+        );
+
+    if(!confirmed){
         return;
     }
 
@@ -1326,6 +1319,501 @@ function hapusDataPakan(index){
         "success"
     );
 
+}
+
+
+// ==========================================================
+// DIALOG HAPUS PAKAN — FMC PROFESSIONAL
+// Hanya tampilan konfirmasi. Logika hapus tetap sama.
+// ==========================================================
+
+function fmcConfirmHapusPakan_(source, index, item){
+
+    return new Promise(function(resolve){
+
+        const existing =
+            document.getElementById(
+                "fmcPakanDeleteDialog"
+            );
+
+        if(existing){
+            existing.remove();
+        }
+
+        const styleId =
+            "fmcPakanDeleteDialogStyle";
+
+        if(!document.getElementById(styleId)){
+
+            const style =
+                document.createElement("style");
+
+            style.id = styleId;
+
+            style.textContent = `
+                #fmcPakanDeleteDialog{
+                    position:fixed;
+                    inset:0;
+                    z-index:99999;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    padding:24px;
+                    box-sizing:border-box;
+                    background:rgba(0,0,0,.52);
+                    backdrop-filter:blur(4px);
+                    -webkit-backdrop-filter:blur(4px);
+                    animation:fmcPakanDialogIn .18s ease-out;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-card{
+                    width:min(100%,390px);
+                    box-sizing:border-box;
+                    background:#fff;
+                    color:#172033;
+                    border-radius:26px;
+                    padding:24px 22px 18px;
+                    box-shadow:0 22px 60px rgba(0,0,0,.28);
+                    transform-origin:center;
+                    animation:fmcPakanDialogCardIn .20s ease-out;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-icon{
+                    width:54px;
+                    height:54px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    border-radius:17px;
+                    margin-bottom:16px;
+                    background:#fff1f2;
+                    color:#dc2626;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-icon .material-symbols-rounded{
+                    font-size:29px;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-title{
+                    margin:0;
+                    font-size:20px;
+                    line-height:1.25;
+                    font-weight:750;
+                    letter-spacing:-.2px;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-message{
+                    margin:10px 0 0;
+                    font-size:14px;
+                    line-height:1.55;
+                    color:#667085;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-highlight{
+                    display:flex;
+                    align-items:center;
+                    gap:9px;
+                    margin-top:14px;
+                    padding:9px 11px;
+                    border-radius:11px;
+                    background:#f8fafc;
+                    color:#344054;
+                    font-size:13px;
+                    font-weight:700;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-highlight-icon{
+                    width:30px;
+                    height:30px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    flex:0 0 30px;
+                    border-radius:9px;
+                    background:#fff1f2;
+                    color:#dc2626;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-detail{
+                    min-width:0;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                    white-space:nowrap;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-actions{
+                    display:flex;
+                    gap:10px;
+                    margin-top:24px;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-btn{
+                    flex:1;
+                    min-height:48px;
+                    border:0;
+                    border-radius:14px;
+                    font:inherit;
+                    font-size:14px;
+                    font-weight:750;
+                    cursor:pointer;
+                    -webkit-tap-highlight-color:transparent;
+                    transition:transform .12s ease,opacity .12s ease;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-btn:active{
+                    transform:scale(.98);
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-cancel{
+                    background:#f2f4f7;
+                    color:#344054;
+                }
+
+                #fmcPakanDeleteDialog .fmc-pd-delete{
+                    background:#dc2626;
+                    color:#fff;
+                    box-shadow:0 7px 18px rgba(220,38,38,.22);
+                }
+
+                @keyframes fmcPakanDialogIn{
+                    from{opacity:0}
+                    to{opacity:1}
+                }
+
+                @keyframes fmcPakanDialogCardIn{
+                    from{opacity:0;transform:translateY(8px) scale(.97)}
+                    to{opacity:1;transform:translateY(0) scale(1)}
+                }
+
+                @media (prefers-color-scheme:dark){
+                    #fmcPakanDeleteDialog .fmc-pd-card{
+                        background:#202124;
+                        color:#f1f3f4;
+                    }
+
+                    #fmcPakanDeleteDialog .fmc-pd-message{
+                        color:#bdc1c6;
+                    }
+
+                    #fmcPakanDeleteDialog .fmc-pd-highlight{
+                        background:#2b2c2f;
+                        color:#e8eaed;
+                    }
+
+                    #fmcPakanDeleteDialog .fmc-pd-cancel{
+                        background:#303134;
+                        color:#e8eaed;
+                    }
+                }
+            `;
+
+            document.head.appendChild(style);
+        }
+
+        const safeItem =
+            item && typeof item === "object"
+                ? item
+                : {};
+
+        const kode =
+            String(
+                safeItem.kode ||
+                safeItem.code ||
+                ""
+            ).trim();
+
+        const jenis =
+            String(
+                safeItem.jenis ||
+                "Pakan"
+            ).trim();
+
+        const tanggal =
+            String(
+                safeItem.tanggal ||
+                ""
+            ).trim();
+
+        let detail = jenis;
+
+        if(kode){
+            detail += " • " + kode;
+        }
+
+        if(tanggal){
+            detail += " • " + tanggal;
+        }
+
+        if(source === "server"){
+            detail = "Data pakan tersimpan";
+        }
+
+        const dialog =
+            document.createElement("div");
+
+        dialog.id =
+            "fmcPakanDeleteDialog";
+
+        dialog.setAttribute("role","dialog");
+        dialog.setAttribute("aria-modal","true");
+        dialog.setAttribute("aria-labelledby","fmcPakanDeleteTitle");
+
+        dialog.innerHTML = `
+            <div class="fmc-pd-card" role="document">
+
+                <div class="fmc-pd-icon" aria-hidden="true">
+                    <span class="material-symbols-rounded">
+                        delete_forever
+                    </span>
+                </div>
+
+                <h2
+                    class="fmc-pd-title"
+                    id="fmcPakanDeleteTitle"
+                >
+                    Hapus Data Pakan?
+                </h2>
+
+                <p class="fmc-pd-message">
+                    Data yang dipilih akan dihapus dari daftar pakan.
+                    Tindakan ini tidak dapat dibatalkan.
+                </p>
+
+                <div class="fmc-pd-highlight">
+                    <div class="fmc-pd-highlight-icon" aria-hidden="true">
+                        <span class="material-symbols-rounded">
+                            inventory_2
+                        </span>
+                    </div>
+                    <div class="fmc-pd-detail">
+                        ${escapePakan(detail)}
+                    </div>
+                </div>
+
+                <div class="fmc-pd-actions">
+
+                    <button
+                        type="button"
+                        class="fmc-pd-btn fmc-pd-cancel"
+                    >
+                        Batal
+                    </button>
+
+                    <button
+                        type="button"
+                        class="fmc-pd-btn fmc-pd-delete"
+                    >
+                        Hapus
+                    </button>
+
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(dialog);
+
+        const cancelBtn =
+            dialog.querySelector(".fmc-pd-cancel");
+
+        const deleteBtn =
+            dialog.querySelector(".fmc-pd-delete");
+
+        let finished = false;
+
+        const close = function(result){
+
+            if(finished){
+                return;
+            }
+
+            finished = true;
+
+            if(dialog.parentNode){
+                dialog.remove();
+            }
+
+            document.removeEventListener(
+                "keydown",
+                onKeyDown
+            );
+
+            resolve(result);
+        };
+
+        const onKeyDown = function(event){
+            if(event.key === "Escape"){
+                close(false);
+            }
+        };
+
+        if(cancelBtn){
+            cancelBtn.addEventListener(
+                "click",
+                function(){
+                    close(false);
+                }
+            );
+        }
+
+        if(deleteBtn){
+            deleteBtn.addEventListener(
+                "click",
+                function(){
+                    close(true);
+                }
+            );
+        }
+
+        dialog.addEventListener(
+            "click",
+            function(event){
+                if(event.target === dialog){
+                    close(false);
+                }
+            }
+        );
+
+        document.addEventListener(
+            "keydown",
+            onKeyDown
+        );
+
+        if(deleteBtn){
+            deleteBtn.focus();
+        }
+    });
+}
+
+
+// ==========================================================
+// LOADING SIMPAN PAKAN — FMC iOS STYLE
+// Hanya tampilan. Tidak mengubah proses API/GAS.
+// ==========================================================
+
+function fmcShowPakanSaving_(){
+
+    if(document.getElementById("fmcPakanSaving")){
+        return;
+    }
+
+    if(!document.getElementById("fmcPakanSavingStyle")){
+
+        const style =
+            document.createElement("style");
+
+        style.id =
+            "fmcPakanSavingStyle";
+
+        style.textContent = `
+            @keyframes fmcPakanSavingFadeIn{
+                from{opacity:0;transform:scale(.96)}
+                to{opacity:1;transform:scale(1)}
+            }
+
+            @keyframes fmcPakanSavingSpinner{
+                to{transform:rotate(360deg)}
+            }
+
+            #fmcPakanSaving{
+                position:fixed;
+                inset:0;
+                z-index:999999;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                padding:24px;
+                box-sizing:border-box;
+                background:rgba(0,0,0,.34);
+                backdrop-filter:blur(10px);
+                -webkit-backdrop-filter:blur(10px);
+            }
+
+            #fmcPakanSaving .fmc-ps-card{
+                width:min(250px,calc(100vw - 48px));
+                box-sizing:border-box;
+                padding:28px 24px 24px;
+                border-radius:28px;
+                background:rgba(30,30,32,.96);
+                color:#fff;
+                text-align:center;
+                box-shadow:0 20px 60px rgba(0,0,0,.35);
+                animation:fmcPakanSavingFadeIn .18s ease-out;
+            }
+
+            #fmcPakanSaving .fmc-ps-spinner{
+                width:42px;
+                height:42px;
+                margin:0 auto 18px;
+                border:4px solid rgba(255,255,255,.22);
+                border-top-color:#fff;
+                border-radius:50%;
+                animation:fmcPakanSavingSpinner .78s linear infinite;
+            }
+
+            #fmcPakanSaving .fmc-ps-title{
+                font-size:18px;
+                line-height:1.3;
+                font-weight:750;
+                letter-spacing:-.2px;
+            }
+
+            #fmcPakanSaving .fmc-ps-text{
+                margin-top:7px;
+                font-size:13px;
+                line-height:1.45;
+                color:rgba(255,255,255,.68);
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    const overlay =
+        document.createElement("div");
+
+    overlay.id =
+        "fmcPakanSaving";
+
+    overlay.setAttribute(
+        "role",
+        "status"
+    );
+
+    overlay.setAttribute(
+        "aria-live",
+        "polite"
+    );
+
+    overlay.innerHTML = `
+        <div class="fmc-ps-card">
+            <div
+                class="fmc-ps-spinner"
+                aria-hidden="true">
+            </div>
+
+            <div class="fmc-ps-title">
+                Menyiapkan Data
+            </div>
+
+            <div class="fmc-ps-text">
+                Mohon tunggu sebentar...
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+}
+
+function fmcHidePakanSaving_(){
+
+    const overlay =
+        document.getElementById(
+            "fmcPakanSaving"
+        );
+
+    if(overlay){
+        overlay.remove();
+    }
 }
 
 
@@ -1658,6 +2146,8 @@ async function simpanPakanUI(){
     }
 
 
+    fmcShowPakanSaving_();
+
     const button =
         document.getElementById(
             "btnSimpanPakan"
@@ -1850,6 +2340,8 @@ async function simpanPakanUI(){
 
     }
     finally{
+
+        fmcHidePakanSaving_();
 
         if(button){
 

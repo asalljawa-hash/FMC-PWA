@@ -18,8 +18,7 @@ const LOGIN_CONFIG = {
    FMC DEVELOPMENT MODE
 ====================================== */
 
-const FMC_DEV_MODE = true;
-
+const FMC_DEV_MODE = false;
 
 function isDevelopmentMode(){
 
@@ -289,6 +288,28 @@ async function loginUser() {
 
         );
 
+        
+        const sessionToken =
+            typeof getFmcSessionToken === "function"
+                ? getFmcSessionToken()
+                : "";
+
+        if(!sessionToken){
+
+            console.error(
+                "LOGIN BERHASIL TETAPI SESSION TOKEN GAS 1 TIDAK TERSEDIA."
+            );
+
+            localStorage.removeItem("FMC_LOGIN");
+            localStorage.removeItem("FMC_USER");
+
+            showLoginMessage(
+                "Login berhasil, tetapi session keamanan tidak berhasil dibuat."
+            );
+
+            return;
+        }
+
         loginState.loggedIn = true;
 
         /* ==========================
@@ -384,13 +405,20 @@ async function loginUser() {
 
 
 /* ======================================
-   SESSION
+   SESSION — GAS 1 PERSISTENT SESSION
 ====================================== */
 
 function isLoggedIn() {
 
-    return localStorage.getItem("FMC_LOGIN") === "1";
+    const token =
+        typeof getFmcSessionToken === "function"
+            ? getFmcSessionToken()
+            : "";
 
+    return (
+        !!token ||
+        localStorage.getItem("FMC_LOGIN") === "1"
+    );
 }
 
 
@@ -399,77 +427,268 @@ function getLoginUser() {
     try {
 
         return JSON.parse(
-
             localStorage.getItem("FMC_USER")
-
         );
 
     }
-
     catch (error) {
 
         return null;
-
     }
-
 }
 
 
-function logoutUser() {
+async function logoutUser() {
 
+    /*
+     * LOGOUT FLOW
+     * 1. Tutup session di GAS 1 jika API tersedia.
+     * 2. Selalu bersihkan session lokal.
+     * 3. Reset state login.
+     * 4. Langsung kembali ke halaman login.
+     */
+
+    try {
+
+        if (typeof logoutAPI === "function") {
+            await logoutAPI();
+        }
+
+    } catch (error) {
+
+        console.error("LOGOUT USER ERROR:", error);
+
+    }
+
+    /* Selalu bersihkan session lokal, terlepas API berhasil/gagal. */
     localStorage.removeItem("FMC_LOGIN");
-
     localStorage.removeItem("FMC_USER");
 
+    if (typeof fmcClearSessionToken === "function") {
+        try {
+            fmcClearSessionToken();
+        } catch (error) {
+            console.error("CLEAR SESSION TOKEN ERROR:", error);
+        }
+    }
+
     loginState.loggedIn = false;
+
+    /* ======================================
+       LOGOUT UI — LANGSUNG KEMBALI KE LOGIN
+    ====================================== */
+
+    const loginPage = document.getElementById("loginPage");
+    const app = document.getElementById("app");
+    const splash = document.getElementById("splash");
+
+    if (splash) {
+        splash.classList.remove("hide");
+        splash.style.display = "none";
+    }
+
+    if (app) {
+        app.style.display = "none";
+    }
+
+    if (loginPage) {
+        loginPage.style.display = "flex";
+    }
+
+    /* Bersihkan form login dari session sebelumnya. */
+    if (loginEmail) loginEmail.value = "";
+    if (loginPin) loginPin.value = "";
+
+    clearLoginMessage();
 
 }
 
 
 /* ======================================
-   AUTO LOGIN
+   AUTO LOGIN — VALIDATE GAS 1 SESSION
 ====================================== */
 
 async function autoLogin() {
 
-    if (!isLoggedIn()) {
+    const token =
+        typeof getFmcSessionToken === "function"
+            ? getFmcSessionToken()
+            : "";
 
-        return;
+    if (!token) {
 
-    }
+        loginState.loggedIn = false;
 
-    const user = getLoginUser();
-
-    console.log("AUTO LOGIN :", user);
-
-    loginState.loggedIn = true;
-
-    const loginPage =
-        document.getElementById("loginPage");
-
-    const app =
-        document.getElementById("app");
-
-    if (loginPage) {
-
-        loginPage.style.display = "none";
+        return false;
 
     }
 
-    if (app) {
+    try {
 
-        app.style.display = "block";
+        if (
+            typeof validateSessionAPI !==
+            "function"
+        ) {
+
+            console.error(
+                "VALIDATE SESSION API TIDAK TERSEDIA."
+            );
+
+            return false;
+
+        }
+
+        console.log(
+            "FMC SESSION: VALIDASI KE GAS 1..."
+        );
+
+        const result =
+            await validateSessionAPI(
+                token
+            );
+
+        console.log(
+            "FMC SESSION VALIDATION RESULT:",
+            result
+        );
+
+        const valid =
+            result &&
+            result.success === true &&
+            (
+                result.valid === true ||
+                result.status === "ACTIVE" ||
+                (
+                    result.data &&
+                    (
+                        result.data.valid === true ||
+                        result.data.status === "ACTIVE"
+                    )
+                )
+            );
+
+        if (!valid) {
+
+            console.warn(
+                "FMC SESSION INVALID. KEMBALI KE LOGIN."
+            );
+
+            if (
+                typeof fmcClearSessionToken ===
+                "function"
+            ) {
+
+                fmcClearSessionToken();
+
+            }
+
+            localStorage.removeItem("FMC_LOGIN");
+            localStorage.removeItem("FMC_USER");
+
+            loginState.loggedIn = false;
+
+            return false;
+
+        }
+
+        const validUser =
+            result.data &&
+            typeof result.data === "object"
+                ? result.data
+                : result;
+
+        const currentUser =
+            getLoginUser() || {};
+
+        const mergedUser = {
+
+            ...currentUser,
+
+            user_id:
+                validUser.user_id ||
+                currentUser.user_id ||
+                "",
+
+            tenant_id:
+                validUser.tenant_id ||
+                currentUser.tenant_id ||
+                "",
+
+            status:
+                validUser.status ||
+                currentUser.status ||
+                "ACTIVE"
+
+        };
+
+        localStorage.setItem(
+            "FMC_USER",
+            JSON.stringify(
+                mergedUser
+            )
+        );
+
+        localStorage.setItem(
+            "FMC_LOGIN",
+            "1"
+        );
+
+        loginState.loggedIn = true;
+
+        const loginPage =
+            document.getElementById(
+                "loginPage"
+            );
+
+        const app =
+            document.getElementById(
+                "app"
+            );
+
+        if (loginPage) {
+            loginPage.style.display = "none";
+        }
+
+        if (app) {
+            app.style.display = "block";
+        }
+
+        if (
+            typeof showPage ===
+            "function"
+        ) {
+
+            await showPage(
+                "dashboard"
+            );
+
+        }
+        else if (
+            typeof tampilDashboard ===
+            "function"
+        ) {
+
+            await tampilDashboard();
+
+        }
+
+        return true;
 
     }
+    catch (error) {
 
-    if (typeof showPage === "function") {
+        console.error(
+            "AUTO LOGIN / SESSION VALIDATION ERROR:",
+            error
+        );
 
-        await showPage("dashboard");
+        /*
+         * Gangguan jaringan tidak langsung
+         * menghapus token session.
+         */
+        loginState.loggedIn = false;
 
-    }
-    else if (typeof tampilDashboard === "function") {
-
-        await tampilDashboard();
+        return false;
 
     }
 
@@ -555,56 +774,14 @@ function initLogin() {
     clearLoginMessage();
 
     /* ==================================
-       DEVELOPMENT MODE
+       AUTH SESSION
     ================================== */
 
-    if(isDevelopmentMode()){
-
-        console.log(
-            "FMC DEVELOPMENT MODE"
-        );
-
-        loginState.loggedIn = true;
-
-        const loginPage =
-            document.getElementById(
-                "loginPage"
-            );
-
-        const app =
-            document.getElementById(
-                "app"
-            );
-
-        if(loginPage){
-
-            loginPage.style.display =
-                "none";
-
-        }
-
-        if(app){
-
-            app.style.display =
-                "block";
-
-        }
-
-        if(typeof showPage === "function"){
-
-            showPage("dashboard");
-
-        }
-
-        return;
-
-    }
-
-
-    /* ==================================
-       NORMAL LOGIN
-    ================================== */
-
+    /*
+     * Localhost tidak lagi bypass authentication.
+     * Persistent Session GAS 1 menjadi sumber
+     * kebenaran untuk startup.
+     */
     autoLogin();
 
 }

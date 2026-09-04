@@ -1275,10 +1275,53 @@ function renderOVKTableInPage(){
 
 
 // ==========================================================
+// ==========================================================
+// DIALOG HAPUS OVK — TAMPILAN SAJA
+// ==========================================================
+function fmcConfirmDeleteOVK_(nama, dariServer){
+    return new Promise(function(resolve){
+        if(!document.getElementById("fmcOVKDeleteDialogStyle")){
+            const style=document.createElement("style");
+            style.id="fmcOVKDeleteDialogStyle";
+            style.textContent=`
+                @keyframes fmcOVKDeleteFadeIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+                #fmcOVKDeleteDialog{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:rgba(0,0,0,.34);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+                #fmcOVKDeleteDialog .fmc-ovkdd-card{width:min(360px,calc(100vw - 40px));box-sizing:border-box;padding:28px 24px 24px;border-radius:28px;background:#fff;color:#101828;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:fmcOVKDeleteFadeIn .18s ease-out}
+                #fmcOVKDeleteDialog .fmc-ovkdd-icon{width:58px;height:58px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;border-radius:18px;background:#fee4e2;color:#d92d20}
+                #fmcOVKDeleteDialog .fmc-ovkdd-icon .material-symbols-rounded{font-size:30px}
+                #fmcOVKDeleteDialog .fmc-ovkdd-title{margin:0;font-size:19px;line-height:1.3;font-weight:800;letter-spacing:-.2px}
+                #fmcOVKDeleteDialog .fmc-ovkdd-message{margin:9px 0 0;font-size:13px;line-height:1.5;color:#667085}
+                #fmcOVKDeleteDialog .fmc-ovkdd-highlight{display:flex;align-items:center;gap:12px;margin-top:18px;padding:12px;border-radius:16px;background:#f8fafc;text-align:left}
+                #fmcOVKDeleteDialog .fmc-ovkdd-highlight-icon{width:40px;height:40px;flex:0 0 40px;display:flex;align-items:center;justify-content:center;border-radius:13px;background:#eef2ff;color:#4f46e5}
+                #fmcOVKDeleteDialog .fmc-ovkdd-detail{min-width:0;font-size:14px;font-weight:700;color:#344054;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+                #fmcOVKDeleteDialog .fmc-ovkdd-actions{display:flex;gap:10px;margin-top:20px}
+                #fmcOVKDeleteDialog .fmc-ovkdd-btn{flex:1;min-height:46px;border:0;border-radius:14px;font-size:14px;font-weight:750;cursor:pointer}
+                #fmcOVKDeleteDialog .fmc-ovkdd-cancel{background:#f2f4f7;color:#344054}
+                #fmcOVKDeleteDialog .fmc-ovkdd-delete{background:#dc2626;color:#fff}
+            `;
+            document.head.appendChild(style);
+        }
+        const dialog=document.createElement("div");
+        dialog.id="fmcOVKDeleteDialog";
+        dialog.setAttribute("role","dialog");
+        dialog.setAttribute("aria-modal","true");
+        const title=dariServer?"Hapus Data OVK dari Server?":"Hapus Data OVK?";
+        const message=dariServer?"Data OVK yang dipilih akan dihapus dari server. Tindakan ini tidak dapat dibatalkan.":"Data OVK yang dipilih akan dihapus dari daftar. Tindakan ini tidak dapat dibatalkan.";
+        dialog.innerHTML=`<div class="fmc-ovkdd-card" role="document"><div class="fmc-ovkdd-icon" aria-hidden="true"><span class="material-symbols-rounded">delete_forever</span></div><h2 class="fmc-ovkdd-title">${title}</h2><p class="fmc-ovkdd-message">${message}</p><div class="fmc-ovkdd-highlight"><div class="fmc-ovkdd-highlight-icon" aria-hidden="true"><span class="material-symbols-rounded">medication</span></div><div class="fmc-ovkdd-detail">${String(nama||"Data OVK")}</div></div><div class="fmc-ovkdd-actions"><button type="button" class="fmc-ovkdd-btn fmc-ovkdd-cancel">Batal</button><button type="button" class="fmc-ovkdd-btn fmc-ovkdd-delete">Hapus</button></div></div>`;
+        document.body.appendChild(dialog);
+        const onKeyDown=function(event){if(event.key==="Escape")close(false)};
+        const close=function(result){if(dialog.parentNode)dialog.remove();document.removeEventListener("keydown",onKeyDown);resolve(result)};
+        dialog.querySelector(".fmc-ovkdd-cancel").onclick=function(){close(false)};
+        dialog.querySelector(".fmc-ovkdd-delete").onclick=function(){close(true)};
+        dialog.onclick=function(event){if(event.target===dialog)close(false)};
+        document.addEventListener("keydown",onKeyDown);
+    });
+}
+
 // HAPUS DATA
 // ==========================================================
 
-function hapusDataOVK(
+async function hapusDataOVK(
     index
 ){
 
@@ -1312,9 +1355,7 @@ function hapusDataOVK(
 
 
     const yakin =
-        confirm(
-            `Hapus ${nama}?`
-        );
+        await fmcConfirmDeleteOVK_(nama, false);
 
 
     if(!yakin){
@@ -1371,9 +1412,7 @@ async function hapusDataOVKServer(
         );
 
     const yakin =
-        window.confirm(
-            `Hapus ${namaObat} dari server?`
-        );
+        await fmcConfirmDeleteOVK_(namaObat, true);
 
     if(!yakin){
         return;
@@ -1746,6 +1785,28 @@ async function ovkPostDirect(
 // - GAS menghitung ulang kolom F melalui Spreadsheet.
 // ==========================================================
 
+// ==========================================================
+// LOADING SIMPAN OVK — TAMPILAN SAJA
+// ==========================================================
+function fmcShowOVKSaving_(){
+    if(document.getElementById("fmcOVKSaving"))return;
+    if(!document.getElementById("fmcOVKSavingStyle")){
+        const style=document.createElement("style"); style.id="fmcOVKSavingStyle"; style.textContent=`
+            @keyframes fmcOVKSavingFadeIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+            @keyframes fmcOVKSavingSpinner{to{transform:rotate(360deg)}}
+            #fmcOVKSaving{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:rgba(0,0,0,.34);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+            #fmcOVKSaving .fmc-ovks-card{width:min(250px,calc(100vw - 48px));box-sizing:border-box;padding:28px 24px 24px;border-radius:28px;background:rgba(30,30,32,.96);color:#fff;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:fmcOVKSavingFadeIn .18s ease-out}
+            #fmcOVKSaving .fmc-ovks-spinner{width:42px;height:42px;margin:0 auto 18px;border:4px solid rgba(255,255,255,.22);border-top-color:#fff;border-radius:50%;animation:fmcOVKSavingSpinner .78s linear infinite}
+            #fmcOVKSaving .fmc-ovks-title{font-size:18px;line-height:1.3;font-weight:750;letter-spacing:-.2px}
+            #fmcOVKSaving .fmc-ovks-text{margin-top:7px;font-size:13px;line-height:1.45;color:rgba(255,255,255,.68)}
+        `; document.head.appendChild(style);
+    }
+    const overlay=document.createElement("div"); overlay.id="fmcOVKSaving"; overlay.setAttribute("role","status"); overlay.setAttribute("aria-live","polite");
+    overlay.innerHTML=`<div class="fmc-ovks-card"><div class="fmc-ovks-spinner" aria-hidden="true"></div><div class="fmc-ovks-title">Menyiapkan Data</div><div class="fmc-ovks-text">Mohon tunggu sebentar...</div></div>`;
+    document.body.appendChild(overlay);
+}
+function fmcHideOVKSaving_(){const overlay=document.getElementById("fmcOVKSaving");if(overlay)overlay.remove()}
+
 async function simpanDataOVK(){
 
     const data =
@@ -1792,6 +1853,8 @@ async function simpanDataOVK(){
         `;
 
     }
+
+    fmcShowOVKSaving_();
 
 
     try{
@@ -1949,6 +2012,8 @@ async function simpanDataOVK(){
 
         // SATU notifikasi server.
         // showUpdateToast/showToast sudah menyediakan ikon 📢.
+        fmcHideOVKSaving_();
+
         tampilToastServerOVK(
             "Data OVK berhasil tersimpan di server"
         );
@@ -2041,6 +2106,8 @@ async function simpanDataOVK(){
 
     }
     finally{
+
+        fmcHideOVKSaving_();
 
         // ==========================================
         // KEMBALIKAN TOMBOL

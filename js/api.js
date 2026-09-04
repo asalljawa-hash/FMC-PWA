@@ -83,7 +83,9 @@ const FMC_AUTH_ACTIONS =
     "verifyOTP",
     "sendResetOTP",
     "verifyResetOTP",
-    "resetPIN"
+    "resetPIN",
+    "validateSession",
+    "logout"
 ];
 
 
@@ -437,6 +439,23 @@ async function apiPost(
 
 }
 
+// ==========================================================
+// RESET APPLICATION DATA API
+// ==========================================================
+// Reset seluruh data periode melalui Unified API GAS 2.
+// Menggunakan apiPost() agar identity user/tenant tetap
+// mengikuti session PWA.
+// ==========================================================
+
+window.FMC_RESET_APPLICATION_DATA_API =
+    async function(data = {}){
+
+        return await apiPost(
+            "resetApplicationData",
+            data
+        );
+
+    };
 
 // ==========================================================
 // GENERIC API GET
@@ -1336,6 +1355,127 @@ async function resetPINAPI(
 
 
 // ==========================================================
+// PERSISTENT AUTH SESSION — GAS 1
+// ==========================================================
+//
+// Token session berasal dari GAS 1.
+// D2/GAS 2 tetap menggunakan identity user_id / tenant_id.
+// ==========================================================
+
+function fmcGetSessionToken(){
+
+    try{
+
+        return String(
+            localStorage.getItem(
+                "FMC_SESSION_TOKEN"
+            ) || ""
+        ).trim();
+
+    }
+    catch(error){
+
+        console.error(
+            "FMC GET SESSION TOKEN ERROR:",
+            error
+        );
+
+        return "";
+    }
+}
+
+
+function fmcSetSessionToken(
+    token
+){
+
+    try{
+
+        const value =
+            String(
+                token || ""
+            ).trim();
+
+        if(!value){
+
+            localStorage.removeItem(
+                "FMC_SESSION_TOKEN"
+            );
+
+            return false;
+        }
+
+        localStorage.setItem(
+            "FMC_SESSION_TOKEN",
+            value
+        );
+
+        return true;
+
+    }
+    catch(error){
+
+        console.error(
+            "FMC SET SESSION TOKEN ERROR:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+function fmcClearSessionToken(){
+
+    try{
+
+        localStorage.removeItem(
+            "FMC_SESSION_TOKEN"
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "FMC CLEAR SESSION TOKEN ERROR:",
+            error
+        );
+    }
+}
+
+
+async function validateSessionAPI(
+    token
+){
+
+    const sessionToken =
+        String(
+            token ||
+            fmcGetSessionToken() ||
+            ""
+        ).trim();
+
+    if(!sessionToken){
+
+        return {
+            success: false,
+            valid: false,
+            message:
+                "Session token tidak tersedia."
+        };
+    }
+
+    return await apiPost(
+        "validateSession",
+        {
+            session_token:
+                sessionToken
+        }
+    );
+}
+
+
+// ==========================================================
 // SESSION
 // ==========================================================
 
@@ -1355,6 +1495,24 @@ function simpanSession(
             user || {}
         )
     );
+
+    const sessionToken =
+        user &&
+        typeof user === "object"
+            ? (
+                user.session_token ||
+                user.sessionToken ||
+                user.token ||
+                ""
+            )
+            : "";
+
+    if(sessionToken){
+
+        fmcSetSessionToken(
+            sessionToken
+        );
+    }
 
 }
 
@@ -1402,6 +1560,8 @@ function hapusSession(){
     );
 
 
+    fmcClearSessionToken();
+
     clearApiCache();
 
 }
@@ -1415,17 +1575,42 @@ async function logoutAPI(){
 
     try{
 
+        const token =
+            fmcGetSessionToken();
+
+        let serverLogout =
+            null;
+
+        if(token){
+
+            serverLogout =
+                await apiPost(
+                    "logout",
+                    {
+                        session_token:
+                            token
+                    }
+                );
+        }
+
         hapusSession();
 
-
         return {
-
             success:
-                true,
+                !serverLogout ||
+                serverLogout.success !== false,
 
             message:
-                "Logout berhasil."
+                serverLogout &&
+                serverLogout.message
+                    ? serverLogout.message
+                    : "Logout berhasil.",
 
+            session_revoked:
+                !!(
+                    serverLogout &&
+                    serverLogout.success === true
+                )
         };
 
     }
@@ -1436,19 +1621,16 @@ async function logoutAPI(){
             error
         );
 
+        hapusSession();
 
         return {
-
             success:
                 false,
 
             message:
-                "Logout gagal."
-
+                "Logout gagal di server, tetapi sesi lokal sudah dibersihkan."
         };
-
     }
-
 }
 
 
@@ -1522,6 +1704,13 @@ async function cekKoneksiServer(){
 function getLoginUser(){
 
     return ambilSession();
+
+}
+
+
+function getFmcSessionToken(){
+
+    return fmcGetSessionToken();
 
 }
 

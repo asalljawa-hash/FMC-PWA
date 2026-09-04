@@ -10,6 +10,15 @@ let settingPanelOpen = false;
 
 async function showPage(page){
 
+    // ==========================================
+    // NORMALISASI NAMA HALAMAN
+    // ==========================================
+    // Label sidebar "Reset Aplikasi" diarahkan
+    // ke nama halaman internal "resetaplikasi".
+    if(page === "Reset Aplikasi"){
+        page = "resetaplikasi";
+    }
+
     currentPage = page;
 
 
@@ -67,8 +76,10 @@ const pages = [
     "ovk",
     "planpanen",
     "inputflok",
-    "realisasipanen"
+    "realisasipanen",
+    "resetaplikasi"
 ];
+
 
 
 // ==========================================
@@ -98,7 +109,9 @@ pages.forEach(p => {
             ? "inputFlokPage"
             : p === "realisasipanen"
                 ? "realisasiPanenPage"
-                : p + "Page";
+                : p === "resetaplikasi"
+                    ? "resetaplikasiPage"
+                    : p + "Page";
 
 
     const el =
@@ -126,7 +139,9 @@ const pageId =
         ? "inputFlokPage"
         : page === "realisasipanen"
             ? "realisasiPanenPage"
-            : page + "Page";
+            : page === "resetaplikasi"
+                ? "resetaplikasiPage"
+                : page + "Page";
 
 
 const activePage =
@@ -148,7 +163,6 @@ if(activePage){
     );
 
 }
-
 
     // ==========================================
     // LOAD HALAMAN
@@ -401,9 +415,16 @@ break;
 
         break;
 
+  case "resetaplikasi":
+
+            if (typeof window.fmcOpenResetApplicationData === "function") {
+                window.fmcOpenResetApplicationData();
+            }
+
+        break;
+
     }
-
-
+  
     // ==========================================
     // MENU ACTIVE
     // ==========================================

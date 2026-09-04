@@ -131,18 +131,12 @@
 
 
         /*
-         * Setelah sidebar ditutup, sembunyikan FAB terlebih dahulu.
-         * updateFmcSettingFab() kemudian menentukan apakah FAB boleh
-         * muncul kembali berdasarkan halaman aktif.
+         * Setelah sidebar ditutup,
+         * cek halaman aktif.
+         *
+         * Kalau Dashboard → muncul.
+         * Selain Dashboard → tetap hilang.
          */
-        const fab =
-            document.getElementById(
-                "fabSetting"
-            );
-
-        if(fab){
-            fab.style.display = "none";
-        }
 
         updateFmcSettingFab();
 
@@ -237,28 +231,17 @@
 
 window.sidebarGo = async function(page){
 
-    /*
-     * Tutup sidebar SEGERA sebelum navigasi.
-     * Jangan menunggu showPage() selesai karena halaman tujuan
-     * bisa dirender sementara sidebar masih terlihat.
-     */
-    closeFmcSidebar();
-
-    /*
-     * Sembunyikan FAB lebih dulu.
-     * Ini penting agar FAB tidak sempat menutupi tombol
-     * pada halaman tujuan seperti RHPP.
-     */
-    const fab =
-        document.getElementById("fabSetting");
-
-    if(fab){
-        fab.style.display = "none";
+    // Normalisasi khusus Reset Aplikasi.
+    // Label sidebar tetap "Reset Aplikasi", sedangkan router internal
+    // menggunakan id halaman "resetaplikasi".
+    if(page === "Reset Aplikasi"){
+        page = "resetaplikasi";
     }
 
-    /*
-     * Navigasi ke halaman tujuan.
-     */
+    closeFmcSidebar();
+
+    updateFmcSettingFab(page);
+
     if(
         typeof showPage ===
         "function"
@@ -267,27 +250,6 @@ window.sidebarGo = async function(page){
         await showPage(page);
 
     }
-
-    /*
-     * Setelah halaman selesai dirender, sinkronkan kembali
-     * status FAB dengan halaman yang benar.
-     *
-     * Gunakan requestAnimationFrame + setTimeout sebagai
-     * pengaman terhadap render/asinkronisasi halaman.
-     */
-    updateFmcSettingFab(page);
-
-    requestAnimationFrame(function(){
-
-        updateFmcSettingFab(page);
-
-        setTimeout(function(){
-
-            updateFmcSettingFab(page);
-
-        }, 50);
-
-    });
 
 };
 

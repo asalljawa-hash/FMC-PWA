@@ -2933,6 +2933,332 @@ function formatBBInputFlok(
 
 
 // ==========================================================
+// DIALOG HAPUS INPUT FLOK — FMC PROFESSIONAL
+// ==========================================================
+// Khusus konfirmasi hapus data Input FLOK.
+// Tidak menggunakan confirm() bawaan browser.
+// Tidak mengubah alur data, API, GAS, atau perhitungan Input FLOK.
+// ==========================================================
+
+function fmcConfirmHapusInputFlok_(
+    flok,
+    umur,
+    onConfirm
+) {
+
+    const existing =
+        document.getElementById(
+            "fmcInputFlokDeleteDialog"
+        );
+
+    if (existing) {
+        existing.remove();
+    }
+
+    const styleId =
+        "fmcInputFlokDeleteDialogStyle";
+
+    if (!document.getElementById(styleId)) {
+
+        const style =
+            document.createElement("style");
+
+        style.id = styleId;
+
+        style.textContent = `
+            #fmcInputFlokDeleteDialog {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+                box-sizing: border-box;
+                background: rgba(0, 0, 0, .52);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                animation: fmcInputFlokDialogIn .18s ease-out;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-card {
+                width: min(100%, 390px);
+                box-sizing: border-box;
+                background: #ffffff;
+                color: #172033;
+                border-radius: 26px;
+                padding: 24px 22px 18px;
+                box-shadow: 0 22px 60px rgba(0, 0, .28);
+                transform-origin: center;
+                animation: fmcInputFlokDialogCardIn .2s ease-out;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-icon {
+                width: 54px;
+                height: 54px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 17px;
+                margin-bottom: 16px;
+                background: #fff1f2;
+                color: #dc2626;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-icon .material-symbols-rounded {
+                font-size: 29px;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-title {
+                margin: 0;
+                font-size: 20px;
+                line-height: 1.25;
+                font-weight: 750;
+                letter-spacing: -.2px;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-message {
+                margin: 10px 0 0;
+                font-size: 14px;
+                line-height: 1.55;
+                color: #667085;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-highlight {
+                display: inline-flex;
+                align-items: center;
+                margin-top: 14px;
+                padding: 8px 11px;
+                border-radius: 10px;
+                background: #f8fafc;
+                color: #344054;
+                font-size: 13px;
+                font-weight: 700;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-actions {
+                display: flex;
+                gap: 10px;
+                margin-top: 24px;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-btn {
+                flex: 1;
+                min-height: 48px;
+                border: 0;
+                border-radius: 14px;
+                font: inherit;
+                font-size: 14px;
+                font-weight: 750;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                transition: transform .12s ease, opacity .12s ease;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-btn:active {
+                transform: scale(.98);
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-cancel {
+                background: #f2f4f7;
+                color: #344054;
+            }
+
+            #fmcInputFlokDeleteDialog .fmc-ifd-delete {
+                background: #dc2626;
+                color: #ffffff;
+                box-shadow: 0 7px 18px rgba(220, 38, 38, .22);
+            }
+
+            @keyframes fmcInputFlokDialogIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+
+            @keyframes fmcInputFlokDialogCardIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px) scale(.97);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            @media (prefers-color-scheme: dark) {
+                #fmcInputFlokDeleteDialog .fmc-ifd-card {
+                    background: #202124;
+                    color: #f1f3f4;
+                }
+
+                #fmcInputFlokDeleteDialog .fmc-ifd-message {
+                    color: #bdc1c6;
+                }
+
+                #fmcInputFlokDeleteDialog .fmc-ifd-highlight {
+                    background: #2b2c2f;
+                    color: #e8eaed;
+                }
+
+                #fmcInputFlokDeleteDialog .fmc-ifd-cancel {
+                    background: #303134;
+                    color: #e8eaed;
+                }
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    const dialog =
+        document.createElement("div");
+
+    dialog.id =
+        "fmcInputFlokDeleteDialog";
+
+    dialog.setAttribute(
+        "role",
+        "dialog"
+    );
+
+    dialog.setAttribute(
+        "aria-modal",
+        "true"
+    );
+
+    dialog.setAttribute(
+        "aria-labelledby",
+        "fmcInputFlokDeleteTitle"
+    );
+
+    dialog.innerHTML = `
+        <div class="fmc-ifd-card" role="document">
+
+            <div class="fmc-ifd-icon" aria-hidden="true">
+                <span class="material-symbols-rounded">
+                    delete_forever
+                </span>
+            </div>
+
+            <h2
+                class="fmc-ifd-title"
+                id="fmcInputFlokDeleteTitle"
+            >
+                Hapus Data FLOK?
+            </h2>
+
+            <p class="fmc-ifd-message">
+                Data yang dipilih akan dihapus dari daftar Input FLOK.
+                Tindakan ini tidak dapat dibatalkan.
+            </p>
+
+            <div class="fmc-ifd-highlight">
+                <span
+    style="
+        font-size:32px;
+        line-height:1;
+        display:block;
+    "
+>🐓</span>
+                FLOK ${String(flok)} &nbsp;•&nbsp; Hari ${String(umur)}
+            </div>
+
+            <div class="fmc-ifd-actions">
+
+                <button
+                    type="button"
+                    class="fmc-ifd-btn fmc-ifd-cancel"
+                    id="fmcInputFlokDeleteCancel"
+                >
+                    Batal
+               </button>
+
+                <button
+                    type="button"
+                    class="fmc-ifd-btn fmc-ifd-delete"
+                    id="fmcInputFlokDeleteConfirm"
+                >
+                    Hapus
+                </button>
+
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
+
+    const cancelBtn =
+        document.getElementById(
+            "fmcInputFlokDeleteCancel"
+        );
+
+    const confirmBtn =
+        document.getElementById(
+            "fmcInputFlokDeleteConfirm"
+        );
+
+    const close = function() {
+
+        if (dialog.parentNode) {
+            dialog.remove();
+        }
+
+        document.removeEventListener(
+            "keydown",
+            onKeyDown
+        );
+    };
+
+    const onKeyDown = function(event) {
+
+        if (event.key === "Escape") {
+            close();
+        }
+    };
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener(
+            "click",
+            close
+        );
+    }
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener(
+            "click",
+            function() {
+
+                close();
+
+                if (typeof onConfirm === "function") {
+                    onConfirm();
+                }
+            }
+        );
+    }
+
+    dialog.addEventListener(
+        "click",
+        function(event) {
+            if (event.target === dialog) {
+                close();
+            }
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        onKeyDown
+    );
+
+    if (confirmBtn) {
+        confirmBtn.focus();
+    }
+}
+
+
+// ==========================================================
 // HAPUS DATA REKAP INPUT FLOK
 // ==========================================================
 
@@ -2967,91 +3293,86 @@ function hapusDataInputFlok(
         data[index];
 
 
-    const yakin =
-        confirm(
-            `Hapus data FLOK ${flok} Hari ${item.umur}?`
-        );
+    fmcConfirmHapusInputFlok_(
+        flok,
+        item.umur,
+        function() {
 
-
-    if (!yakin) {
-        return;
-    }
-
-
-    data.splice(
-        index,
-        1
-    );
-
-
-    // Render ulang rekapan.
-    const rekap =
-        document.getElementById(
-            "inputFlokRekap"
-        );
-
-
-    if (rekap) {
-
-        rekap.innerHTML =
-            renderRekapInputFlok(
-                flok
+            data.splice(
+                index,
+                1
             );
 
-    }
+
+            // Render ulang rekapan.
+            const rekap =
+                document.getElementById(
+                    "inputFlokRekap"
+                );
 
 
-    // Setelah data dihapus, umur berikutnya mengikuti data terakhir.
-    const umurEl =
-        document.getElementById(
-            "inputFlokUmur"
-        );
+            if (rekap) {
+
+                rekap.innerHTML =
+                    renderRekapInputFlok(
+                        flok
+                    );
+
+            }
 
 
-    const umurBerikutnya =
-        tentukanUmurBerikutnyaInputFlok(
-            flok
-        );
+            // Setelah data dihapus, umur berikutnya mengikuti data terakhir.
+            const umurEl =
+                document.getElementById(
+                    "inputFlokUmur"
+                );
 
 
-    if (umurEl) {
+            const umurBerikutnya =
+                tentukanUmurBerikutnyaInputFlok(
+                    flok
+                );
 
-        umurEl.value =
-            String(
+
+            if (umurEl) {
+
+                umurEl.value =
+                    String(
+                        umurBerikutnya
+                    );
+
+            }
+
+
+            // Tampilkan tanggal untuk umur berikutnya.
+            tampilkanTanggalInputFlok(
+                flok,
                 umurBerikutnya
             );
 
-    }
+
+            // Pastikan tombol simpan kembali aktif.
+            const saveBtn =
+                document.getElementById(
+                    "btnTambahDataInputFlok"
+                );
 
 
-    // Tampilkan tanggal untuk umur berikutnya.
-    tampilkanTanggalInputFlok(
-        flok,
-        umurBerikutnya
+            if (saveBtn) {
+                saveBtn.disabled = false;
+            }
+
+            if (typeof simpanInputFlokSessionLocal === "function") {
+                simpanInputFlokSessionLocal();
+            }
+
+
+            tampilPesanInputFlok(
+                `Data FLOK ${flok} Hari ${item.umur} berhasil dihapus.`,
+                "success"
+            );
+        }
     );
-
-
-    // Pastikan tombol simpan kembali aktif.
-    const saveBtn =
-        document.getElementById(
-            "btnTambahDataInputFlok"
-        );
-
-
-    if (saveBtn) {
-        saveBtn.disabled = false;
-    }
-
-    if (typeof simpanInputFlokSessionLocal === "function") {
-        simpanInputFlokSessionLocal();
-    }
-
-
-    tampilPesanInputFlok(
-        `Data FLOK ${flok} Hari ${item.umur} berhasil dihapus.`,
-        "success"
-    );
-
 }
 
 
@@ -3251,6 +3572,105 @@ async function kirimInputFlokKeGAS(
 }
 
 
+// ==========================================================
+// FMC INPUT FLOK — SAVE LOADING UI
+// HANYA TAMPILAN — TIDAK MENGUBAH ALUR SAVE
+// ==========================================================
+
+function fmcShowInputFlokSaving_() {
+    if (document.getElementById("fmcInputFlokSaving")) {
+        return;
+    }
+
+    if (!document.getElementById("fmcInputFlokSavingStyle")) {
+        const style = document.createElement("style");
+        style.id = "fmcInputFlokSavingStyle";
+        style.textContent = `
+            @keyframes fmcInputFlokSavingFadeIn {
+                from { opacity: 0; transform: scale(.96); }
+                to { opacity: 1; transform: scale(1); }
+            }
+
+            @keyframes fmcInputFlokSavingSpinner {
+                to { transform: rotate(360deg); }
+            }
+
+            #fmcInputFlokSaving {
+                position: fixed;
+                inset: 0;
+                z-index: 999999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+                box-sizing: border-box;
+                background: rgba(0,0,0,.34);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            #fmcInputFlokSaving .fmc-ifsl-card {
+                width: min(250px, calc(100vw - 48px));
+                box-sizing: border-box;
+                padding: 28px 24px 24px;
+                border-radius: 28px;
+                background: rgba(30,30,32,.96);
+                color: #fff;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0,0,0,.35);
+                animation: fmcInputFlokSavingFadeIn .18s ease-out;
+            }
+
+            #fmcInputFlokSaving .fmc-ifsl-spinner {
+                width: 42px;
+                height: 42px;
+                margin: 0 auto 18px;
+                border: 4px solid rgba(255,255,255,.22);
+                border-top-color: #fff;
+                border-radius: 50%;
+                animation: fmcInputFlokSavingSpinner .78s linear infinite;
+            }
+
+            #fmcInputFlokSaving .fmc-ifsl-title {
+                font-size: 18px;
+                line-height: 1.3;
+                font-weight: 750;
+                letter-spacing: -.2px;
+            }
+
+            #fmcInputFlokSaving .fmc-ifsl-text {
+                margin-top: 7px;
+                font-size: 13px;
+                line-height: 1.45;
+                color: rgba(255,255,255,.68);
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    const overlay = document.createElement("div");
+    overlay.id = "fmcInputFlokSaving";
+    overlay.setAttribute("role", "status");
+    overlay.setAttribute("aria-live", "polite");
+    overlay.innerHTML = `
+        <div class="fmc-ifsl-card">
+            <div class="fmc-ifsl-spinner" aria-hidden="true"></div>
+            <div class="fmc-ifsl-title">Menyimpan Data</div>
+            <div class="fmc-ifsl-text">Mohon tunggu sebentar...</div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+}
+
+function fmcHideInputFlokSaving_() {
+    const overlay = document.getElementById("fmcInputFlokSaving");
+    if (overlay) {
+        overlay.remove();
+    }
+}
+
+
 async function simpanInputFlokKeGAS() {
 
     const flok = getInputFlokAktif();
@@ -3264,6 +3684,8 @@ async function simpanInputFlokKeGAS() {
         );
         return;
     }
+
+    fmcShowInputFlokSaving_();
 
     if (saveBtn) {
         saveBtn.disabled = true;
@@ -3337,6 +3759,8 @@ async function simpanInputFlokKeGAS() {
         );
 
     } finally {
+        fmcHideInputFlokSaving_();
+
         if (saveBtn) {
             saveBtn.disabled = false;
             saveBtn.innerHTML = `
