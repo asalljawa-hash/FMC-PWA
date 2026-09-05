@@ -1393,10 +1393,11 @@ function exitFMC() {
 
         "Apakah Anda yakin ingin keluar dari FMC Broiler Mobile?",
 
-        function () {
+        async function () {
 
-            // Hapus session login
-            logoutUser();
+            // Hapus session login dan tunggu
+            // sampai session + cache benar-benar dibersihkan
+            await logoutUser();
 
             // Tutup panel setting
             const panel =
@@ -1414,7 +1415,7 @@ function exitFMC() {
 
             settingPanelOpen = false;
 
-            // Kembali ke halaman Login
+            // Reload setelah logout benar-benar selesai
             location.reload();
 
         }
