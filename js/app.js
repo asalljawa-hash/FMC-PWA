@@ -581,85 +581,50 @@ window.onload = async function () {
 
         /*
          * ==========================================
-         * SPLASH TETAP TAMPIL SELAMA CEK SESSION
+         * STARTUP + SESSION
          * ==========================================
          *
-         * Jangan sembunyikan splash sebelum autoLogin()
-         * selesai. Pada koneksi publik, validasi session
-         * ke GAS dapat membutuhkan beberapa detik.
-         *
-         * Session valid   -> Splash -> Dashboard
-         * Session invalid -> Splash -> Login
-         *
-         * Jadi halaman Login tidak sempat terlihat
+         * Splash dipertahankan selama autoLogin()
+         * agar halaman Login tidak sempat terlihat
          * ketika session pengguna masih valid.
+         *
+         * autoLogin() pada login.js tidak mengembalikan
+         * true/false, jadi hasil return tidak diperiksa.
          */
 
         const splash =
             document.getElementById("splash");
 
+        const app =
+            document.getElementById("app");
+
+        const loginPage =
+            document.getElementById("loginPage");
+
+        /*
+         * Tampilkan Splash selama startup.
+         */
         if (splash) {
             splash.style.display = "flex";
             splash.classList.remove("hide");
         }
 
-        /* ==========================================
-           CEK SESSION
-        ========================================== */
-
+        /*
+         * Session ada:
+         * autoLogin() menangani loginPage, app,
+         * dan pembukaan Dashboard.
+         */
         if (isLoggedIn()) {
 
-            /*
-             * autoLogin() melakukan validasi session
-             * ke GAS dan menangani tampilan Dashboard
-             * serta Splash setelah session valid.
-             */
-            const loginResult =
-                await autoLogin();
-
-            /*
-             * Jika session ternyata tidak valid,
-             * pastikan Login ditampilkan setelah proses
-             * validasi selesai.
-             */
-            if (loginResult === false) {
-
-                const app =
-                    document.getElementById("app");
-
-                const loginPage =
-                    document.getElementById("loginPage");
-
-                if (app) {
-                    app.style.display = "none";
-                }
-
-                if (loginPage) {
-                    loginPage.style.display = "flex";
-                }
-
-                if (splash) {
-                    splash.classList.add("hide");
-
-                    setTimeout(() => {
-                        splash.style.display = "none";
-                    }, 300);
-                }
-            }
+            await autoLogin();
 
         } else {
 
             /*
              * Tidak ada session.
-             * Tampilkan Login setelah splash selesai.
+             * Login baru ditampilkan setelah pemeriksaan
+             * startup selesai.
              */
-
-            const app =
-                document.getElementById("app");
-
-            const loginPage =
-                document.getElementById("loginPage");
-
             if (app) {
                 app.style.display = "none";
             }
@@ -667,14 +632,21 @@ window.onload = async function () {
             if (loginPage) {
                 loginPage.style.display = "flex";
             }
+        }
 
-            if (splash) {
-                splash.classList.add("hide");
+        /*
+         * Splash baru disembunyikan SETELAH
+         * autoLogin() selesai.
+         */
+        if (splash) {
 
-                setTimeout(() => {
-                    splash.style.display = "none";
-                }, 300);
-            }
+            splash.classList.add("hide");
+
+            setTimeout(() => {
+
+                splash.style.display = "none";
+
+            }, 300);
         }
 
     } catch (err) {
@@ -686,9 +658,8 @@ window.onload = async function () {
 
         /*
          * Jika startup gagal, jangan biarkan
-         * pengguna terjebak di splash.
+         * pengguna terjebak di Splash.
          */
-
         const app =
             document.getElementById("app");
 
@@ -707,10 +678,13 @@ window.onload = async function () {
         }
 
         if (splash) {
+
             splash.classList.add("hide");
 
             setTimeout(() => {
+
                 splash.style.display = "none";
+
             }, 300);
         }
     }
