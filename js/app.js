@@ -569,10 +569,7 @@ window.onload = async function () {
         }
 
         updateModeIndicator();
-
-        /* THEME */
         loadTheme();
-
         updateJam();
 
         await new Promise(resolve =>
@@ -584,12 +581,14 @@ window.onload = async function () {
          * STARTUP + SESSION
          * ==========================================
          *
-         * Splash dipertahankan selama autoLogin()
-         * agar halaman Login tidak sempat terlihat
-         * ketika session pengguna masih valid.
+         * autoLogin() sudah dijalankan oleh login.js
+         * pada DOMContentLoaded.
          *
-         * autoLogin() pada login.js tidak mengembalikan
-         * true/false, jadi hasil return tidak diperiksa.
+         * Jangan memanggil autoLogin() kedua kali di sini.
+         * app.js hanya menyelaraskan tampilan awal dengan
+         * status session dan melepas Splash.
+         *
+         * Splash tidak menunggu tampilDashboard() selesai.
          */
 
         const splash =
@@ -601,30 +600,28 @@ window.onload = async function () {
         const loginPage =
             document.getElementById("loginPage");
 
-        /*
-         * Tampilkan Splash selama startup.
-         */
         if (splash) {
             splash.style.display = "flex";
             splash.classList.remove("hide");
         }
 
-        /*
-         * Session ada:
-         * autoLogin() menangani loginPage, app,
-         * dan pembukaan Dashboard.
-         */
         if (isLoggedIn()) {
 
-            await autoLogin();
+            /*
+             * autoLogin() dari login.js menangani
+             * loginPage, app, dan showPage("dashboard").
+             * Jangan await atau memanggilnya lagi di sini.
+             */
+            if (loginPage) {
+                loginPage.style.display = "none";
+            }
+
+            if (app) {
+                app.style.display = "block";
+            }
 
         } else {
 
-            /*
-             * Tidak ada session.
-             * Login baru ditampilkan setelah pemeriksaan
-             * startup selesai.
-             */
             if (app) {
                 app.style.display = "none";
             }
@@ -635,31 +632,22 @@ window.onload = async function () {
         }
 
         /*
-         * Splash baru disembunyikan SETELAH
-         * autoLogin() selesai.
+         * Lepaskan Splash tanpa menunggu proses
+         * pengambilan data Dashboard selesai.
          */
         if (splash) {
 
             splash.classList.add("hide");
 
             setTimeout(() => {
-
                 splash.style.display = "none";
-
             }, 300);
         }
 
     } catch (err) {
 
-        console.error(
-            "FMC STARTUP ERROR:",
-            err
-        );
+        console.error("FMC STARTUP ERROR:", err);
 
-        /*
-         * Jika startup gagal, jangan biarkan
-         * pengguna terjebak di Splash.
-         */
         const app =
             document.getElementById("app");
 
@@ -669,12 +657,25 @@ window.onload = async function () {
         const splash =
             document.getElementById("splash");
 
-        if (app) {
-            app.style.display = "none";
-        }
+        if (isLoggedIn()) {
 
-        if (loginPage) {
-            loginPage.style.display = "flex";
+            if (loginPage) {
+                loginPage.style.display = "none";
+            }
+
+            if (app) {
+                app.style.display = "block";
+            }
+
+        } else {
+
+            if (app) {
+                app.style.display = "none";
+            }
+
+            if (loginPage) {
+                loginPage.style.display = "flex";
+            }
         }
 
         if (splash) {
@@ -682,14 +683,11 @@ window.onload = async function () {
             splash.classList.add("hide");
 
             setTimeout(() => {
-
                 splash.style.display = "none";
-
             }, 300);
         }
     }
 }
-
 // ==========================================
 // AUTO REFRESH
 // ==========================================
