@@ -558,27 +558,19 @@ function updateJam(){
 // ==========================================
 
 window.onload = async function () {
-
     try {
-
         /* MODE */
-
         const mode = localStorage.getItem("fmcMode");
 
         if (mode === "desktop") {
-
             document.body.classList.add("desktop");
-
         } else {
-
             document.body.classList.remove("desktop");
-
         }
 
         updateModeIndicator();
 
         /* THEME */
-
         loadTheme();
 
         updateJam();
@@ -587,41 +579,143 @@ window.onload = async function () {
             requestAnimationFrame(resolve)
         );
 
-        /* SEMBUNYIKAN SPLASH */
+        /*
+         * ==========================================
+         * SPLASH TETAP TAMPIL SELAMA CEK SESSION
+         * ==========================================
+         *
+         * Jangan sembunyikan splash sebelum autoLogin()
+         * selesai. Pada koneksi publik, validasi session
+         * ke GAS dapat membutuhkan beberapa detik.
+         *
+         * Session valid   -> Splash -> Dashboard
+         * Session invalid -> Splash -> Login
+         *
+         * Jadi halaman Login tidak sempat terlihat
+         * ketika session pengguna masih valid.
+         */
 
         const splash =
             document.getElementById("splash");
 
         if (splash) {
-
-            splash.style.display = "none";
+            splash.style.display = "flex";
             splash.classList.remove("hide");
-
         }
 
-        /* CEK SESSION */
+        /* ==========================================
+           CEK SESSION
+        ========================================== */
 
         if (isLoggedIn()) {
 
-            await autoLogin();
+            /*
+             * autoLogin() melakukan validasi session
+             * ke GAS dan menangani tampilan Dashboard
+             * serta Splash setelah session valid.
+             */
+            const loginResult =
+                await autoLogin();
+
+            /*
+             * Jika session ternyata tidak valid,
+             * pastikan Login ditampilkan setelah proses
+             * validasi selesai.
+             */
+            if (loginResult === false) {
+
+                const app =
+                    document.getElementById("app");
+
+                const loginPage =
+                    document.getElementById("loginPage");
+
+                if (app) {
+                    app.style.display = "none";
+                }
+
+                if (loginPage) {
+                    loginPage.style.display = "flex";
+                }
+
+                if (splash) {
+                    splash.classList.add("hide");
+
+                    setTimeout(() => {
+                        splash.style.display = "none";
+                    }, 300);
+                }
+            }
 
         } else {
 
-            document.getElementById("app").style.display = "none";
+            /*
+             * Tidak ada session.
+             * Tampilkan Login setelah splash selesai.
+             */
 
-            document.getElementById("loginPage").style.display = "flex";
+            const app =
+                document.getElementById("app");
 
+            const loginPage =
+                document.getElementById("loginPage");
+
+            if (app) {
+                app.style.display = "none";
+            }
+
+            if (loginPage) {
+                loginPage.style.display = "flex";
+            }
+
+            if (splash) {
+                splash.classList.add("hide");
+
+                setTimeout(() => {
+                    splash.style.display = "none";
+                }, 300);
+            }
         }
 
+    } catch (err) {
+
+        console.error(
+            "FMC STARTUP ERROR:",
+            err
+        );
+
+        /*
+         * Jika startup gagal, jangan biarkan
+         * pengguna terjebak di splash.
+         */
+
+        const app =
+            document.getElementById("app");
+
+        const loginPage =
+            document.getElementById("loginPage");
+
+        const splash =
+            document.getElementById("splash");
+
+        if (app) {
+            app.style.display = "none";
+        }
+
+        if (loginPage) {
+            loginPage.style.display = "flex";
+        }
+
+        if (splash) {
+            splash.classList.add("hide");
+
+            setTimeout(() => {
+                splash.style.display = "none";
+            }, 300);
+        }
     }
-
-    catch (err) {
-
-        console.error(err);
-
-    }
-
 }
+
 // ==========================================
 // AUTO REFRESH
 // ==========================================
