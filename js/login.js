@@ -75,64 +75,75 @@ function showLoginMessage(
     type = "error"
 ) {
 
-    loginMessage.style.display = "block";
+    if (!loginMessage) return;
 
+    loginMessage.style.display = "flex";
+    loginMessage.className = "loginMessage " + type;
     loginMessage.innerHTML = message;
 
     if (type === "success") {
 
-        loginMessage.style.background =
-            "#d1fae5";
+        loginMessage.style.background = "#F0FDF4";
+        loginMessage.style.color = "#166534";
+        loginMessage.style.border = "1px solid #BBF7D0";
 
-        loginMessage.style.color =
-            "#065f46";
+    } else if (type === "processing") {
 
+        loginMessage.style.background = "rgba(255,255,255,.94)";
+        loginMessage.style.color = "#166534";
         loginMessage.style.border =
-            "1px solid #10b981";
+            "1px solid rgba(22,163,74,.18)";
 
+    } else if (type === "warning") {
+
+        loginMessage.style.background = "#FFFBEB";
+        loginMessage.style.color = "#92400E";
+        loginMessage.style.border = "1px solid #FDE68A";
+
+    } else {
+
+        loginMessage.style.background = "#FEF2F2";
+        loginMessage.style.color = "#991B1B";
+        loginMessage.style.border = "1px solid #FECACA";
     }
-
-    else if (type === "warning") {
-
-        loginMessage.style.background =
-            "#fef3c7";
-
-        loginMessage.style.color =
-            "#92400e";
-
-        loginMessage.style.border =
-            "1px solid #f59e0b";
-
-    }
-
-    else {
-
-        loginMessage.style.background =
-            "#fee2e2";
-
-        loginMessage.style.color =
-            "#991b1b";
-
-        loginMessage.style.border =
-            "1px solid #ef4444";
-
-    }
-
 }
 
 
 function clearLoginMessage() {
 
+    if (!loginMessage) return;
+
     loginMessage.style.display = "none";
-
     loginMessage.innerHTML = "";
-
+    loginMessage.className = "loginMessage";
 }
 
 
 /* ======================================
-   BUTTON STATE
+   BUTTON STATE — PREMIUM PROGRESS
 ====================================== */
+
+let loginProgressTimer = null;
+let loginProgress = 0;
+
+function updateLoginButtonProgress(percent) {
+
+    loginProgress = Math.min(
+        100,
+        Math.max(0, percent)
+    );
+
+    btnLogin.style.setProperty(
+        "--login-progress",
+        loginProgress + "%"
+    );
+
+    btnLogin.innerHTML =
+        `<span class="loginProgressText">
+            Memverifikasi ${Math.round(loginProgress)}%
+         </span>`;
+}
+
 
 function disableLoginButton() {
 
@@ -140,22 +151,60 @@ function disableLoginButton() {
 
     btnLogin.disabled = true;
 
-    btnLogin.innerHTML =
-        "Memproses...";
+    loginProgress = 1;
 
+    updateLoginButtonProgress(1);
+
+    clearInterval(loginProgressTimer);
+
+    loginProgressTimer = setInterval(() => {
+
+        /*
+         * Progress simulasi hanya sampai 90%.
+         * Setelah itu menunggu respons server.
+         */
+
+        if (loginProgress < 90) {
+
+            const step =
+                loginProgress < 30 ? 2 :
+                loginProgress < 60 ? 1 :
+                0.5;
+
+            updateLoginButtonProgress(
+                loginProgress + step
+            );
+        }
+
+    }, 120);
+}
+
+
+function finishLoginProgress() {
+
+    clearInterval(loginProgressTimer);
+
+    updateLoginButtonProgress(100);
 }
 
 
 function enableLoginButton() {
 
+    clearInterval(loginProgressTimer);
+
     loginState.loading = false;
 
     btnLogin.disabled = false;
 
+    btnLogin.style.setProperty(
+        "--login-progress",
+        "0%"
+    );
+
     btnLogin.innerHTML =
         "MASUK KE FMC";
-
 }
+
 
 /* ======================================
    VALIDATION
@@ -254,8 +303,8 @@ async function loginUser() {
     try {
 
         showLoginMessage(
-            "Memproses login...",
-            "warning"
+            "Memverifikasi akun...",
+            "processing"
         );
 
         const result = await loginAPI(

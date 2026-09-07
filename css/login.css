@@ -984,3 +984,175 @@
     }
 
 }
+
+/* =========================
+   LOGIN MESSAGE PROCESSING
+   Premium loading state
+========================= */
+
+.loginMessage.processing{
+    color:#166534;
+    background:rgba(255,255,255,.94);
+    border:1px solid rgba(22,163,74,.18);
+    box-shadow:
+        0 8px 22px rgba(0,0,0,.09),
+        inset 0 1px 0 rgba(255,255,255,.75);
+}
+
+.loginMessage.processing::before{
+    content:"";
+    width:20px;
+    height:20px;
+    display:block;
+    flex:0 0 20px;
+    border:2.5px solid rgba(22,163,74,.18);
+    border-top-color:#16A34A;
+    border-right-color:#16A34A;
+    border-radius:50%;
+    animation:loginMessageSpin .75s linear infinite;
+}
+
+@keyframes loginMessageSpin{
+    to{ transform:rotate(360deg); }
+}
+
+#btnLogin:disabled{
+    cursor:wait;
+}
+
+/* =========================
+   LOGIN BUTTON LOADING
+========================= */
+
+.loginLoadingSpinner{
+    display:inline-block;
+    width:15px;
+    height:15px;
+    flex:0 0 15px;
+    border:2px solid rgba(255,255,255,.38);
+    border-top-color:currentColor;
+    border-radius:50%;
+    animation:loginMessageSpin .75s linear infinite;
+}
+/* ======================================
+   LOGIN BUTTON — PREMIUM PROGRESS
+====================================== */
+
+#btnLogin {
+    --login-progress: 0%;
+
+    position: relative;
+    overflow: hidden;
+
+    isolation: isolate;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.3s ease,
+        opacity 0.3s ease;
+}
+
+
+/* Lapisan progress */
+
+#btnLogin::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: var(--login-progress);
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.08),
+            rgba(255,255,255,0.22),
+            rgba(255,255,255,0.08)
+        );
+
+    border-radius: inherit;
+
+    z-index: -1;
+
+    transition:
+        width 0.25s ease-out;
+}
+
+
+/* Teks tombol */
+
+#btnLogin .loginProgressText {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    white-space: nowrap;
+}
+
+
+/* Saat loading */
+
+#btnLogin:disabled {
+
+    cursor: wait;
+
+    opacity: 0.96;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,0.12);
+}
+
+
+/* Kilau halus pada progress */
+
+#btnLogin:disabled::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    width: 70px;
+
+    left: -80px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.18),
+            transparent
+        );
+
+    animation:
+        loginProgressShine 1.8s
+        ease-in-out infinite;
+
+    pointer-events: none;
+}
+
+
+@keyframes loginProgressShine {
+
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(520px);
+    }
+
+}
