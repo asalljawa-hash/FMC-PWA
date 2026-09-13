@@ -76,6 +76,7 @@ const pages = [
     "ovk",
     "planpanen",
     "inputflok",
+    "history",
     "realisasipanen",
     "resetaplikasi"
 ];
@@ -398,32 +399,60 @@ case "realisasipanen":
 
 break;
 
-        // ==========================================
-        // INPUT FLOK
-        // ==========================================
+// ==========================================
+// INPUT FLOK
+// ==========================================
 
-        case "inputflok":
+case "inputflok":
 
-            if(
-                typeof tampilInputFlok ===
-                "function"
-            ){
+    if(
+        typeof tampilInputFlok ===
+        "function"
+    ){
 
-                await tampilInputFlok();
-
-            }
-
-        break;
-
-  case "resetaplikasi":
-
-            if (typeof window.fmcOpenResetApplicationData === "function") {
-                window.fmcOpenResetApplicationData();
-            }
-
-        break;
+        await tampilInputFlok();
 
     }
+
+break;
+
+
+// ==========================================
+// HISTORY
+// ==========================================
+
+case "history":
+
+    if(
+        typeof tampilHistory ===
+        "function"
+    ){
+
+        await tampilHistory();
+
+    }
+
+break;
+
+
+// ==========================================
+// RESET APLIKASI
+// ==========================================
+
+case "resetaplikasi":
+
+    if (
+        typeof window.fmcOpenResetApplicationData === "function"
+    ) {
+
+        window.fmcOpenResetApplicationData();
+
+    }
+
+break;
+
+}
+  
   
     // ==========================================
     // MENU ACTIVE

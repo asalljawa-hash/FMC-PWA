@@ -60,6 +60,7 @@ rel="stylesheet">
 <link rel="stylesheet" href="css/dark.css">
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/card.css">
+<link rel="stylesheet" href="css/ai.css">
 <link rel="stylesheet" href="css/table.css">
 <link rel="stylesheet" href="css/index.css">
 <link rel="stylesheet" href="css/share.css">
@@ -72,6 +73,7 @@ rel="stylesheet">
 <link rel="stylesheet" href="css/inputflok.css">
 <link rel="stylesheet" href="css/plan-panen.css">
 <link rel="stylesheet" href="css/realisasi-panen.css">
+<link rel="stylesheet" href="css/history.css">
 </head>
 
 <body id="appBody">
@@ -969,7 +971,7 @@ download
 <button
     type="button"
     class="sidebarItem"
-    onclick="sidebarComingSoon('History')">
+    onclick="sidebarGo('history')">
 
     <span class="material-symbols-rounded">
         history
@@ -1229,6 +1231,15 @@ Mengambil data produksi...
     id="resetaplikasiPage"
     style="display:none;">
 </section>
+
+<!-- ======================================
+     HISTORY
+====================================== -->
+
+<section
+    id="historyPage"
+    style="display:none;">
+</section>
   
 <!-- ======================================
 HARIAN
@@ -1330,16 +1341,15 @@ AI
 
 <section
 id="aiPage"
+class="aiProPage"
 style="display:none;">
 
-<div class="card">
+<div class="aiProLoading">
 
 <h2>
 
 <span class="material-symbols-rounded">
-
 smart_toy
-
 </span>
 
 FMC AI Advisor
@@ -1347,9 +1357,7 @@ FMC AI Advisor
 </h2>
 
 <p>
-
 Menyiapkan analisis cerdas...
-
 </p>
 
 </div>
@@ -2027,6 +2035,7 @@ SHARE CARD
 <script src="js/resetAplikasi.js"></script>
 
 <!-- Core -->
+<script src="js/history.js"></script>
 <script src="js/app.js"></script>
 
 

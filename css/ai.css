@@ -1,0 +1,502 @@
+/* =========================================================
+   FMC BROILER MOBILE — AI PRO MODE
+   Presentation layer only.
+   Tidak mengubah API, data, engine, threshold, atau perhitungan.
+   ========================================================= */
+
+.aiProPage{
+    display:grid;
+    gap:16px;
+    width:100%;
+    padding-bottom:12px;
+}
+
+.aiProHero{
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    min-height:172px;
+    padding:24px 22px;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at 85% 15%, rgba(24,184,91,.20), transparent 34%),
+        linear-gradient(135deg,#087438 0%,#0B8F43 58%,#18B85B 100%);
+    color:#fff;
+    box-shadow:0 12px 28px rgba(8,116,56,.18);
+}
+
+.aiProHero::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    right:-75px;
+    bottom:-105px;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:50%;
+}
+
+.aiProHeroMain{ position:relative; z-index:1; min-width:0; }
+
+.aiProBadge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px;
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:999px;
+    background:rgba(255,255,255,.10);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.08em;
+}
+
+.aiProBadge .material-symbols-rounded{
+    font-size:15px;
+}
+
+.aiProHero h1{
+    margin:12px 0 5px;
+    font-size:27px;
+    line-height:1.05;
+    font-weight:800;
+    letter-spacing:-.02em;
+}
+
+.aiProHero p{
+    margin:0;
+    max-width:470px;
+    color:rgba(255,255,255,.82);
+    font-size:12px;
+    line-height:1.55;
+}
+
+.aiProHeroMeta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:15px;
+}
+
+.aiProHeroMeta span{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    color:rgba(255,255,255,.86);
+    font-size:10px;
+}
+
+.aiProHeroMeta .material-symbols-rounded{
+    font-size:15px;
+}
+
+.aiProHeroOrb{
+    position:relative;
+    z-index:1;
+    flex:0 0 62px;
+    width:62px;
+    height:62px;
+    display:grid;
+    place-items:center;
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:20px;
+    background:rgba(255,255,255,.12);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.aiProHeroOrb .material-symbols-rounded{
+    font-size:34px;
+}
+
+.aiProFarm{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:15px 16px;
+    border:1px solid rgba(11,143,67,.10);
+    box-shadow:0 6px 18px rgba(15,23,42,.055);
+}
+
+.aiProFarmIdentity{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    min-width:0;
+}
+
+.aiProFarmIcon{
+    width:40px;
+    height:40px;
+    flex:0 0 40px;
+    display:grid;
+    place-items:center;
+    border-radius:13px;
+    background:rgba(11,143,67,.08);
+    color:var(--primary);
+}
+
+.aiProFarmIcon .material-symbols-rounded{ font-size:21px; }
+
+.aiProLabel,
+.aiProEyebrow{
+    display:block;
+    color:var(--text-soft);
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.09em;
+}
+
+.aiProFarm h2{
+    margin:3px 0 2px;
+    font-size:15px;
+    color:var(--text);
+}
+
+.aiProFarm small{
+    color:var(--text-soft);
+    font-size:10px;
+}
+
+.aiProActive{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 9px;
+    border-radius:999px;
+    background:rgba(11,143,67,.08);
+    color:var(--primary-dark);
+    font-size:9px;
+    font-weight:800;
+}
+
+.aiProActiveDot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--primary-light);
+    box-shadow:0 0 0 3px rgba(24,184,91,.12);
+}
+
+.aiProSectionHead{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:10px;
+    margin:3px 2px -4px;
+}
+
+.aiProSectionHead h2{
+    margin:3px 0 0;
+    color:var(--text);
+    font-size:17px;
+}
+
+.aiProSectionIcon{
+    color:var(--primary);
+    font-size:22px;
+}
+
+.aiProMetricGrid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:11px;
+}
+
+.aiProMetric{
+    min-width:0;
+    padding:14px;
+    border:1px solid rgba(15,23,42,.055);
+    box-shadow:0 5px 15px rgba(15,23,42,.045);
+}
+
+.aiProMetricTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:13px;
+}
+
+.aiProMetricIcon{
+    width:31px;
+    height:31px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    background:#F1F5F3;
+    font-size:17px;
+}
+
+.aiProMetricMortality .aiProMetricIcon{ color:#E53935; background:rgba(229,57,53,.08); }
+.aiProMetricFcr .aiProMetricIcon{ background:rgba(139,94,60,.08); }
+.aiProMetricIp .aiProMetricIcon{ background:rgba(25,118,210,.08); }
+.aiProMetricBest .aiProMetricIcon{ background:rgba(245,158,11,.10); }
+
+.aiProMetricTag{
+    color:var(--text-light);
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:.08em;
+}
+
+.aiProMetricLabel{
+    display:block;
+    color:var(--text-soft);
+    font-size:10px;
+    font-weight:650;
+}
+
+.aiProMetric strong{
+    display:block;
+    margin:4px 0 3px;
+    color:var(--text);
+    font-size:21px;
+    line-height:1.15;
+    font-weight:800;
+}
+
+.aiProMetric small{
+    display:block;
+    color:var(--text-light);
+    font-size:9px;
+}
+
+.aiProRecommendation{
+    padding:6px 14px;
+    border:1px solid rgba(11,143,67,.09);
+    box-shadow:0 6px 18px rgba(15,23,42,.045);
+}
+
+.aiProInsight{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    padding:13px 2px;
+}
+
+.aiProInsight + .aiProInsight{
+    border-top:1px solid var(--divider);
+}
+
+.aiProInsightIcon{
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    display:grid;
+    place-items:center;
+    border-radius:11px;
+}
+
+.aiProInsight-good .aiProInsightIcon{
+    color:var(--primary);
+    background:rgba(11,143,67,.08);
+}
+
+.aiProInsight-warning .aiProInsightIcon{
+    color:#D97706;
+    background:rgba(245,158,11,.10);
+}
+
+.aiProInsight-info .aiProInsightIcon{
+    color:#2563EB;
+    background:rgba(37,99,235,.08);
+}
+
+.aiProInsightBody{
+    min-width:0;
+    padding-top:1px;
+}
+
+.aiProInsightTitle{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    flex-wrap:wrap;
+    color:var(--text);
+    font-size:12px;
+    font-weight:750;
+}
+
+.aiProInsightTitle span{
+    padding:3px 5px;
+    border-radius:5px;
+    background:var(--surface);
+    color:var(--text-light);
+    font-size:7px;
+    font-weight:800;
+    letter-spacing:.07em;
+}
+
+.aiProInsightBody p{
+    margin:4px 0 0;
+    color:var(--text-soft);
+    font-size:11px;
+    line-height:1.5;
+}
+
+.aiProFooter{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    padding:2px 8px 8px;
+    color:var(--text-light);
+    font-size:9px;
+    text-align:center;
+}
+
+.aiProFooter .material-symbols-rounded{
+    color:var(--primary);
+    font-size:14px;
+}
+
+.aiProOffline{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:18px;
+}
+
+.aiProOffline h2{
+    margin:3px 0;
+    color:var(--text);
+    font-size:16px;
+}
+
+.aiProOffline p{
+    margin:0;
+    color:var(--text-soft);
+    font-size:11px;
+}
+
+.aiProOffline .aiProIcon{
+    width:42px;
+    height:42px;
+    flex:0 0 42px;
+    display:grid;
+    place-items:center;
+    border-radius:13px;
+    background:rgba(239,68,68,.08);
+    color:#DC2626;
+}
+
+@media (min-width:700px){
+    .aiProMetricGrid{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+}
+
+@media (max-width:430px){
+    .aiProHero{
+        min-height:160px;
+        padding:20px 17px;
+    }
+
+    .aiProHero h1{ font-size:24px; }
+    .aiProHeroOrb{
+        width:54px;
+        height:54px;
+        flex-basis:54px;
+        border-radius:17px;
+    }
+
+    .aiProHeroOrb .material-symbols-rounded{ font-size:29px; }
+    .aiProFarm{ padding:13px; }
+}
+
+@media (max-width:360px){
+    .aiProMetricGrid{ grid-template-columns:1fr; }
+    .aiProHeroOrb{ display:none; }
+}
+
+/* =========================================================
+   FMC AI PRO — SOFT TEXT POLISH
+   Khusus typography AI PRO.
+   Tidak mengubah layout, warna ikon, API, data, atau engine.
+   ========================================================= */
+
+.aiProPage{
+    color:#374151;
+}
+
+/* Label kecil / eyebrow */
+.aiProPage .aiProLabel,
+.aiProPage .aiProEyebrow{
+    color:#6B7280;
+    font-weight:700;
+}
+
+/* Nama farm */
+.aiProPage .aiProFarm h2{
+    color:#374151;
+    font-weight:700;
+}
+
+/* Keterangan farm */
+.aiProPage .aiProFarm small{
+    color:#6B7280;
+}
+
+/* Judul section */
+.aiProPage .aiProSectionHead h2{
+    color:#374151;
+    font-weight:700;
+}
+
+/* Tag KPI / BEST */
+.aiProPage .aiProMetricTag{
+    color:#6B7280;
+    font-weight:700;
+}
+
+/* Label KPI */
+.aiProPage .aiProMetricLabel{
+    color:#4B5563;
+    font-weight:600;
+}
+
+/* Nilai KPI — tetap tegas tetapi tidak hitam pekat */
+.aiProPage .aiProMetric strong{
+    color:#1F2937;
+    font-weight:700;
+}
+
+/* Keterangan KPI */
+.aiProPage .aiProMetric small{
+    color:#6B7280;
+}
+
+/* Judul rekomendasi */
+.aiProPage .aiProInsightTitle{
+    color:#374151;
+    font-weight:700;
+}
+
+/* Badge AI INSIGHT */
+.aiProPage .aiProInsightTitle span{
+    color:#6B7280;
+    font-weight:700;
+}
+
+/* Isi rekomendasi */
+.aiProPage .aiProInsightBody p{
+    color:#4B5563;
+}
+
+/* Footer */
+.aiProPage .aiProFooter{
+    color:#6B7280;
+}
+
+/* Offline */
+.aiProPage .aiProOffline h2{
+    color:#374151;
+    font-weight:700;
+}
+
+.aiProPage .aiProOffline p{
+    color:#6B7280;
+}
+

@@ -11,21 +11,21 @@ async function tampilAI(){
 
         document.getElementById("aiPage").innerHTML=`
 
-        <div class="card">
+        <div class="aiProPage">
 
-            <h2>
+            <div class="aiProOffline">
 
-                <span class="material-symbols-rounded">
+                <div class="aiProIcon">
+                    <span class="material-symbols-rounded">cloud_off</span>
+                </div>
 
-                cloud_off
+                <div>
+                    <span class="aiProEyebrow">FMC AI PRO</span>
+                    <h2>AI Advisor Offline</h2>
+                    <p>Server tidak tersedia. Analisis belum dapat diperbarui.</p>
+                </div>
 
-                </span>
-
-                FMC AI Offline
-
-            </h2>
-
-            <p>Server tidak tersedia.</p>
+            </div>
 
         </div>
 
@@ -35,9 +35,10 @@ async function tampilAI(){
 
     }
 
-    const farm=data.dashboard.farm;
-    const kpi=data.dashboard.kpi;
-    const flok=data.dashboard.flok || [];
+    const dashboard=data.dashboard || {};
+    const farm=dashboard.farm || {};
+    const kpi=dashboard.kpi || {};
+    const flok=Array.isArray(dashboard.flok) ? dashboard.flok : [];
 
     let terbaik=flok.length?flok[0]:null;
 
@@ -57,154 +58,215 @@ async function tampilAI(){
 
     let analisa=[];
 
-    if(parseFloat(kpi.mortalitas)<=3){
+    const mortalitasValue = Number(
+        String(kpi.mortalitas ?? "").replace(",", ".")
+    );
 
-        analisa.push({
-            icon:"check_circle",
-            text:"Mortalitas masih dalam batas normal."
-        });
+    const fcrValue = Number(
+        String(kpi.fcr ?? "").replace(",", ".")
+    );
+
+    if(Number.isFinite(mortalitasValue)){
+
+        if(mortalitasValue <= 0.03){
+
+            analisa.push({
+                icon:"check_circle",
+                tone:"good",
+                title:"Mortalitas",
+                text:"Mortalitas masih dalam batas normal."
+            });
+
+        }else{
+
+            analisa.push({
+                icon:"warning",
+                tone:"warning",
+                title:"Mortalitas",
+                text:"Mortalitas mulai meningkat. Periksa kesehatan ayam."
+            });
+
+        }
 
     }else{
 
         analisa.push({
-            icon:"warning",
-            text:"Mortalitas mulai meningkat. Periksa kesehatan ayam."
+            icon:"info",
+            tone:"info",
+            title:"Mortalitas",
+            text:"Data mortalitas belum tersedia."
         });
 
     }
 
-    if(parseFloat(kpi.fcr)<=1.6){
+    if(Number.isFinite(fcrValue) && fcrValue > 0){
 
-        analisa.push({
-            icon:"check_circle",
-            text:"Nilai FCR sangat baik."
-        });
+        if(fcrValue <= 1.6){
+
+            analisa.push({
+                icon:"check_circle",
+                tone:"good",
+                title:"Efisiensi pakan",
+                text:"Nilai FCR sangat baik."
+            });
+
+        }else{
+
+            analisa.push({
+                icon:"warning",
+                tone:"warning",
+                title:"Efisiensi pakan",
+                text:"Efisiensi pakan perlu ditingkatkan."
+            });
+
+        }
 
     }else{
 
         analisa.push({
-            icon:"warning",
-            text:"Efisiensi pakan perlu ditingkatkan."
+            icon:"info",
+            tone:"info",
+            title:"Efisiensi pakan",
+            text:"Data FCR belum tersedia sehingga efisiensi pakan belum dapat dinilai."
         });
 
     }
 
     analisa.push({
         icon:"lightbulb",
+        tone:"info",
+        title:"Monitoring",
         text:"Pertahankan biosecurity, kualitas pakan dan monitoring harian."
     });
 
     let html=`
 
-<div class="dashboardHero">
+<div class="aiProPage">
 
-<div>
+    <div class="aiProHero">
 
-<div class="heroSmall">
+        <div class="aiProHeroMain">
 
-FMC BOILER MOBILE V11
+            <div class="aiProBadge">
+                <span class="material-symbols-rounded">auto_awesome</span>
+                FMC AI PRO
+            </div>
 
-</div>
+            <h1>AI Advisor</h1>
 
-<h1>
+            <p>
+                Analisis cerdas berdasarkan data produksi yang tersedia.
+            </p>
 
-AI Advisor
+            <div class="aiProHeroMeta">
+                <span>
+                    <span class="material-symbols-rounded">smart_toy</span>
+                    Analytics Engine
+                </span>
+                <span>
+                    <span class="material-symbols-rounded">sync</span>
+                    Data server
+                </span>
+            </div>
 
-</h1>
+        </div>
 
-<div class="heroDate">
+        <div class="aiProHeroOrb">
+            <span class="material-symbols-rounded">psychology</span>
+        </div>
 
-<span class="material-symbols-rounded">
+    </div>
 
-smart_toy
+    <div class="aiProFarm">
 
-</span>
+        <div class="aiProFarmIdentity">
 
-Analisis Cerdas Produksi
+            <div class="aiProFarmIcon">
+                <span class="material-symbols-rounded">home</span>
+            </div>
 
-</div>
+            <div>
+                <span class="aiProLabel">FARM MONITORING</span>
+                <h2>${farm.namaFarm}</h2>
+                <small>AI production overview</small>
+            </div>
 
-</div>
+        </div>
 
-<div class="heroLogo">
+        <div class="aiProActive">
+            <span class="aiProActiveDot"></span>
+            ACTIVE
+        </div>
 
-<span class="material-symbols-rounded">
+    </div>
 
-psychology
+    <div class="aiProSectionHead">
 
-</span>
+        <div>
+            <span class="aiProEyebrow">PERFORMANCE SNAPSHOT</span>
+            <h2>Ringkasan AI</h2>
+        </div>
 
-</div>
+        <span class="aiProSectionIcon material-symbols-rounded">monitoring</span>
 
-</div>
+    </div>
 
-<div class="card farmCard">
+    <div class="aiProMetricGrid">
 
-<div class="farmHeader">
+        <div class="aiProMetric aiProMetricMortality">
+            <div class="aiProMetricTop">
+                <span class="aiProMetricIcon material-symbols-rounded">pie_chart</span>
+                <span class="aiProMetricTag">KPI</span>
+            </div>
+            <span class="aiProMetricLabel">Mortalitas</span>
+            <strong>${aiMortalitas(kpi.mortalitas)}</strong>
+            <small>Global production</small>
+        </div>
 
-<div>
+        <div class="aiProMetric aiProMetricFcr">
+            <div class="aiProMetricTop">
+                <span class="aiProMetricIcon">🍗</span>
+                <span class="aiProMetricTag">KPI</span>
+            </div>
+            <span class="aiProMetricLabel">FCR</span>
+            <strong>${aiFCR(kpi.fcr)}</strong>
+            <small>Feed efficiency</small>
+        </div>
 
-<h2>
+        <div class="aiProMetric aiProMetricIp">
+            <div class="aiProMetricTop">
+                <span class="aiProMetricIcon">🏆</span>
+                <span class="aiProMetricTag">KPI</span>
+            </div>
+            <span class="aiProMetricLabel">IP</span>
+            <strong>${aiIP(kpi.ip)}</strong>
+            <small>Production index</small>
+        </div>
 
-<span class="material-symbols-rounded">
+        <div class="aiProMetric aiProMetricBest">
+            <div class="aiProMetricTop">
+                <span class="aiProMetricIcon">🥇</span>
+                <span class="aiProMetricTag">BEST</span>
+            </div>
+            <span class="aiProMetricLabel">FLOK Terbaik</span>
+            <strong>${terbaik?terbaik.nama:"-"}</strong>
+            <small>IP tertinggi</small>
+        </div>
 
-home
+    </div>
 
-</span>
+    <div class="aiProSectionHead aiProRecommendationHead">
 
-${farm.namaFarm}
+        <div>
+            <span class="aiProEyebrow">DECISION SUPPORT</span>
+            <h2>Rekomendasi FMC AI</h2>
+        </div>
 
-</h2>
+        <span class="aiProSectionIcon material-symbols-rounded">tips_and_updates</span>
 
-<small>
+    </div>
 
-AI Monitoring
-
-</small>
-
-</div>
-
-<div class="onlineBadge">
-
-<span class="material-symbols-rounded">
-
-auto_awesome
-
-</span>
-
-ACTIVE
-
-</div>
-
-</div>
-
-</div>
-
-<div class="gridCard">
-
-${aiCard("pie_chart","Mortalitas",aiMortalitas(kpi.mortalitas))}
-
-${aiCard("🍗","FCR",aiFCR(kpi.fcr))}
-
-${aiCard("🏆","IP",aiIP(kpi.ip))}
-
-${aiCard("🥇","Flok Terbaik",terbaik?terbaik.nama:"-")}
-
-</div>
-
-<div class="card">
-
-<h2>
-
-<span class="material-symbols-rounded">
-
-tips_and_updates
-
-</span>
-
-Rekomendasi FMC AI
-
-</h2>
+    <div class="aiProRecommendation">
 
 `;
 
@@ -212,29 +274,24 @@ Rekomendasi FMC AI
 
         html+=`
 
-<div style="
-display:flex;
-align-items:flex-start;
-gap:10px;
-margin:14px 0;
-">
+        <div class="aiProInsight aiProInsight-${item.tone}">
 
-<span class="material-symbols-rounded"
-style="
-color:var(--primary);
-">
+            <div class="aiProInsightIcon">
+                <span class="material-symbols-rounded">${item.icon}</span>
+            </div>
 
-${item.icon}
+            <div class="aiProInsightBody">
 
-</span>
+                <div class="aiProInsightTitle">
+                    ${item.title}
+                    <span>AI INSIGHT</span>
+                </div>
 
-<div>
+                <p>${item.text}</p>
 
-${item.text}
+            </div>
 
-</div>
-
-</div>
+        </div>
 
 `;
 
@@ -242,25 +299,20 @@ ${item.text}
 
     html+=`
 
+    </div>
+
+    <div class="aiProFooter">
+        <span class="material-symbols-rounded">verified</span>
+        FMC AI Analytics · Source: data produksi server
+    </div>
+
 </div>
-
-<center
-style="
-margin:20px;
-font-size:12px;
-color:#777;
-">
-
-Powered by FMC AI Analytics
-
-</center>
 
 `;
 
     document.getElementById("aiPage").innerHTML=html;
 
 }
-
 
 // ==========================================
 // FORMAT ANGKA AI
@@ -369,44 +421,5 @@ function aiIP(value){
             maximumFractionDigits: 2
         }
     );
-
-}
-
-
-function aiCard(icon,judul,nilai){
-
-    const iconHtml=
-
-    icon.length<=2
-
-    ? icon
-
-    : `<span class="material-symbols-rounded">${icon}</span>`;
-
-    return`
-
-<div class="card">
-
-<div class="kpiIcon">
-
-${iconHtml}
-
-</div>
-
-<h4>
-
-${judul}
-
-</h4>
-
-<b>
-
-${nilai}
-
-</b>
-
-</div>
-
-`;
 
 }

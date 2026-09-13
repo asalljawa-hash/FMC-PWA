@@ -1,258 +1,724 @@
-/* ==========================================
-   FMC BROILER MOBILE V11
-   THEME SYSTEM
-========================================== */
+/* =========================================================
+   FMC BOILER MOBILE V11
+   VISUAL GRAPH V2
+   KPI / FLOK / HARIAN / KEUANGAN
+   Theme.css TIDAK DIUBAH
+   ========================================================= */
 
-:root{
-
-    /* ======================================
-       RESPONSIVE
-       (Hanya Variabel - Tidak Mengubah Layout)
-    ====================================== */
-
-    --container-max:480px;
-
-    --header-height:64px;
-
-    --bottom-nav-height:72px;
-
-    --safe-top:env(safe-area-inset-top);
-
-    --safe-bottom:env(safe-area-inset-bottom);
-
-    --safe-left:env(safe-area-inset-left);
-
-    --safe-right:env(safe-area-inset-right);
-
-    --content-spacing:16px;
-
-    --section-spacing:24px;
-
-    --card-spacing:20px;
-
-    /* ======================================
-       BRAND
-    ====================================== */
-
-    --primary:#0B8F43;
-
-    --primary-light:#18B85B;
-
-    --primary-dark:#087438;
-
-    --secondary:#2563EB;
-
-    --secondary-light:#60A5FA;
-
-    /* ======================================
-       BACKGROUND
-    ====================================== */
-
-    --bg:#F4F7F6;
-
-    --card:#FFFFFF;
-
-    --surface:#F8FAF9;
-
-    /* ======================================
-       TEXT
-    ====================================== */
-
-    --text:#1F2937;
-
-    --text-soft:#6B7280;
-
-    --text-light:#9CA3AF;
-
-    /* ======================================
-       STATUS
-    ====================================== */
-
-    --success:#22C55E;
-
-    --warning:#F59E0B;
-
-    --danger:#EF4444;
-
-    --info:#0EA5E9;
-
-    /* ======================================
-       BORDER
-    ====================================== */
-
-    --border:#E5E7EB;
-
-    --divider:#EEF2F7;
-
-    /* ======================================
-       RADIUS
-    ====================================== */
-
-    --radius-xs:8px;
-
-    --radius-sm:12px;
-
-    --radius:20px;
-
-    --radius-lg:24px;
-
-    --radius-xl:30px;
-
-    /* ======================================
-       SHADOW
-    ====================================== */
-
-    --shadow-xs:
-    0 2px 6px rgba(0,0,0,.04);
-
-    --shadow-sm:
-    0 6px 18px rgba(0,0,0,.06);
-
-    --shadow:
-    0 10px 25px rgba(0,0,0,.08);
-
-    --shadow-lg:
-    0 20px 40px rgba(0,0,0,.12);
-
-    /* ======================================
-       TRANSITION
-    ====================================== */
-
-    --speed:.25s;
-
-    --speed-slow:.4s;
-
-}
-/* ==========================================
-   GLOBAL SELECTION
-========================================== */
-
-::selection{
-
-    background:rgba(11,143,67,.18);
-
-    color:var(--text);
-
+.fmcGraphSection,
+.fmcFinanceGraph{
+    margin:14px 0 18px;
+    padding:16px;
+    border-radius:22px;
+    background:linear-gradient(180deg, rgba(11,143,67,.055), rgba(11,143,67,.018));
+    border:1px solid rgba(11,143,67,.10);
+    box-shadow:0 8px 24px rgba(11,143,67,.06);
 }
 
-/* ==========================================
-   LINK
-========================================== */
-
-a{
-
-    color:var(--primary);
-
-    text-decoration:none;
-
-}
-
-a:hover{
-
-    color:var(--primary-dark);
-
-}
-
-/* ==========================================
-   HR
-========================================== */
-
-hr{
-
-    border:none;
-
-    height:1px;
-
-    background:var(--divider);
-
-    margin:16px 0;
-
-}
-
-/* ==========================================
-   BADGE
-========================================== */
-
-.badge{
-
-    display:inline-flex;
-
+.fmcGraphTitle{
+    display:flex;
     align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+}
 
-    gap:6px;
+.fmcGraphTitle h2{
+    margin:0;
+    font-size:18px;
+    color:var(--text);
+}
 
-    padding:6px 12px;
-
-    border-radius:999px;
-
+.fmcGraphTitle small{
+    display:block;
+    margin-top:4px;
+    color:var(--text-soft);
     font-size:12px;
+}
 
+.fmcGraphTitle > .material-symbols-rounded{
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:13px;
+    background:rgba(11,143,67,.10);
+    color:var(--primary);
+}
+
+.fmcGraphBlock{
+    padding:14px;
+    margin-top:12px;
+    border-radius:17px;
+    background:rgba(255,255,255,.76);
+    border:1px solid rgba(11,143,67,.08);
+}
+
+.fmcGraphBlockTitle{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--text);
+}
+
+.fmcGraphBlockTitle span:last-child{
+    color:var(--text-soft);
+    font-size:11px;
+    font-weight:500;
+}
+
+.fmcBarList{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.fmcBarRow{
+    width:100%;
+}
+
+.fmcBarLabel{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:6px;
+    font-size:12px;
+    color:var(--text-soft);
+}
+
+.fmcBarLabel b{
+    color:var(--text);
+    font-size:13px;
+    white-space:nowrap;
+}
+
+.fmcBarTrack{
+    width:100%;
+    height:9px;
+    overflow:hidden;
+    border-radius:999px;
+    background:#edf2ef;
+}
+
+.fmcBarFill{
+    height:100%;
+    min-width:2px;
+    border-radius:999px;
+    transition:width .35s ease;
+}
+
+.fmcBarGreen{
+    background:linear-gradient(90deg,var(--primary-dark),var(--primary-light));
+}
+
+.fmcBarRed{
+    background:linear-gradient(90deg,#dc2626,#ef4444);
+}
+
+.fmcBarOrange{
+    background:linear-gradient(90deg,#d97706,#f59e0b);
+}
+
+.fmcBarBlue{
+    background:linear-gradient(90deg,#2563eb,#60a5fa);
+}
+
+.fmcGraphCard{
+    background:linear-gradient(180deg,rgba(11,143,67,.045),rgba(255,255,255,.96));
+    border:1px solid rgba(11,143,67,.08);
+}
+
+.fmcMiniMetric{
+    margin-top:16px;
+    padding:12px;
+    border-radius:15px;
+    background:rgba(11,143,67,.045);
+}
+
+.fmcMiniMetricHead{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+    font-size:12px;
+    color:var(--text-soft);
+}
+
+.fmcMiniMetricHead b{
+    color:var(--text);
+}
+
+.fmcMetricGrid4{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-top:10px;
+}
+
+.fmcMetricBox{
+    padding:10px;
+    border-radius:15px;
+    background:rgba(255,255,255,.78);
+    border:1px solid rgba(11,143,67,.07);
+}
+
+.fmcMetricBox .kpiIcon{
+    width:30px;
+    height:30px;
+    margin-bottom:7px;
+    font-size:15px;
+}
+
+.fmcMetricBox small{
+    display:block;
+    color:var(--text-soft);
+    font-size:11px;
+}
+
+.fmcMetricBox b{
+    display:block;
+    margin-top:3px;
+    font-size:17px;
+    color:var(--text);
+}
+
+.fmcStatusLine{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:12px;
+    padding-top:11px;
+    border-top:1px solid rgba(11,143,67,.08);
+    font-size:12px;
+}
+
+.fmcStatusLine span:first-child{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    color:var(--text-soft);
+}
+
+.fmcStatusLine .material-symbols-rounded{
+    font-size:17px;
+    color:var(--primary);
+}
+
+.fmcDailyHero{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px;
+    margin:14px 0;
+    background:linear-gradient(135deg,rgba(11,143,67,.08),rgba(255,255,255,.96));
+    border:1px solid rgba(11,143,67,.10);
+}
+
+.fmcDailyLabel{
+    display:block;
+    color:var(--text-soft);
+    font-size:13px;
     font-weight:600;
-
 }
 
-.badge-success{
-
-    background:rgba(34,197,94,.12);
-
-    color:var(--success);
-
+.fmcDailyHero strong{
+    display:block;
+    margin-top:3px;
+    font-size:40px;
+    line-height:1.1;
+    color:#E53935;
 }
 
-.badge-warning{
-
-    background:rgba(245,158,11,.12);
-
-    color:var(--warning);
-
+.fmcDailyHero small{
+    color:var(--text-soft);
 }
 
-.badge-danger{
-
-    background:rgba(239,68,68,.12);
-
-    color:var(--danger);
-
+.fmcDailyIcon{
+    width:50px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:16px;
+    background:rgba(239,68,68,.10);
+    color:#dc2626;
+    font-size:27px;
 }
+
+.fmcDailyGrid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+}
+
+.fmcDailyMetric{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 0;
+    border-bottom:1px solid rgba(11,143,67,.07);
+}
+
+.fmcDailyMetric .material-symbols-rounded{
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:11px;
+    background:rgba(11,143,67,.08);
+    color:var(--primary);
+    font-size:18px;
+}
+
+.fmcDailyMetric small{
+    display:block;
+    color:var(--text-soft);
+    font-size:10px;
+}
+
+.fmcDailyMetric b{
+    display:block;
+    margin-top:2px;
+    font-size:15px;
+}
+
+.fmcFinanceGraph{
+    margin-top:14px;
+}
+
+.fmcFinanceBars{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.fmcFinanceSummary{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+}
+
+.fmcFinanceMetric{
+    background:linear-gradient(180deg,rgba(11,143,67,.045),rgba(255,255,255,.96));
+    border:1px solid rgba(11,143,67,.08);
+}
+
+.fmcFinanceMetric b{
+    font-size:17px;
+}
+
+.fmcFinanceProfit{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-top:12px;
+    padding:16px;
+    background:linear-gradient(180deg,rgba(11,143,67,.07),rgba(255,255,255,.96));
+    border:1px solid rgba(11,143,67,.10);
+}
+
+.fmcFinanceProfit small{
+    display:block;
+    color:var(--text-soft);
+    font-size:12px;
+}
+
+.fmcFinanceProfit strong{
+    display:block;
+    margin-top:5px;
+    font-size:23px;
+    line-height:1.2;
+}
+
+.fmcFinanceProfit > .material-symbols-rounded{
+    width:43px;
+    height:43px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:14px;
+    background:rgba(11,143,67,.10);
+    color:var(--primary);
+}
+
+.fmcFinanceProfitText{
+    color:var(--primary);
+}
+
+.fmcFinanceLoss{
+    color:#E53935 !important;
+}
+
+@media (max-width:480px){
+    .fmcGraphSection,
+    .fmcFinanceGraph{
+        padding:13px;
+        border-radius:19px;
+    }
+
+    .fmcGraphBlock{
+        padding:12px;
+    }
+
+    .fmcDailyGrid{
+        grid-template-columns:1fr;
+    }
+
+    .fmcFinanceSummary{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:9px;
+    }
+
+    .fmcFinanceMetric{
+        padding:10px;
+    }
+
+    .fmcFinanceMetric h4{
+        font-size:11px;
+    }
+
+    .fmcFinanceMetric b{
+        font-size:15px;
+    }
+
+    .fmcMetricGrid4{
+        gap:8px;
+    }
+
+    .fmcMetricBox{
+        padding:9px;
+    }
+}
+
+
+/* =========================================================
+   FMC VISUAL GRAPH V3 — SOFT COLOR / SMOOTH UI
+   Tambahan override untuk memperhalus warna icon & tulisan.
+   Theme.css tetap tidak diubah.
+   ========================================================= */
+
+.fmcGraphSection,
+.fmcFinanceGraph,
+.fmcDailyHero,
+.fmcGraphCard,
+.fmcFinanceMetric,
+.fmcFinanceProfit{
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+}
+
+/* Panel utama: hijau sangat tipis, tidak menyilaukan */
+.fmcGraphSection,
+.fmcFinanceGraph{
+    background:linear-gradient(180deg,
+        rgba(11,143,67,.075) 0%,
+        rgba(255,255,255,.96) 72%);
+    border:1px solid rgba(11,143,67,.12);
+    box-shadow:0 8px 24px rgba(11,143,67,.055);
+}
+
+.fmcGraphTitle h2,
+.fmcGraphBlockTitle span:first-child,
+.fmcGraphCard h2,
+.fmcFinanceGraph h2{
+    color:#263238;
+    font-weight:750;
+    letter-spacing:-.15px;
+}
+
+.fmcGraphTitle small,
+.fmcGraphBlockTitle span:last-child,
+.fmcGraphCard small,
+.fmcFinanceGraph small{
+    color:#718078;
+    opacity:.95;
+}
+
+/* Icon judul grafik — hijau lembut */
+.fmcGraphTitle > .material-symbols-rounded{
+    background:linear-gradient(145deg,rgba(11,143,67,.13),rgba(24,184,91,.07));
+    color:#0B8F43;
+    border:1px solid rgba(11,143,67,.09);
+    font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24;
+    box-shadow:0 4px 12px rgba(11,143,67,.08);
+}
+
+.fmcGraphBlock{
+    background:rgba(255,255,255,.86);
+    border:1px solid rgba(11,143,67,.085);
+    box-shadow:0 3px 12px rgba(31,41,55,.025);
+}
+
+.fmcBarLabel span{
+    color:#68766f;
+    font-weight:500;
+}
+
+.fmcBarLabel b{
+    color:#263238;
+    font-weight:750;
+}
+
+.fmcBarTrack{
+    background:#e9f0ec;
+    box-shadow:inset 0 1px 2px rgba(31,41,55,.035);
+}
+
+.fmcBarFill{
+    box-shadow:0 1px 5px rgba(11,143,67,.13);
+}
+
+.fmcBarGreen{ background:linear-gradient(90deg,#0B8F43,#20B965); }
+.fmcBarRed{ background:linear-gradient(90deg,#e34b4b,#f06b6b); box-shadow:0 1px 5px rgba(229,57,53,.13); }
+.fmcBarOrange{ background:linear-gradient(90deg,#e69a16,#f5b83f); box-shadow:0 1px 5px rgba(245,158,11,.13); }
+.fmcBarBlue{ background:linear-gradient(90deg,#3d78dc,#6d9de8); box-shadow:0 1px 5px rgba(37,99,235,.13); }
+
+/* Card FLOK */
+.fmcGraphCard{
+    background:linear-gradient(180deg,
+        rgba(11,143,67,.055) 0%,
+        rgba(255,255,255,.97) 62%);
+    border:1px solid rgba(11,143,67,.095);
+    box-shadow:0 6px 18px rgba(31,41,55,.055);
+}
+
+.fmcGraphCard .farmHeader h2{
+    color:#263238;
+}
+
+.fmcMiniMetric{
+    background:linear-gradient(180deg,rgba(11,143,67,.055),rgba(11,143,67,.025));
+    border:1px solid rgba(11,143,67,.065);
+}
+
+.fmcMiniMetricHead span{ color:#68766f; }
+.fmcMiniMetricHead b{ color:#263238; font-weight:750; }
+
+/* Icon metric FLOK — tiap icon punya warna lembut */
+.fmcMetricBox{
+    background:rgba(255,255,255,.90);
+    border:1px solid rgba(31,41,55,.055);
+    box-shadow:0 3px 10px rgba(31,41,55,.025);
+}
+
+.fmcMetricBox small{ color:#718078; }
+.fmcMetricBox b{ color:#263238; font-weight:750; }
+
+.fmcMetricBox:nth-child(1) .kpiIcon{
+    background:rgba(239,68,68,.105);
+    color:#d94a4a;
+}
+.fmcMetricBox:nth-child(2) .kpiIcon{
+    background:rgba(245,158,11,.115);
+    color:#d8890d;
+}
+.fmcMetricBox:nth-child(3) .kpiIcon{
+    background:rgba(11,143,67,.105);
+    color:#0B8F43;
+}
+.fmcMetricBox:nth-child(4) .kpiIcon{
+    background:rgba(37,99,235,.105);
+    color:#3b73cf;
+}
+
+.fmcMetricBox .kpiIcon{
+    box-shadow:none;
+    border:1px solid rgba(255,255,255,.45);
+}
+
+.fmcStatusLine{
+    border-top-color:rgba(11,143,67,.075);
+    color:#68766f;
+}
+
+.fmcStatusLine b{ color:#0B8F43; font-weight:750; }
+.fmcStatusLine .material-symbols-rounded{
+    color:#15964e;
+    font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 20;
+}
+
+/* HARIAN */
+.fmcDailyHero{
+    background:linear-gradient(135deg,
+        rgba(239,68,68,.055),
+        rgba(11,143,67,.045) 55%,
+        rgba(255,255,255,.97));
+    border:1px solid rgba(11,143,67,.09);
+    box-shadow:0 7px 20px rgba(31,41,55,.045);
+}
+
+.fmcDailyLabel{ color:#718078; }
+.fmcDailyHero strong{ color:#d94a4a; text-shadow:0 1px 1px rgba(217,74,74,.06); }
+.fmcDailyHero small{ color:#7a8780; }
+
+.fmcDailyIcon{
+    background:rgba(239,68,68,.095);
+    color:#d94a4a;
+    border:1px solid rgba(239,68,68,.08);
+    box-shadow:none;
+    font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 28;
+}
+
+.fmcDailyMetric{
+    border-bottom-color:rgba(11,143,67,.065);
+}
+
+.fmcDailyMetric .material-symbols-rounded{
+    background:rgba(11,143,67,.075);
+    color:#15964e;
+    border:1px solid rgba(11,143,67,.055);
+    font-variation-settings:'FILL' 1,'wght' 450,'GRAD' 0,'opsz' 20;
+}
+
+.fmcDailyMetric:nth-child(2) .material-symbols-rounded{
+    background:rgba(239,68,68,.085);
+    color:#d94a4a;
+}
+.fmcDailyMetric:nth-child(3) .material-symbols-rounded{
+    background:rgba(245,158,11,.095);
+    color:#d8890d;
+}
+
+.fmcDailyMetric small{ color:#718078; }
+.fmcDailyMetric b{ color:#263238; font-weight:750; }
+
+/* KEUANGAN */
+.fmcFinanceMetric{
+    background:linear-gradient(180deg,
+        rgba(11,143,67,.045),
+        rgba(255,255,255,.97));
+    border:1px solid rgba(11,143,67,.075);
+    box-shadow:0 5px 15px rgba(31,41,55,.045);
+}
+
+.fmcFinanceMetric h4{
+    color:#718078;
+    font-weight:600;
+}
+.fmcFinanceMetric b{
+    color:#263238;
+    font-weight:750;
+}
+
+/* Icon keuangan: variasi warna lembut */
+.fmcFinanceMetric:nth-child(1) .kpiIcon,
+.fmcFinanceMetric:nth-child(2) .kpiIcon,
+.fmcFinanceMetric:nth-child(3) .kpiIcon{
+    background:rgba(11,143,67,.095);
+    color:#0B8F43;
+}
+.fmcFinanceMetric:nth-child(4) .kpiIcon{
+    background:rgba(245,158,11,.105);
+    color:#d8890d;
+}
+.fmcFinanceMetric:nth-child(5) .kpiIcon{
+    background:rgba(37,99,235,.095);
+    color:#3b73cf;
+}
+.fmcFinanceMetric:nth-child(6) .kpiIcon{
+    background:rgba(124,58,237,.09);
+    color:#7041c2;
+}
+.fmcFinanceMetric:nth-child(7) .kpiIcon{
+    background:rgba(245,158,11,.105);
+    color:#d8890d;
+}
+.fmcFinanceMetric:nth-child(8) .kpiIcon{
+    background:rgba(239,68,68,.085);
+    color:#d94a4a;
+}
+.fmcFinanceMetric:nth-child(9) .kpiIcon,
+.fmcFinanceMetric:nth-child(10) .kpiIcon,
+.fmcFinanceMetric:nth-child(11) .kpiIcon{
+    background:rgba(11,143,67,.095);
+    color:#0B8F43;
+}
+.fmcFinanceMetric:nth-child(12) .kpiIcon{
+    background:rgba(37,99,235,.095);
+    color:#3b73cf;
+}
+.fmcFinanceMetric:nth-child(13) .kpiIcon,
+.fmcFinanceMetric:nth-child(14) .kpiIcon{
+    background:rgba(245,158,11,.105);
+    color:#d8890d;
+}
+
+.fmcFinanceMetric .kpiIcon{
+    box-shadow:none;
+    border:1px solid rgba(255,255,255,.50);
+    font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 22;
+}
+
+.fmcFinanceProfit{
+    background:linear-gradient(135deg,
+        rgba(11,143,67,.065),
+        rgba(255,255,255,.97));
+    border:1px solid rgba(11,143,67,.085);
+    box-shadow:0 6px 18px rgba(31,41,55,.045);
+}
+
+.fmcFinanceProfit small{ color:#718078; }
+.fmcFinanceProfit strong{ font-weight:750; }
+.fmcFinanceProfit > .material-symbols-rounded{
+    background:rgba(11,143,67,.09);
+    color:#0B8F43;
+    font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24;
+}
+
+/* Semua Material Symbols visual lebih lembut */
+.fmcGraphSection .material-symbols-rounded,
+.fmcFinanceGraph .material-symbols-rounded,
+.fmcGraphCard .material-symbols-rounded,
+.fmcFinanceMetric .material-symbols-rounded,
+.fmcFinanceProfit .material-symbols-rounded,
+.fmcDailyHero .material-symbols-rounded,
+.fmcDailyGrid .material-symbols-rounded{
+    -webkit-font-smoothing:antialiased;
+}
+
+@media (max-width:480px){
+    .fmcGraphTitle h2{ font-size:17px; }
+    .fmcGraphBlockTitle{ font-size:12px; }
+    .fmcBarLabel{ font-size:11.5px; }
+    .fmcBarLabel b{ font-size:12.5px; }
+}
+
 /* ==========================================
-   MATERIAL SYMBOL
+   HARIAN — FIX WARNING ICON ALIGNMENT
 ========================================== */
+.fmcDailyHero .fmcDailyIcon{
+    width:50px;
+    height:50px;
+    flex:0 0 50px;
 
-.material-symbols-rounded{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-sizing:border-box;
+    padding:0 !important;
+    margin:0 !important;
+
+    font-family:"Material Symbols Rounded" !important;
+    font-size:27px !important;
+    line-height:1 !important;
+    font-weight:normal !important;
+
+    letter-spacing:normal;
+    font-style:normal;
+    font-variation-settings:
+        "FILL" 0,
+        "wght" 500,
+        "GRAD" 0,
+        "opsz" 24;
 
     vertical-align:middle;
-
-    line-height:1;
-
-    font-size:24px;
-
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 300,
-    'GRAD' 0,
-    'opsz' 24;
-
-}
-
-/* ==========================================
-   SMOOTH TRANSITION
-========================================== */
-
-body,
-.card,
-.weatherCard,
-.header,
-.bottomNav,
-button,
-input,
-select,
-textarea,
-#settingPanel{
-
-    transition:
-        background-color var(--speed),
-        color var(--speed),
-        border-color var(--speed),
-        box-shadow var(--speed);
-
+    transform:translateY(1px);
 }

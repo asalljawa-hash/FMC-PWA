@@ -1,8 +1,8 @@
 // ==========================================
 // FMC BROILER MOBILE
 // SHARE & EXPORT PDF ENGINE
-// V18 PROFESSIONAL
-// BAGIAN 1 / 3
+// V19.2 PROFESSIONAL
+// PWA + ANDROID SHARE READY
 // ==========================================
 
 // ==========================================
@@ -20,31 +20,98 @@ async function shareText(title, text){
 
     try{
 
-        if(navigator.share){
+        // ==========================================
+        // APK ANDROID — CAPACITOR NATIVE SHARE
+        // ==========================================
+        const capacitor = window.Capacitor;
+        const nativeShare = capacitor?.Plugins?.Share;
 
-            await navigator.share({
-
+        if(
+            capacitor?.isNativePlatform?.() &&
+            nativeShare?.share
+        ){
+            await nativeShare.share({
                 title: title,
-
-                text: text
-
+                text: text,
+                dialogTitle: "Bagikan laporan FMC"
             });
-
-        }else{
-
-            await navigator.clipboard.writeText(text);
-
-            showUpdateToast(
-
-                "📋 Teks berhasil disalin"
-
-            );
-
+            return;
         }
+
+        // ==========================================
+        // PWA / BROWSER — WEB SHARE API
+        // ==========================================
+        if(
+            typeof navigator !== "undefined" &&
+            typeof navigator.share === "function"
+        ){
+            await navigator.share({
+                title: title,
+                text: text
+            });
+            return;
+        }
+
+        // ==========================================
+        // FALLBACK — CLIPBOARD
+        // ==========================================
+        if(
+            navigator.clipboard &&
+            typeof navigator.clipboard.writeText === "function"
+        ){
+            await navigator.clipboard.writeText(text);
+            showUpdateToast(
+                "📋 Teks berhasil disalin"
+            );
+            return;
+        }
+
+        showUpdateToast(
+            "⚠️ Fitur share tidak tersedia"
+        );
 
     }catch(err){
 
-        console.log(err);
+        // Cancel dari dialog share bukan error aplikasi.
+        if(err?.name === "AbortError") return;
+
+        console.error("FMC SHARE ERROR:", err);
+
+        // Jika native share gagal, coba Web Share sebagai fallback.
+        try{
+            if(
+                typeof navigator !== "undefined" &&
+                typeof navigator.share === "function"
+            ){
+                await navigator.share({
+                    title: title,
+                    text: text
+                });
+                return;
+            }
+        }catch(fallbackErr){
+            if(fallbackErr?.name === "AbortError") return;
+            console.error("FMC WEB SHARE FALLBACK ERROR:", fallbackErr);
+        }
+
+        try{
+            if(
+                navigator.clipboard &&
+                typeof navigator.clipboard.writeText === "function"
+            ){
+                await navigator.clipboard.writeText(text);
+                showUpdateToast(
+                    "📋 Share gagal — teks disalin"
+                );
+                return;
+            }
+        }catch(copyErr){
+            console.error("FMC CLIPBOARD ERROR:", copyErr);
+        }
+
+        showUpdateToast(
+            "❌ Share gagal. Coba lagi."
+        );
 
     }
 
@@ -53,35 +120,6 @@ async function shareText(title, text){
 // ==========================================
 // PDF ENGINE
 // ==========================================
-// ==========================================
-// FMC PDF LOGO ENGINE
-// ==========================================
-
-let FMC_LOGO = null;
-
-async function loadPdfLogo(){
-
-    if(FMC_LOGO) return FMC_LOGO;
-
-    return new Promise((resolve,reject)=>{
-
-        const img = new Image();
-
-        img.onload = function(){
-
-            FMC_LOGO = img;
-
-            resolve(img);
-
-        };
-
-        img.onerror = reject;
-
-        img.src = "icons/logo-fmc.png";
-
-    });
-
-}
 
 const { jsPDF } = window.jspdf;
 
@@ -103,6 +141,72 @@ const PDF_THEME = {
     white:[255,255,255]
 
 };
+
+// ==========================================
+// FORMAT ANGKA PDF — V19.2
+// Tampilan Indonesia: 1.234,56 / Rp 1.234.567
+// Tidak mengubah nilai/perhitungan engine.
+// ==========================================
+
+const PDF_NUM_LOCALE = "id-ID";
+
+function pdfNumber(value, decimals = 0){
+    if(value === null || value === undefined || value === "" || value === "-"){
+        return "-";
+    }
+    const n = Number(value);
+    if(!Number.isFinite(n)) return String(value);
+    return n.toLocaleString(PDF_NUM_LOCALE, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+    });
+}
+
+function pdfCurrency(value){
+    if(value === null || value === undefined || value === "" || value === "-"){
+        return "-";
+    }
+    const n = Number(value);
+    if(!Number.isFinite(n)) return "Rp " + String(value);
+    return "Rp " + n.toLocaleString(PDF_NUM_LOCALE, {
+        maximumFractionDigits: 0
+    });
+}
+
+function pdfPercent(value, decimals = 2){
+    if(value === null || value === undefined || value === "" || value === "-"){
+        return "-";
+    }
+    const n = Number(value);
+    if(!Number.isFinite(n)) return String(value);
+    // Engine menyimpan mortalitas/deplesi sebagai rasio 0..1.
+    return (n * 100).toLocaleString(PDF_NUM_LOCALE, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+    }) + "%";
+}
+
+function pdfMargin(value){
+    if(value === null || value === undefined || value === "" || value === "-"){
+        return "-";
+    }
+    const n = Number(value);
+    if(!Number.isFinite(n)) return String(value);
+    return pdfPercent(n, 2);
+}
+
+function pdfFcr(value){
+    return pdfNumber(value, 2);
+}
+
+function pdfIp(value){
+    return pdfNumber(value, 2);
+}
+
+function pdfKg(value, decimals = 2){
+    const n = pdfNumber(value, decimals);
+    return n === "-" ? "-" : n + " Kg";
+}
 
 // ==========================================
 // FORMAT TANGGAL
@@ -143,40 +247,88 @@ function createReportID(){
 }
 
 // ==========================================
-// FMC LOGO PREMIUM
+// LOGO ENGINE FMC
 // ==========================================
 
-function drawPdfLogo(pdf, x, y){
+function drawPdfLogo(pdf,x,y){
 
-    // Bayangan tipis
-    pdf.setFillColor(220,220,220);
-    pdf.circle(x+9.4, y+9.4, 9.2, "F");
+    const p = PDF_THEME.primary;
+    const s = PDF_THEME.secondary;
+    const w = PDF_THEME.white;
 
-    // Lingkaran utama
-    pdf.setFillColor(11,143,67);
-    pdf.circle(x+9, y+9, 9, "F");
+    // Badge
 
-    // Ring luar
-    pdf.setDrawColor(255,255,255);
-    pdf.setLineWidth(0.9);
-    pdf.circle(x+9, y+9, 8.2);
+    pdf.setFillColor(...p);
 
-    // Ring dalam
-    pdf.setLineWidth(0.4);
-    pdf.circle(x+9, y+9, 6.8);
+    pdf.roundedRect(
+        x,
+        y,
+        18,
+        18,
+        3,
+        3,
+        "F"
+    );
 
-    // Tulisan FMC
-    pdf.setTextColor(255,255,255);
-    pdf.setFont("helvetica","bold");
-    pdf.setFontSize(11);
+    // Kepala Ayam
 
-    pdf.text(
-        "FMC",
+    pdf.setFillColor(...w);
+
+    pdf.circle(
         x+9,
-        y+10.3,
-        {
-            align:"center"
-        }
+        y+9,
+        4,
+        "F"
+    );
+
+    // Paruh
+
+    pdf.setFillColor(255,193,7);
+
+    pdf.triangle(
+        x+12,
+        y+9,
+        x+15,
+        y+8,
+        x+15,
+        y+10,
+        "F"
+    );
+
+    // Mata
+
+    pdf.setFillColor(0);
+
+    pdf.circle(
+        x+10,
+        y+8,
+        0.35,
+        "F"
+    );
+
+    // Jengger
+
+    pdf.setFillColor(...s);
+
+    pdf.circle(
+        x+7.2,
+        y+4.5,
+        1,
+        "F"
+    );
+
+    pdf.circle(
+        x+9,
+        y+3.6,
+        1,
+        "F"
+    );
+
+    pdf.circle(
+        x+10.8,
+        y+4.5,
+        1,
+        "F"
     );
 
 }
@@ -289,7 +441,7 @@ let y = drawDashboardKPI(pdf, kpi);
 }
 
 // ==========================================
-// HEADER PDF V19.1 PROFESSIONAL
+// HEADER PDF V19 PROFESSIONAL
 // ==========================================
 
 function createPdfHeader(pdf, title, farmName = ""){
@@ -298,7 +450,7 @@ function createPdfHeader(pdf, title, farmName = ""){
     drawHeaderBackground(pdf);
 
     // Logo FMC
-    drawPdfLogo(pdf,10,4);
+    drawPdfLogo(pdf,12,6);
 
     // Nama Aplikasi
     pdf.setTextColor(...PDF_THEME.white);
@@ -331,63 +483,32 @@ function createPdfHeader(pdf, title, farmName = ""){
         24
     );
 
-    // ==========================================
-    // REPORT INFO BOX
-    // ==========================================
-
-    pdf.setFillColor(250,250,250);
-    pdf.setDrawColor(...PDF_THEME.white);
-    pdf.setLineWidth(0.3);
-
-    pdf.roundedRect(
-        143,
-        5,
-        53,
-        20,
-        2,
-        2,
-        "FD"
-    );
-
-    // Judul Box
-    pdf.setTextColor(...PDF_THEME.primary);
-    pdf.setFont("helvetica","bold");
+    // Informasi Report
+    pdf.setFont("helvetica","normal");
     pdf.setFontSize(7);
 
     pdf.text(
-        "REPORT INFO",
-        169.5,
-        9,
-        {align:"center"}
-    );
-
-    // Isi Box
-    pdf.setTextColor(...PDF_THEME.dark);
-    pdf.setFont("helvetica","normal");
-    pdf.setFontSize(6.5);
-
-    pdf.text(
         "Generated : " + pdfDateTime(),
-        146,
-        13
+        198,
+        10,
+        {align:"right"}
     );
 
     pdf.text(
         "Report ID : " + createReportID(),
-        146,
-        17
+        198,
+        15,
+        {align:"right"}
     );
 
     pdf.text(
-        "Version : V19.1 Professional",
-        146,
-        21
+        "Version : V19.2 Professional",
+        198,
+        20,
+        {align:"right"}
     );
 
-    // ==========================================
-    // JUDUL HALAMAN
-    // ==========================================
-
+    // Judul Halaman
     pdf.setTextColor(...PDF_THEME.dark);
 
     pdf.setFont(
@@ -419,8 +540,9 @@ function createPdfHeader(pdf, title, farmName = ""){
         47
     );
 
-    // Garis utama
+    // Garis Utama
     pdf.setDrawColor(...PDF_THEME.primary);
+
     pdf.setLineWidth(0.9);
 
     pdf.line(
@@ -430,8 +552,9 @@ function createPdfHeader(pdf, title, farmName = ""){
         50
     );
 
-    // Garis tipis
+    // Garis Tipis
     pdf.setDrawColor(225);
+
     pdf.setLineWidth(0.25);
 
     pdf.line(
@@ -512,11 +635,38 @@ function drawKpiCard(
     pdf.setFontSize(16);
 
     pdf.text(
-        String(value ?? "-"),
+        formatDashboardKpiValue(title, value),
         x + 6,
         y + 17
     );
 
+}
+
+// ==========================================
+// FORMAT NILAI KPI DASHBOARD
+// ==========================================
+
+function formatDashboardKpiValue(title, value){
+    if(value === null || value === undefined || value === "") return "-";
+
+    switch(String(title).toUpperCase()){
+        case "DOC IN":
+        case "AYAM HIDUP":
+            return pdfNumber(value, 0);
+
+        case "MORTALITAS":
+        case "DEPLESI":
+            return pdfPercent(value, 2);
+
+        case "FCR GLOBAL":
+            return pdfFcr(value);
+
+        case "IP GLOBAL":
+            return pdfIp(value);
+
+        default:
+            return pdfNumber(value, 2);
+    }
 }
 
 // ==========================================
@@ -793,13 +943,13 @@ async function exportFlokPDF(){
 
         const flok = data.dashboard.flok || [];
 
-        if(flok.length===0){
+if(flok.length===0){
 
-            showUpdateToast("Data Flok kosong");
+    showUpdateToast("Data Flok kosong");
 
-            return;
+    return;
 
-        }
+}
 
         const pdf = new jsPDF({
 
@@ -812,17 +962,156 @@ async function exportFlokPDF(){
         });
 
         createPdfHeader(
+    pdf,
+    "Laporan Flok",
+    data.dashboard.farm.namaFarm
+);
 
-            pdf,
+        let y = 55;
 
-            "Laporan Flok",
+        pdf.setFontSize(12);
 
-            data.dashboard.farm.namaFarm
+        pdf.setFont(
+
+            "helvetica",
+
+            "bold"
 
         );
 
-        // Card Summary FLOK
-        let y = drawFlokSummary(pdf, flok);
+        pdf.text(
+
+            "DATA FLOK",
+
+            20,
+
+            y
+
+        );
+
+        y += 10;
+
+        flok.forEach(f=>{
+
+            pdf.setFont(
+
+                "helvetica",
+
+                "bold"
+
+            );
+
+            pdf.text(
+
+                "FLOK "+f.nama,
+
+                20,
+
+                y
+
+            );
+
+            y += 7;
+
+            pdf.setFont(
+
+                "helvetica",
+
+                "normal"
+
+            );
+
+            pdf.text(
+
+                "Ayam Hidup : "+pdfNumber(f.hidup,0),
+
+                25,
+
+                y
+
+            );
+
+            y += 6;
+
+            pdf.text(
+
+                "Mati : "+pdfNumber(f.mati,0),
+
+                25,
+
+                y
+
+            );
+
+            y += 6;
+
+            pdf.text(
+
+                "Mortalitas : "+pdfPercent(f.mortalitas,2),
+
+                25,
+
+                y
+
+            );
+
+            y += 6;
+
+            pdf.text(
+
+                "FCR : "+pdfFcr(f.fcr),
+
+                25,
+
+                y
+
+            );
+
+            y += 6;
+
+            pdf.text(
+
+                "IP : "+pdfIp(f.ip),
+
+                25,
+
+                y
+
+            );
+
+            y += 6;
+
+            pdf.text(
+
+                "Status : "+f.status,
+
+                25,
+
+                y
+
+            );
+
+            y += 10;
+
+            if(y>260){
+
+                createPdfFooter(pdf);
+
+                pdf.addPage();
+
+                createPdfHeader(
+
+                    pdf,
+
+                    "Laporan Flok"
+
+                );
+
+                y=55;
+
+            }
+
+        });
 
         createPdfFooter(pdf);
 
@@ -834,204 +1123,9 @@ async function exportFlokPDF(){
 
         console.error(err);
 
-        showUpdateToast("❌ " + err.message);
+        showUpdateToast("❌ "+err.message);
 
     }
-
-}
-
-// ==========================================
-// FLOK CARD V19 PROFESSIONAL
-// ==========================================
-
-function drawFlokCard(pdf, x, y, w, h, f){
-
-    let color = PDF_THEME.primary;
-
-    if((f.status || "").toUpperCase() === "PANEN"){
-        color = [34,197,94];
-    }else if((f.status || "").toUpperCase() === "BERJALAN"){
-        color = [245,158,11];
-    }else if((f.status || "").toUpperCase() === "BELUM"){
-        color = PDF_THEME.primary;
-    }else{
-        color = [239,68,68];
-    }
-
-    // Shadow
-    pdf.setFillColor(235,238,240);
-    pdf.roundedRect(x+0.8,y+0.8,w,h,3,3,"F");
-
-    // Card
-    pdf.setFillColor(255,255,255);
-    pdf.roundedRect(x,y,w,h,3,3,"F");
-
-    // Border kiri
-    pdf.setFillColor(...color);
-    pdf.roundedRect(x,y,3,h,2,2,"F");
-
-    pdf.setTextColor(...PDF_THEME.dark);
-    pdf.setFont("helvetica","bold");
-    pdf.setFontSize(10);
-    pdf.text("FLOK " + f.nama, x+6, y+7);
-
-    pdf.setFont("helvetica","normal");
-    pdf.setFontSize(8);
-
-    pdf.text("Hidup : " + f.hidup, x+6, y+14);
-    pdf.text("Mort : " + f.mortalitas, x+6, y+20);
-    pdf.text("FCR : " + f.fcr, x+40, y+14);
-    pdf.text("IP : " + f.ip, x+40, y+20);
-
-    pdf.setFont("helvetica","bold");
-    pdf.setTextColor(...color);
-    pdf.text(f.status || "-", x+6, y+28);
-
-}
-
-// ==========================================
-// FLOK SUMMARY GRID
-// BAGIAN 3B
-// ==========================================
-
-function drawFlokSummary(pdf, flok){
-
-    const cardW = 82;
-    const cardH = 34;
-
-    const left = 20;
-    const right = 108;
-
-    let y = 58;
-
-    if(flok[0]){
-        drawFlokCard(
-            pdf,
-            left,
-            y,
-            cardW,
-            cardH,
-            flok[0]
-        );
-    }
-
-    if(flok[1]){
-        drawFlokCard(
-            pdf,
-            right,
-            y,
-            cardW,
-            cardH,
-            flok[1]
-        );
-    }
-
-    y += 40;
-
-    if(flok[2]){
-        drawFlokCard(
-            pdf,
-            left,
-            y,
-            cardW,
-            cardH,
-            flok[2]
-        );
-    }
-
-    if(flok[3]){
-        drawFlokCard(
-            pdf,
-            right,
-            y,
-            cardW,
-            cardH,
-            flok[3]
-        );
-    }
-
-    return y + 45;
-
-}
-
-
-// ==========================================
-// HARIAN KPI SUMMARY
-// ==========================================
-
-function drawHarianSummary(pdf, harian){
-
-    drawKpiCard(
-        pdf,
-        20,
-        58,
-        82,
-        26,
-        "TANGGAL",
-        harian.tanggal || "-"
-    );
-
-    drawKpiCard(
-        pdf,
-        108,
-        58,
-        82,
-        26,
-        "TOTAL MATI",
-        (harian.totalMati || 0) + " Ekor"
-    );
-
-    return 95;
-
-}
-
-// ==========================================
-// KEUANGAN KPI SUMMARY
-// ==========================================
-
-function drawKeuanganSummary(pdf, k){
-
-    drawKpiCard(
-        pdf,
-        20,
-        58,
-        82,
-        26,
-        "PAKAN",
-        (k.totalPakan || 0) + " Kg"
-    );
-
-    drawKpiCard(
-        pdf,
-        108,
-        58,
-        82,
-        26,
-        "BIAYA",
-        "Rp " + (k.biayaOperasional || 0)
-    );
-
-    drawKpiCard(
-        pdf,
-        20,
-        90,
-        82,
-        26,
-        "OMSET",
-        "Rp " + (k.estimasiOmset || 0)
-    );
-
-    drawKpiCard(
-        pdf,
-        108,
-        90,
-        82,
-        26,
-        "LABA",
-        "Rp " + (k.estimasiLaba || 0)
-    );
-
-    return 128;
 
 }
 
@@ -1076,24 +1170,19 @@ async function exportHarianPDF(){
         });
 
         createPdfHeader(
+    pdf,
+    "Laporan Harian",
+    data.dashboard.farm.namaFarm
+);
 
-            pdf,
-
-            "Laporan Harian",
-
-            data.dashboard.farm.namaFarm
-
-        );
-
-        let y = drawHarianSummary(pdf, harian);
+        let y = 55;
 
         pdf.setFont("helvetica","bold");
-        pdf.setFontSize(12);
-        pdf.setTextColor(...PDF_THEME.dark);
+        pdf.setFontSize(13);
 
         pdf.text(
 
-            "DETAIL HARIAN",
+            "Tanggal : " + harian.tanggal,
 
             20,
 
@@ -1101,7 +1190,19 @@ async function exportHarianPDF(){
 
         );
 
-        y += 8;
+        y += 10;
+
+        pdf.text(
+
+            "Total Kematian : " + pdfNumber(harian.totalMati,0) + " Ekor",
+
+            20,
+
+            y
+
+        );
+
+        y += 12;
 
         harian.flok.forEach(f=>{
 
@@ -1117,13 +1218,13 @@ async function exportHarianPDF(){
 
             );
 
-            y += 6;
+            y += 7;
 
             pdf.setFont("helvetica","normal");
 
             pdf.text(
 
-                "Umur : " + f.umur + " Hari",
+                "Umur : " + pdfNumber(f.umur,0) + " Hari",
 
                 25,
 
@@ -1131,11 +1232,11 @@ async function exportHarianPDF(){
 
             );
 
-            y += 5;
+            y += 6;
 
             pdf.text(
 
-                "Mati : " + f.mati,
+                "Mati : " + pdfNumber(f.mati,0),
 
                 25,
 
@@ -1143,11 +1244,11 @@ async function exportHarianPDF(){
 
             );
 
-            y += 5;
+            y += 6;
 
             pdf.text(
 
-                "Mortalitas : " + f.mortalitas,
+                "Mortalitas : " + pdfPercent(f.mortalitas,2),
 
                 25,
 
@@ -1155,7 +1256,7 @@ async function exportHarianPDF(){
 
             );
 
-            y += 8;
+            y += 10;
 
             if(y > 260){
 
@@ -1167,9 +1268,7 @@ async function exportHarianPDF(){
 
                     pdf,
 
-                    "Laporan Harian",
-
-                    data.dashboard.farm.namaFarm
+                    "Laporan Harian"
 
                 );
 
@@ -1181,15 +1280,29 @@ async function exportHarianPDF(){
 
         createPdfFooter(pdf);
 
-        pdf.save("Harian_FMC.pdf");
+        pdf.save(
 
-        showUpdateToast("✅ PDF Harian berhasil dibuat");
+            "Harian_FMC.pdf"
 
-    }catch(err){
+        );
+
+        showUpdateToast(
+
+            "✅ PDF Harian berhasil dibuat"
+
+        );
+
+    }
+
+    catch(err){
 
         console.error(err);
 
-        showUpdateToast("❌ " + err.message);
+        showUpdateToast(
+
+            "❌ " + err.message
+
+        );
 
     }
 
@@ -1236,20 +1349,16 @@ async function exportKeuanganPDF(){
         });
 
         createPdfHeader(
+    pdf,
+    "Laporan Keuangan",
+    data.dashboard.farm.namaFarm
+);
 
-            pdf,
-
-            "Laporan Keuangan",
-
-            data.dashboard.farm.namaFarm
-
-        );
-
-        let y = drawKeuanganSummary(pdf, k);
+        let y = 55;
 
         pdf.setFont("helvetica","bold");
-        pdf.setFontSize(12);
-        pdf.setTextColor(...PDF_THEME.dark);
+
+        pdf.setFontSize(13);
 
         pdf.text(
 
@@ -1261,31 +1370,57 @@ async function exportKeuanganPDF(){
 
         );
 
-        y += 8;
+        y += 12;
 
         pdf.setFont("helvetica","normal");
-        pdf.setFontSize(10);
 
-        pdf.text("Total Ekor Panen : " + k.totalEkor,20,y); y+=6;
-        pdf.text("Total Tonase : " + k.totalTonase,20,y); y+=6;
-        pdf.text("Flok Siap Panen : " + k.flokPanen,20,y); y+=6;
-        pdf.text("BB Tertinggi : " + k.bbTertinggi,20,y); y+=6;
-        pdf.text("Umur Tertua : " + k.umurTertua,20,y); y+=6;
-        pdf.text("Flok Terbaik : " + k.flokTerbaik,20,y); y+=6;
-        pdf.text("Konsumsi Pakan : " + k.totalPakan + " Kg",20,y); y+=6;
-        pdf.text("Biaya Operasional : Rp " + k.biayaOperasional,20,y); y+=6;
-        pdf.text("Estimasi Omset : Rp " + k.estimasiOmset,20,y); y+=6;
-        pdf.text("Cost / Ekor : " + (k.costEkor || "-"),20,y); y+=6;
-        pdf.text("Cost / Kg : " + (k.costKg || "-"),20,y); y+=6;
-        pdf.text("Margin Produksi : " + (k.marginProduksi || "-"),20,y); y+=6;
-        pdf.text("Bonus Kematian : Rp " + (k.bonusKematian || "0"),20,y); y+=6;
-        pdf.text("Bonus Pasar : Rp " + (k.bonusPasar || "0"),20,y); y+=8;
+        pdf.text("Total Ekor Panen : "+pdfNumber(k.totalEkor,0),20,y);
+        y+=7;
+
+        pdf.text("Total Tonase : "+pdfNumber(k.totalTonase,2)+" Ton",20,y);
+        y+=7;
+
+        pdf.text("Flok Siap Panen : "+pdfNumber(k.flokPanen,0),20,y);
+        y+=7;
+
+        pdf.text("BB Tertinggi : "+pdfNumber(k.bbTertinggi,2)+" Kg",20,y);
+        y+=7;
+
+        pdf.text("Umur Tertua : "+pdfNumber(k.umurTertua,0)+" Hari",20,y);
+        y+=7;
+
+        pdf.text("Flok Terbaik : "+k.flokTerbaik,20,y);
+        y+=7;
+
+        pdf.text("Konsumsi Pakan : "+pdfNumber(k.totalPakan,0)+" Kg",20,y);
+        y+=7;
+
+        pdf.text("Biaya Operasional : "+pdfCurrency(k.biayaOperasional),20,y);
+        y+=7;
+
+        pdf.text("Estimasi Omset : "+pdfCurrency(k.estimasiOmset),20,y);
+        y+=7;
+
+        pdf.text("Cost / Ekor : "+pdfCurrency(k.costEkor),20,y);
+        y+=7;
+
+        pdf.text("Cost / Kg : "+pdfCurrency(k.costKg),20,y);
+        y+=7;
+
+        pdf.text("Margin Produksi : "+pdfMargin(k.marginProduksi),20,y);
+        y+=7;
+
+        pdf.text("Bonus Kematian : "+pdfCurrency(k.bonusKematian || 0),20,y);
+        y+=7;
+
+        pdf.text("Bonus Pasar : "+pdfCurrency(k.bonusPasar || 0),20,y);
+        y+=10;
 
         pdf.setFont("helvetica","bold");
 
         pdf.text(
 
-            "Estimasi Laba : Rp " + k.estimasiLaba,
+            "Estimasi Laba : "+pdfCurrency(k.estimasiLaba),
 
             20,
 
@@ -1293,11 +1428,11 @@ async function exportKeuanganPDF(){
 
         );
 
-        y += 7;
+        y+=8;
 
         pdf.text(
 
-            "Profit Owner / Ekor : Rp " + (k.profitOwner || "-"),
+            "Profit Owner / Ekor : "+pdfCurrency(k.profitOwner),
 
             20,
 
@@ -1311,11 +1446,13 @@ async function exportKeuanganPDF(){
 
         showUpdateToast("✅ PDF Keuangan berhasil dibuat");
 
-    }catch(err){
+    }
+
+    catch(err){
 
         console.error(err);
 
-        showUpdateToast("❌ " + err.message);
+        showUpdateToast("❌ "+err.message);
 
     }
 

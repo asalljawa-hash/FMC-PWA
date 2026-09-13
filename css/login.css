@@ -21,10 +21,12 @@
     -webkit-overflow-scrolling:touch;
 
     background:
-        radial-gradient(circle at top left,#32d56d 0%,transparent 35%),
-        radial-gradient(circle at bottom right,#58e89a 0%,transparent 35%),
-        linear-gradient(135deg,#0B8F43,#16a34a);
-
+        linear-gradient(
+            rgba(11,143,67,.10),
+            rgba(11,143,67,.18)
+        ),
+        url("../assets/login-farm-bg.webp")
+        center / cover no-repeat;
 }
 
 /* =========================
@@ -43,12 +45,12 @@
 
     border-radius:30px;
 
-    background:rgba(255,255,255,.18);
+    background:rgba(255,255,255,.035);
 
-    backdrop-filter:blur(28px);
-    -webkit-backdrop-filter:blur(28px);
+    backdrop-filter:blur(1.5px);
+    -webkit-backdrop-filter:blur(1.5px);
 
-    border:1px solid rgba(255,255,255,.35);
+    border:1px solid rgba(255,255,255,.28);
 
     box-shadow:
         0 20px 60px rgba(0,0,0,.18),
@@ -1156,3 +1158,94 @@
     }
 
 }
+
+/* =========================================================
+   FMC LOGIN — TEXT VISIBILITY POLISH
+   Khusus teks halaman login.
+   Background farm tetap jelas.
+   Tidak mengubah fungsi login.
+   ========================================================= */
+
+/* Judul utama */
+#loginPage .loginContainer h1{
+    color:#0B3D2A !important;
+    font-weight:800;
+    text-shadow:0 1px 3px rgba(255,255,255,.55);
+}
+
+/* Subtitle */
+#loginPage .loginSub{
+    color:#2F5F49 !important;
+    font-weight:600;
+    text-shadow:0 1px 2px rgba(255,255,255,.35);
+}
+
+/* Label Email / PIN */
+#loginPage label{
+    color:#244D3A !important;
+    font-weight:700;
+    text-shadow:0 1px 2px rgba(255,255,255,.35);
+}
+
+/* Status Memeriksa Server */
+#loginPage .serverStatus{
+    color:#24543D !important;
+    font-weight:700;
+}
+
+#loginPage .serverStatus .material-symbols-rounded{
+    color:#0B8F43 !important;
+}
+
+/* Placeholder input */
+#loginPage input{
+    color:#263A31;
+    font-weight:500;
+}
+
+#loginPage input::placeholder{
+    color:#64776E;
+    opacity:1;
+}
+
+/* Link Lupa PIN dan icon di dalam area login */
+#loginPage .loginContainer a{
+    color:#087438;
+    font-weight:700;
+    text-shadow:0 1px 2px rgba(255,255,255,.45);
+}
+
+#loginPage .loginContainer a:hover{
+    color:#065C2C;
+}
+
+/* Tombol login — teks sengaja putih agar kontras */
+#loginPage .loginBtn,
+#loginPage .loginBtn .material-symbols-rounded{
+    color:#FFFFFF !important;
+    font-weight:700;
+}
+
+/* Daftar */
+#loginPage .registerBox{
+    color:#365B4A !important;
+    font-weight:500;
+}
+
+#loginPage .registerBox a{
+    color:#087438 !important;
+    font-weight:800;
+}
+
+/* Versi — dibuat sedikit lebih terlihat */
+#loginPage .loginVersion{
+    color:#557568 !important;
+    font-weight:600;
+    text-shadow:0 1px 2px rgba(255,255,255,.35);
+}
+
+/* Pesan proses/sukses/error tetap memakai warna statusnya sendiri */
+#loginPage .loginMessage.processing{
+    color:#166534;
+}
+

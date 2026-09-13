@@ -1,0 +1,483 @@
+/* =========================================================
+   FMC BROILER MOBILE — HISTORY PAGE
+   FMC GREEN THEME / UI MATCH
+   Scope: hanya halaman History
+   ========================================================= */
+
+.fmcHistoryPage{
+    width:100%;
+    box-sizing:border-box;
+    padding:18px 14px 110px;
+    color:#263238;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+
+.fmcHistoryHeader{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.fmcHistoryEyebrow{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.12em;
+    color:#607078;
+    margin-bottom:5px;
+}
+
+.fmcHistoryHeader h2{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:0;
+    color:#123d2b;
+    font-size:26px;
+    line-height:1.15;
+    font-weight:900;
+}
+
+.fmcHistoryHeader h2 .material-symbols-rounded{
+    font-size:29px;
+    color:#008f4c;
+}
+
+.fmcHistoryHeader p{
+    margin:7px 0 0;
+    color:#68757c;
+    font-size:14px;
+}
+
+.fmcHistoryRefresh{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    min-height:42px;
+    padding:9px 13px;
+    border:1px solid rgba(0,143,76,.10);
+    border-radius:14px;
+    background:#e8f6ee;
+    color:#087b46;
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:none;
+    transition:transform .15s ease,background .15s ease;
+}
+
+.fmcHistoryRefresh:active{
+    transform:scale(.97);
+    background:#d9f0e4;
+}
+
+.fmcHistoryRefresh .material-symbols-rounded{
+    font-size:19px;
+}
+
+/* =========================
+   LIST
+   ========================= */
+
+.fmcHistoryList{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+/* =========================
+   CARD
+   ========================= */
+
+.fmcHistoryCard{
+    position:relative;
+    overflow:hidden;
+    box-sizing:border-box;
+    padding:14px;
+    border-radius:22px;
+    background:#ffffff;
+    border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 7px 22px rgba(25,70,48,.09);
+}
+
+.fmcHistoryCard.isActive{
+    border:1px solid rgba(0,143,76,.18);
+}
+
+/* =========================
+   GREEN PERIOD BANNER
+   ========================= */
+
+.fmcHistoryCardTop{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+    padding:15px 15px 16px;
+    border-radius:17px;
+    background:linear-gradient(135deg,#008f4c 0%,#00a95a 100%);
+    color:#ffffff;
+    box-shadow:0 5px 14px rgba(0,143,76,.16);
+}
+
+.fmcHistoryPeriodLabel{
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.14em;
+    color:rgba(255,255,255,.82);
+}
+
+.fmcHistoryPeriodNo{
+    margin-top:4px;
+    color:#ffffff;
+    font-size:30px;
+    line-height:1;
+    font-weight:900;
+}
+
+.fmcHistoryStatus{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    border-radius:999px;
+    padding:7px 11px;
+    background:#ffffff;
+    color:#135b3c;
+    font-size:10px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.fmcHistoryStatusActive{
+    background:#ecfff5;
+    color:#075c37;
+}
+
+.fmcHistoryStatusClosed{
+    background:#f3f5f4;
+    color:#59666b;
+}
+
+/* =========================
+   DATA TILES
+   ========================= */
+
+.fmcHistoryMetaGrid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px;
+    margin-top:0;
+}
+
+.fmcHistoryMetaGrid>div{
+    min-width:0;
+    min-height:74px;
+    box-sizing:border-box;
+    padding:11px 12px;
+    border-radius:15px;
+    background:#f6f7f7;
+    border:1px solid rgba(0,0,0,.025);
+}
+
+.fmcHistoryMetaGrid small{
+    display:block;
+    margin-bottom:5px;
+    color:#738087;
+    font-size:9px;
+    line-height:1.1;
+    font-weight:900;
+    letter-spacing:.09em;
+}
+
+.fmcHistoryMetaGrid strong{
+    display:block;
+    color:#26383f;
+    font-size:13px;
+    line-height:1.35;
+    font-weight:800;
+    overflow-wrap:anywhere;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.fmcHistoryCardFooter{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:13px;
+    padding-top:12px;
+    border-top:1px solid #edf0ef;
+}
+
+.fmcHistoryReadonly{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    color:#7b8589;
+    font-size:11px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.fmcHistoryReadonly .material-symbols-rounded{
+    color:#7b8589;
+    font-size:17px;
+}
+
+/* =========================
+   DOWNLOAD BUTTON — FMC GREEN
+   ========================= */
+
+.fmcHistoryDownload{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    min-height:43px;
+    box-sizing:border-box;
+    padding:10px 16px;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#008f4c,#00a95a);
+    color:#ffffff;
+    font-size:13px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 5px 13px rgba(0,143,76,.17);
+    transition:transform .15s ease,box-shadow .15s ease;
+}
+
+.fmcHistoryDownload:active{
+    transform:scale(.98);
+    box-shadow:0 2px 7px rgba(0,143,76,.12);
+}
+
+.fmcHistoryDownload .material-symbols-rounded{
+    font-size:19px;
+}
+
+/* =========================
+   LOADING / EMPTY / ERROR
+   ========================= */
+
+.fmcHistoryLoading,
+.fmcHistoryEmpty,
+.fmcHistoryError{
+    min-height:190px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    box-sizing:border-box;
+    padding:25px;
+    text-align:center;
+    border-radius:20px;
+    background:#ffffff;
+    border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 6px 18px rgba(25,70,48,.07);
+}
+
+.fmcHistoryLoading .material-symbols-rounded{
+    color:#008f4c;
+    font-size:31px;
+    animation:fmcHistorySpin 1s linear infinite;
+}
+
+.fmcHistoryEmpty .material-symbols-rounded,
+.fmcHistoryError .material-symbols-rounded{
+    color:#008f4c;
+    font-size:37px;
+}
+
+.fmcHistoryEmpty strong,
+.fmcHistoryError strong{
+    color:#26383f;
+    font-size:16px;
+}
+
+.fmcHistoryEmpty small,
+.fmcHistoryError p{
+    margin:0;
+    color:#738087;
+    font-size:12px;
+}
+
+.fmcHistoryRetry{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    margin-top:6px;
+    padding:9px 14px;
+    border:0;
+    border-radius:11px;
+    background:#008f4c;
+    color:#ffffff;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.fmcHistoryRetry .material-symbols-rounded{
+    color:#ffffff;
+    font-size:18px;
+}
+
+@keyframes fmcHistorySpin{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media(max-width:480px){
+
+    .fmcHistoryPage{
+        padding:17px 12px 108px;
+    }
+
+    .fmcHistoryHeader{
+        gap:8px;
+    }
+
+    .fmcHistoryHeader h2{
+        font-size:23px;
+    }
+
+    .fmcHistoryHeader h2 .material-symbols-rounded{
+        font-size:27px;
+    }
+
+    .fmcHistoryRefresh{
+        min-height:40px;
+        padding:8px 11px;
+        font-size:12px;
+    }
+
+    .fmcHistoryCard{
+        padding:13px;
+        border-radius:21px;
+    }
+
+    .fmcHistoryCardTop{
+        padding:14px;
+        border-radius:16px;
+    }
+
+    .fmcHistoryPeriodNo{
+        font-size:29px;
+    }
+
+    .fmcHistoryMetaGrid{
+        gap:8px;
+    }
+
+    .fmcHistoryMetaGrid>div{
+        min-height:70px;
+        padding:10px;
+        border-radius:14px;
+    }
+
+    .fmcHistoryMetaGrid strong{
+        font-size:12.5px;
+    }
+
+    .fmcHistoryCardFooter{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .fmcHistoryDownload{
+        width:100%;
+        min-height:44px;
+    }
+
+}
+
+/* =========================
+   DARK MODE
+   ========================= */
+
+@media(prefers-color-scheme:dark){
+
+    .fmcHistoryPage{
+        color:#e8eeee;
+    }
+
+    .fmcHistoryEyebrow{
+        color:#aab7b5;
+    }
+
+    .fmcHistoryHeader h2{
+        color:#d9f5e6;
+    }
+
+    .fmcHistoryHeader p{
+        color:#a9b6b5;
+    }
+
+    .fmcHistoryRefresh{
+        background:#123c2a;
+        color:#8de2b3;
+        border-color:rgba(141,226,179,.10);
+    }
+
+    .fmcHistoryCard{
+        background:#18201e;
+        border-color:rgba(255,255,255,.07);
+        box-shadow:0 7px 22px rgba(0,0,0,.18);
+    }
+
+    .fmcHistoryMetaGrid>div{
+        background:#202926;
+        border-color:rgba(255,255,255,.04);
+    }
+
+    .fmcHistoryMetaGrid small{
+        color:#91a09d;
+    }
+
+    .fmcHistoryMetaGrid strong{
+        color:#e4ece9;
+    }
+
+    .fmcHistoryCardFooter{
+        border-top-color:rgba(255,255,255,.08);
+    }
+
+    .fmcHistoryReadonly{
+        color:#9aa7a4;
+    }
+
+    .fmcHistoryReadonly .material-symbols-rounded{
+        color:#9aa7a4;
+    }
+
+    .fmcHistoryLoading,
+    .fmcHistoryEmpty,
+    .fmcHistoryError{
+        background:#18201e;
+        border-color:rgba(255,255,255,.07);
+    }
+
+    .fmcHistoryEmpty strong,
+    .fmcHistoryError strong{
+        color:#e4ece9;
+    }
+
+    .fmcHistoryEmpty small,
+    .fmcHistoryError p{
+        color:#9aa7a4;
+    }
+}
