@@ -685,3 +685,35 @@ body.dark .masterKontrakEmpty{
     }
 
 }
+
+/* ==========================================================
+   FMC MASTER KONTRAK — LABEL ROW FIX
+   UI ONLY
+   Mempertahankan ukuran/layout baseline.
+   Header tabel menjadi penjelas kolom.
+   ========================================================== */
+
+#masterKontrakPage .masterKontrakRow .masterKontrakInputGroup label{
+    display:none;
+}
+
+/* ==========================================================
+   FMC MASTER KONTRAK — VISUAL RENDER FIX 20260914
+   SCOPE: MASTER KONTRAK ONLY
+   Tidak mengubah ukuran/grid/padding.
+   Memastikan border + background tetap terlihat walau
+   variable/theme/cache lama masih terbawa.
+   ========================================================== */
+
+#masterKontrakPage .masterKontrakRow{
+    border:1px solid #E5E7EB !important;
+    background:#FFFFFF !important;
+    box-sizing:border-box;
+}
+
+#masterKontrakPage .masterKontrakInputGroup input{
+    border:1px solid #E5E7EB !important;
+    background:#FFFFFF !important;
+    color:#1F2937 !important;
+    box-sizing:border-box;
+}

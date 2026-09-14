@@ -257,3 +257,12 @@ body.desktop .dashboardHero{
     width:100%;
 
 }
+
+/* FMC HEADER SAFE AREA FINAL */
+@media (max-width: 768px){
+    body:not(.desktop) .header{
+        top:var(--fmc-safe-top);
+        left:var(--fmc-safe-left);
+        right:var(--fmc-safe-right);
+    }
+}

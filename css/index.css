@@ -1840,3 +1840,21 @@ body.dark.desktop span{
         'GRAD' 0,
         'opsz' 24;
 }
+/* FMC APK — APP VIEWPORT SAFE AREA FIX
+   Header/navigation tetap baseline.
+   Hanya menyelaraskan area konten dengan safe-area. */
+@media (max-width: 480px){
+    body:not(.desktop) #app{
+        top:calc(68px + var(--fmc-safe-top, 0px));
+        bottom:calc(72px + var(--fmc-safe-bottom, 0px));
+        left:var(--fmc-safe-left, 0px);
+        right:var(--fmc-safe-right, 0px);
+        box-sizing:border-box;
+        overflow-y:auto;
+        overflow-x:hidden;
+        padding:6px;
+        padding-left:calc(6px + var(--fmc-safe-left, 0px));
+        padding-right:calc(6px + var(--fmc-safe-right, 0px));
+        padding-bottom:calc(6px + var(--fmc-safe-bottom, 0px));
+    }
+}

@@ -261,3 +261,14 @@ body.dark .bottomNav button.active .material-symbols-rounded{
     color:var(--primary);
 
 }
+
+/* FMC NAV SAFE AREA FINAL */
+@media (max-width: 768px){
+    body:not(.desktop) .bottomNav{
+        left:var(--fmc-safe-left);
+        right:var(--fmc-safe-right);
+        bottom:var(--fmc-safe-bottom);
+        padding-bottom:0;
+        height:74px;
+    }
+}
