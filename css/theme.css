@@ -722,3 +722,10 @@
     vertical-align:middle;
     transform:translateY(1px);
 }
+/* FMC SAFE AREA FINAL */
+:root{
+    --fmc-safe-top: max(0px, var(--safe-area-inset-top, env(safe-area-inset-top, 0px)));
+    --fmc-safe-bottom: max(0px, var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px)));
+    --fmc-safe-left: max(0px, var(--safe-area-inset-left, env(safe-area-inset-left, 0px)));
+    --fmc-safe-right: max(0px, var(--safe-area-inset-right, env(safe-area-inset-right, 0px)));
+}
