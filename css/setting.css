@@ -107,11 +107,11 @@
 
 body.setting-open #fabSetting{
 
-    opacity:0;
+    opacity:1;
 
-    pointer-events:none;
+    pointer-events:auto;
 
-    transform:scale(.80);
+    transform:scale(1);
 
 }
 

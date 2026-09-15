@@ -57,9 +57,12 @@
          */
 
         if(
-            document.body.classList.contains("setting-open")
+            page === "dashboard" &&
+            !sidebarOpen
         ){
-            fab.style.display = "flex";
+
+            fab.style.display =
+                "flex";
 
         }else{
 

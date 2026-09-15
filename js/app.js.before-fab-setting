@@ -50,7 +50,10 @@ async function showPage(page){
 
     if(fabSetting){
 
-        fabSetting.style.display = "none";
+        fabSetting.style.display =
+            page === "dashboard"
+                ? "flex"
+                : "none";
 
     }
 
@@ -1221,11 +1224,6 @@ function toggleSettingPanel(){
 
         settingPanelOpen = false;
 
-        const fabSetting = document.getElementById("fabSetting");
-        if(fabSetting){
-            fabSetting.style.display = "none";
-        }
-
     }else{
 
         panel.classList.add("show");
@@ -1233,11 +1231,6 @@ function toggleSettingPanel(){
         document.body.classList.add("setting-open");
 
         settingPanelOpen = true;
-
-        const fabSetting = document.getElementById("fabSetting");
-        if(fabSetting){
-            fabSetting.style.display = "flex";
-        }
 
         // Agar tombol Back Android
         // menutup panel terlebih dahulu
@@ -1271,11 +1264,6 @@ window.addEventListener("popstate", function(){
 
         settingPanelOpen = false;
 
-        const fabSetting = document.getElementById("fabSetting");
-        if(fabSetting){
-            fabSetting.style.display = "none";
-        }
-
     }
 
 });
@@ -1303,8 +1291,6 @@ document.addEventListener("click", function(e){
             document.body.classList.remove("setting-open");
 
             settingPanelOpen = false;
-
-            fab.style.display = "none";
 
         }
 

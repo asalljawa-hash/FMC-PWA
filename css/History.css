@@ -409,7 +409,7 @@
    DARK MODE
    ========================= */
 
-@media(prefers-color-scheme:dark){
+body.dark{
 
     .fmcHistoryPage{
         color:#e8eeee;
